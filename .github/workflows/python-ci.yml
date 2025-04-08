@@ -35,4 +35,4 @@ jobs:
 
     - name: Run agent
       run: |
-        python wolf_silicon/main.py --req challenge/lemmings3.md
+        python wolf_silicon/main.py --req challenge/lemmings1.md
