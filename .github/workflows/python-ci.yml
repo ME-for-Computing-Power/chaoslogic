@@ -36,3 +36,13 @@ jobs:
     - name: Run agent
       run: |
         python wolf_silicon/main.py --req challenge/lemmings1.md
+    - name: Archive playground folder
+      if: always() 
+      run: |
+        zip -r playground.zip playground
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: playground
+        path: playground.zip
