@@ -82,6 +82,7 @@ class BaseAssistant(object):
         completion = self.agent.model_client.chat.completions.create(
             model=self.agent.MODEL_NAME,
             messages=messages,
+            max_tokens=self.agent.MAX_TOKENS,
             tools=self.get_tools_description(),
             tool_choice="required" if tools_enable else "none"
         )

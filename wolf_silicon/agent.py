@@ -16,6 +16,7 @@ class WolfSiliconAgent(object):
         self.TRANSLATION_MODEL_NAME = "deepseek-chat"
         self.MAX_SHORT_TERM_MEMORY = 10
         self.MAX_RETRY = 10
+        self.MAX_TOKENS = 8000
         # connect to model_client
         self.model_client = mc
         # 在 workspace 目录下创建doc、cmodel、design、verification文件夹
