@@ -1,4 +1,6 @@
 name: Python CI
+on:
+  workflow_dispatch:
 
 runs-on: self-hosted
 
