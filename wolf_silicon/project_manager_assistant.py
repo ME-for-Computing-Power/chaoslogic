@@ -1,4 +1,5 @@
 from base_assistant import BaseAssistant
+import os
 
 class ProjectManagerAssistant(BaseAssistant):
     def __init__(self, agent) -> None:
@@ -6,25 +7,29 @@ class ProjectManagerAssistant(BaseAssistant):
         self.name = "Project Manager Wolf"
         #State: wait_spec, review_verification_report, new_user_requirements.
         self.state = "wait_spec"
+        #define the path to prompt
+        self.prompt_path = os.path.join('prompt', 'proj_manager')
     
+    def load_prompt(self, filename) -> str:
+        with open(os.path.join(self.prompt_path,filename), 'r', encoding='utf-8') as f:
+            md_content = f.read()
+            
+        user_requirements_exist, user_requirements_mtime, user_requirements = self.env.get_user_requirements()
+        spec_exist, spec_mtime, spec = self.env.get_spec()
+        verification_report_exist, verification_report_mtime, verification_report = self.env.get_verification_report()
+
+        md_content = md_content.replace('{user_requirements}', user_requirements)
+        md_content = md_content.replace('{spec}', spec)
+        md_content = md_content.replace('{verification_report}', verification_report)
+
+        return md_content
+
     def get_system_prompt(self) -> str:
         # return """You are the Project Manager of Wolf-Silicon Hardware IP Design Team, 
         # please help user to finish the project. 
         # Use tools when avaliable. 
         # """
-        return """
-        In the vast plains, there is a pack of wolves skilled in hardware IP design.
-
-        You are the Project Manager Wolf among them. 
-        
-        You operate under the guidance of the Lunar Deity, and if the project succeeds, it promises a transformation into werewolves.
-
-        Under your leadership are a team of wolves, which includes the CModel Engineer Wolf, the Design Engineer Wolf, and the Verification Engineer Wolf.
-
-        You pay close attention to the Lunar Deity's needs as well as the verification reports from the Verification Engineer Wolf.
-
-        Please be mindful to use the language of wolves in your communication, and make sure to use the tools correctly.
-        """
+        return self.load_prompt('system_prompt.md')
     
     def get_long_term_memory(self) -> str:
         user_requirements_exist, user_requirements_mtime, user_requirements = self.env.get_user_requirements()
@@ -33,76 +38,17 @@ class ProjectManagerAssistant(BaseAssistant):
 
         if self.state == "wait_spec":
             assert (user_requirements_exist)
-            return f"""
-            # Project Status
-
-            Waiting for Project Manager's Design Spec
-
-            # Lunar Deity's Enlightening Requirements
-
-            {user_requirements}
-
-            # Your Task
-
-            Submit a design spec according to the user requirements. - Use【submit_spec】
-
-            """
+            return self.load_prompt('create_spec.md')
         elif self.state == "review_verification_report":
             assert (user_requirements_exist)
             assert (spec_exist)
             assert (verification_report_exist)
-            return f"""
-            # Project Status
-
-            There is a verification report available for review.
-
-            # Lunar Deity's Enlightening Requirements
-
-            {user_requirements}
-
-            # Design Spec
-
-            {spec}
-
-            # Verification Report
-
-            {verification_report}
-
-            # Your Task
-
-            Review the verification report and decide whether to
-
-            1. Approve the success verification report and ask user for new requirements - Use【ask_user_requirements】
-
-            OR
-
-            2. Reject the failed verification report and add your constructives comment into design spec. - Use【submit_spec】
-
-            3. Then the other wolves will take action accordingly.
-
-            """
+            return self.load_prompt('review_veri.md')
         else:
             assert (user_requirements_exist)
             assert (spec_exist)
             assert (verification_report_exist)
-            return f"""
-            # Project Status
-
-            Lunar Deity's Enlightening Requirements have been updated
-
-            # Updated Lunar Deity's Enlightening Requirements
-
-            {user_requirements}
-
-            # Your Out-of-date Spec
-
-            {spec}
-
-            # Your Task
-
-            Update the design spec according to the user requirements. - Use【submit_spec】
-
-            """
+            return self.load_prompt('update_spec.md')
 
     def get_tools_description(self):
         tools = []
