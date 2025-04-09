@@ -81,7 +81,7 @@ class BaseAssistant(object):
         ]
         #Debugging
         print("Final messages payload:")
-        print(json.dumps(messages, indent=2))
+        print(messages)
         completion = self.agent.model_client.chat.completions.create(
             model=self.agent.MODEL_NAME,
             messages=messages,
