@@ -19,4 +19,5 @@ if __name__ == "__main__":
     workpath = create_workspace("./playground")
     # 创建 WolfSiliconAgent
     agent = WolfSiliconAgent(workspace_path=workpath, user_requirements_path=args.req)
-    agent.run()
+    if agent.run() == 0:
+        exit

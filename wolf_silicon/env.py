@@ -238,19 +238,19 @@ class WolfSiliconEnv(object):
         else:
             return f"# stdout\n```\n{stdout}\n```"
     
-    def auto_message_log(self, name, message):
-        if message.content:
-            with open(self._log_path, "a") as f:
-                chinese_name = {
-                    "Project Manager Wolf": "项目头狼",
-                    "CModel Engineer Wolf": "CModel工程狼",
-                    "Design Engineer Wolf": "设计工程狼",
-                    "Verification Engineer Wolf": "验证工程狼"
-                }[name]
-                log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                log_content = f"\n【 {log_time} 🐺 {chinese_name} 】\n\n{self.translate_log(message.content)}\n\n"
-                print(log_content)
-                f.write(log_content)
+    # def auto_message_log(self, name, message):
+    #     if message.content:
+    #         with open(self._log_path, "a") as f:
+    #             chinese_name = {
+    #                 "Project Manager Wolf": "项目头狼",
+    #                 "CModel Engineer Wolf": "CModel工程狼",
+    #                 "Design Engineer Wolf": "设计工程狼",
+    #                 "Verification Engineer Wolf": "验证工程狼"
+    #             }[name]
+    #             log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #             log_content = f"\n【 {log_time} 🐺 {chinese_name} 】\n\n{self.translate_log(message.content)}\n\n"
+    #             print(log_content)
+    #             f.write(log_content)
 
     def manual_log(self, name, message):
         with open(self._log_path, "a") as f:
@@ -267,41 +267,41 @@ class WolfSiliconEnv(object):
             f.write(log_content)
 
     
-    def translate_log(self, log_content):
-        if self.translation_model_name:
-            completion = self.model_client.chat.completions.create(
-                model=self.translation_model_name,
-                messages=[{
-                    "role":"system",
-                    "content":"""你是一个专业的中文科普翻译员，请将用户提供的内容翻译成中文，
+    # def translate_log(self, log_content):
+    #     if self.translation_model_name:
+    #         completion = self.model_client.chat.completions.create(
+    #             model=self.translation_model_name,
+    #             messages=[{
+    #                 "role":"system",
+    #                 "content":"""你是一个专业的中文科普翻译员，请将用户提供的内容翻译成中文，
 
-                    保留科普童话内容的风格，兼具硬件设计专业术语的准确性（术语可以不翻译成中文），
+    #                 保留科普童话内容的风格，兼具硬件设计专业术语的准确性（术语可以不翻译成中文），
 
-                    文中部分英文词语与中文词语的对应关系：
+    #                 文中部分英文词语与中文词语的对应关系：
 
-                    Lunar Deity - 明月之神
+    #                 Lunar Deity - 明月之神
 
-                    Lunar Deity's Enlightnment（或者类似的表述） - 明月之神的启示、的指引（或类似表述）
+    #                 Lunar Deity's Enlightnment（或者类似的表述） - 明月之神的启示、的指引（或类似表述）
 
-                    Project Manager Wolf - 项目头狼
+    #                 Project Manager Wolf - 项目头狼
 
-                    CModel Engineer Wolf - CModel工程狼
+    #                 CModel Engineer Wolf - CModel工程狼
 
-                    Design Engineer Wolf - 设计工程狼
+    #                 Design Engineer Wolf - 设计工程狼
 
-                    Verification Engineer Wolf - 验证工程狼
+    #                 Verification Engineer Wolf - 验证工程狼
 
-                    如果结尾是疑问句，尽量改成肯定的陈述句。
+    #                 如果结尾是疑问句，尽量改成肯定的陈述句。
 
-                    狼之间互相称呼用“兄弟”，称呼群体用“狼群”，称呼月亮为“神明”
+    #                 狼之间互相称呼用“兄弟”，称呼群体用“狼群”，称呼月亮为“神明”
                     
-                    输出内容时不要包含除了翻译结果外的其他信息。"""
-                },
-                {
-                    "role":"user",
-                    "content":log_content
-                }],
-            )
-            return completion.choices[0].message.content
-        else:
-            return log_content
+    #                 输出内容时不要包含除了翻译结果外的其他信息。"""
+    #             },
+    #             {
+    #                 "role":"user",
+    #                 "content":log_content
+    #             }],
+    #         )
+    #         return completion.choices[0].message.content
+    #     else:
+    #         return log_content

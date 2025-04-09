@@ -97,35 +97,32 @@ class DesignEngineerAssistant(BaseAssistant):
     
     def execute(self):
         self.clear_short_term_memory()
-        self.call_llm("Observe and analyze the project situation, show me your observation and think", tools_enable=False)
+        #self.call_llm("Observe and analyze the project situation, show me your observation and think", tools_enable=False)
         self.is_lint_clean = False
         while True:
             if not self.ready_to_handover():
                 llm_message = self.call_llm("""
-                    Please submit your Design code.
-
-                    All Design code is assumed to be in a single .v file.
-                    Your Design code should be synthesizable and obey the verilog-2001 standard.
-                    Your Design code should be lint clean.
-                    Your Design code will be automatically lint after submission, Please Note the Result.
-
+                    使用外部工具提交你的设计。
+                                            
+                    设计应当仅在一个.v文件中存储，且符合verilog-2001标准。
+                    设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               
                     """, tools_enable=True)
             elif not self.is_lint_clean:
                 llm_message = self.call_llm(f"""
-                Your recently submitted code is not lint clean, the lint result
-                ```
-                {self.env.lint_design()}
-                ```
-                Please resubmit the Design code Use 【submit_design】
+                    刚才的代码中存在语法错误：
+                    ```
+                    {self.env.lint_design()}
+                    ```
+                    修改错误，并用 submit_design 重新提交。
 
-                """, tools_enable=True)
+                    """, tools_enable=True)
             else:
                 llm_message = self.call_llm(f"""
-                Your recently submitted code is ready. Please decide whether to:
-
-                handover the Design to the Verification Engineer Wolf Use 【handover_to_verification】
-
-                """, tools_enable=True) 
+                    刚才的代码中没有语法错误。
+                                                
+                    若仍要修改，则使用 submit_design 重新提交。
+                    若确认无误，则使用 handover_to_verification提交验证部门。
+                    """, tools_enable=True) 
             for tool_call in llm_message.tool_calls:
                 tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_design":

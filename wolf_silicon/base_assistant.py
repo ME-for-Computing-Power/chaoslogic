@@ -59,7 +59,7 @@ class BaseAssistant(object):
             tool_choice="none"
         )
         self.update_short_term_memory(completion.choices[0].message)
-        self.env.auto_message_log(self.name, completion.choices[0].message)
+        #self.env.auto_message_log(self.name, completion.choices[0].message)
 
 
     def call_llm(self, user_message, tools_enable):
@@ -90,5 +90,5 @@ class BaseAssistant(object):
             tool_choice="required" if tools_enable else "none"
         )
         self.update_short_term_memory(completion.choices[0].message)
-        self.env.auto_message_log(self.name, completion.choices[0].message)
+        #self.env.auto_message_log(self.name, completion.choices[0].message)
         return completion.choices[0].message

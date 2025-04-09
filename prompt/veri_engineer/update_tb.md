@@ -1,17 +1,16 @@
-# Project Status
+# 项目当前状态
 
-The Verification Report is outdated.
+用户需求已更新
 
-# Lunar Deity's Enlightening Requirements
 
-{user_requirements}
-
-# Project Manager Wolf's NEW Design Specification
+# 更新后的的Spec
 
 {spec}
 
-# Your Task
+# 当前任务
 
-1. Submit testbench code and review testbench result - Use【submit_testbench】
+1. 使用 submit_testbench 提交testbench，并观察对应结果
 
-2. Write the verification report regarding the testbench result - Use【write_verification_report】
+或
+
+2. 当testbench完成后，使用 write_verification_report 提交报告。

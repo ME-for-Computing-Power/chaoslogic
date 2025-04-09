@@ -69,7 +69,8 @@ class WolfSiliconAgent(object):
                     self.design_engineer_assistant.execute()
                     self.verification_engineer_assistant.execute()
                 else:
-                    print("\n**** 🐺 项目头狼虔诚地向您祷告：“崇高无尚的明月之神啊，请您审视我们的工作！” ****\n")
+                    print("\n**** 完成 ****\n")
+                    return 0
                     # new_user_requirements = input(" 🌕 明月之神的旨意 (y/Y表示同意当前结果并退出， 或者给出新的需求):")
                     # if new_user_requirements.lower() == "y":
                     #     print("\n**** 🐺🐺🐺🐺 狼群在感激中仰头长啸，它们变身成了狼人，在草原深处建立起 “野狼Silicon半导体设计公司” ****\n")
@@ -79,5 +80,5 @@ class WolfSiliconAgent(object):
                     #     self.env.manual_log("User", f"给出了新的旨意: {new_user_requirements}")
                     #     continue
         except KeyboardInterrupt:
-            print("\n 🌕 明月之神改变了主意，让狼群先退下吧～ ")
+            print("\n键盘输入中断")
 

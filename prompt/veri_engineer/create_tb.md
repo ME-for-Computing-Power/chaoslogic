@@ -1,17 +1,15 @@
-# Project Status
+# 项目当前状态
 
-Waiting for Verification Engineer Wolf's Report
+等待验证工程师的报告
 
-# Lunar Deity's Enlightening Requirements
-
-{user_requirements}
-
-# Project Manager Wolf's Design Specification
+# 项目管理员的Spec
 
 {spec}
 
-# Your Task
+# 当前任务
 
-1. Submit testbench code and review testbench result - Use【submit_testbench】
+1. 使用 submit_testbench 提交testbench，并观察对应结果
 
-2. Write the verification report regarding the testbench result - Use【write_verification_report】
+或
+
+2. 当testbench完成后，使用 write_verification_report 提交报告。

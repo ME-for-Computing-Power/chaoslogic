@@ -63,7 +63,7 @@ class ProjectManagerAssistant(BaseAssistant):
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "spec": {"type": "string", "description": "Design spec content"},
+                        "spec": {"type": "string", "description": "Design spec content, never insert verilog code here"},
                         "overwrite": {"type": "boolean", "description": "Overwrite the existing spec or append to it."}
                     },
                     "required": ["spec", "overwrite"],
@@ -91,9 +91,9 @@ class ProjectManagerAssistant(BaseAssistant):
 #FSM-like
     def execute(self) -> str:
         self.clear_short_term_memory()
-        self.call_llm("Observe and analyze the project situation, show me your observation and think", tools_enable=False)
+        #self.call_llm("分析项目情况，给出你的观察和想法", tools_enable=False)
         while True:
-            llm_message = self.call_llm("Please use tool to take action", tools_enable=True)
+            llm_message = self.call_llm("使用外部工具提交Spec", tools_enable=True)
             if self.state == "wait_spec" or self.state == "new_user_requirements":
                 for tool_call in llm_message.tool_calls:
                     tool_id, name, args = self.decode_tool_call(tool_call)
@@ -103,6 +103,8 @@ class ProjectManagerAssistant(BaseAssistant):
                         self.reflect_tool_call(tool_id, "success")
                         self.state = "review_verification_report"
                         return "design"
+                    else:
+                        raise Exception("未知的Function Call")
             elif self.state == "review_verification_report":
                 for tool_call in llm_message.tool_calls:
                     tool_id, name, args = self.decode_tool_call(tool_call)

@@ -1,15 +1,15 @@
-# Project Status
+# 项目当前状态
 
-Lunar Deity's Enlightening Requirements have been updated
+用户需求已更新
 
-# Updated Lunar Deity's Enlightening Requirements
+# 更新后的客户需求
 
 {user_requirements}
 
-# Your Out-of-date Spec
+# 原来的Spec
 
 {spec}
 
-# Your Task
+# 当前任务
 
-Update the design spec according to the user requirements. - Use【submit_spec】
+根据客户需求更新Spec。Spec中不应有任何代码。可使用 submit_spec 提交该Spec。

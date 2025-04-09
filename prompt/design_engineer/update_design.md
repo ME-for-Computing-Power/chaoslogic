@@ -1,15 +1,11 @@
-# Project Status
+# 项目当前状态
 
-The Design is outdated.
+用户需求已更新
 
-# Lunar Deity's NEW Enlightening Requirements
-
-{user_requirements}
-
-# Project Manager Wolf's NEW Design Specification
+# 更新后的Spec
 
 {spec}
 
-# Your Task
+# 当前任务
 
-Update your design - Use【submit_design】
+根据客户需求更新Spec。Spec中不应有任何代码。可使用 submit_spec 提交该Spec。

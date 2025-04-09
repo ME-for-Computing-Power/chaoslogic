@@ -96,37 +96,24 @@ class VerificationEngineerAssistant(BaseAssistant):
     def execute(self):
         self.clear_short_term_memory()
         self.env.delete_verification_binary()
-        self.call_llm("Observe and analyze the project situation, show me your observation and think", tools_enable=False)
+        #self.call_llm("Observe and analyze the project situation, show me your observation and think", tools_enable=False)
 
         while True:
             if (not self.env.is_verification_binary_exist()):
                 llm_message = self.call_llm("""
-                    Please submit your Testbench code.
-
-                    All Testbench code is assumed to be in a single tb.v file, and the top module is named tb.
-                    Your Testbench code should use assertion to check the correctness of the design.
-                    Your Testbench code will be automatically compile and run after submission, Please Note the Result.
-
+                    提交你的 Testbench。
+                    Testbench 中应利用 assertion 检查设计是否正确。
+                    提交后，Testbench将会编译并运行。
                     """, tools_enable=True)
             else:
                 llm_message = self.call_llm(f"""
-                There is a Testbench binary and the execution result
+                Testbench 编译、运行结果如下：
                 ```
                 {self.env.run_verification()}
                 ```
-                
-                Your duty is to create correct testbench code rather than to debug the design.
+                若 Testbench 本身存在问题，使用 submit_testbench 提交修改后的Testbench。
 
-                No matter the correctness of the design, you should write a verification report.
-
-                Please decide whether to:
-                
-                Write down your verification report - Use【write_verification_report】
-                
-                OR
-
-                Resubmit the testbench code - Use【submit_testbench】
-
+                当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则该错误应当写入测试报告中，使用 write_verification_report 提交测试报告。
                 """, tools_enable=True)
             for tool_call in llm_message.tool_calls:
                 tool_id, name, args = self.decode_tool_call(tool_call)

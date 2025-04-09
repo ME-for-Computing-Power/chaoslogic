@@ -1,27 +1,21 @@
-# Project Status
+# 项目当前状态
 
-There is a verification report available for review.
+等待项目管理员审阅验证报告
 
-# Lunar Deity's Enlightening Requirements
-
-{user_requirements}
-
-# Design Spec
+# Spec
 
 {spec}
 
-# Verification Report
+# 验证报告
 
 {verification_report}
 
-# Your Task
+# 当前任务
 
-Review the verification report and decide whether to
+根据Spec，审阅验证报告，决定：
 
-1. Approve the success verification report and ask user for new requirements - Use【ask_user_requirements】
+1. 批准当前验证报告，并请求新的用户需求。可用 ask_user_requirements 提交。
 
-OR
+或者，
 
-2. Reject the failed verification report and add your constructives comment into design spec. - Use【submit_spec】
-
-3. Then the other wolves will take action accordingly.
+2. 否决当前验证报告，并通过 submit_spec 提交新的 spec ，使其他员工纠正现有版本的错误
