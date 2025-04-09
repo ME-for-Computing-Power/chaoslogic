@@ -23,7 +23,7 @@ class DesignEngineerAssistant(BaseAssistant):
         md_content = md_content.replace('{user_requirements}', user_requirements)
         md_content = md_content.replace('{spec}', spec)
         #md_content = md_content.replace('{cmodel_code}', cmodel_code)
-
+        return md_content
 
     def get_system_prompt(self):
         return self.load_prompt('system_prompt.md')
