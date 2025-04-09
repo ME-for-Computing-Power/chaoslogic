@@ -79,6 +79,9 @@ class BaseAssistant(object):
             },
             *self.get_short_term_memory()
         ]
+        #Debugging
+        print("Final messages payload:")
+        print(json.dumps(messages, indent=2))
         completion = self.agent.model_client.chat.completions.create(
             model=self.agent.MODEL_NAME,
             messages=messages,
