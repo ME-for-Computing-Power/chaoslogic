@@ -64,8 +64,8 @@ class WolfSiliconAgent(object):
         try:
             while True:
                 res = self.project_manager_assistent.execute()
-                if res == "cmodel":
-                    self.cmodel_engineer_assistant.execute()
+                if res == "design":
+                    #self.cmodel_engineer_assistant.execute()
                     self.design_engineer_assistant.execute()
                     self.verification_engineer_assistant.execute()
                 else:

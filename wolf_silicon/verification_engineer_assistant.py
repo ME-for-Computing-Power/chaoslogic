@@ -1,4 +1,5 @@
 from base_assistant import BaseAssistant
+import os
 
 class VerificationEngineerAssistant(BaseAssistant):
     def __init__(self, agent) -> None:
@@ -6,106 +7,45 @@ class VerificationEngineerAssistant(BaseAssistant):
         self.name = "Verification Engineer Wolf"
         # State wait_verification, verification_outdated
         self.state = "wait_verification"
+        #define the path to prompt
+        self.prompt_path = os.path.join('prompt', 'veri_engineer')
+    
+    def load_prompt(self, filename) -> str:
+        with open(os.path.join(self.prompt_path,filename), 'r', encoding='utf-8') as f:
+            md_content = f.read()
+            
+        user_requirements_exist, user_requirements_mtime, user_requirements = self.env.get_user_requirements()
+        spec_exist, spec_mtime, spec = self.env.get_spec()
+        #cmodel_code_exist, cmodel_code_mtime, cmodel_code = self.env.get_cmodel_code()
+
+        md_content = md_content.replace('{user_requirements}', user_requirements)
+        md_content = md_content.replace('{spec}', spec)
+        #md_content = md_content.replace('{cmodel_code}', cmodel_code)
+
+        return md_content
     
     def get_system_prompt(self):
-        return """
-        In the vast plains, there is a pack of wolves skilled in hardware IP design.
-
-        You are the Verification Engineer Wolf among them. 
-        
-        Guided by the Lunar Deity, your project holds the promise of transforming into werewolves upon success.
-
-        Within the team are the Project Manager Wolf, CModel Engineer Wolf, and Design Engineer Wolf.
-
-        The Project Manager Wolf converts the Lunar Deity's enlightening requirements into a design specification.
-
-        The CModel Engineer Wolf provides a CModel that serves as a golden reference for your verification.
-
-        The Design Engineer Wolf converts the design specification into a Verilog IP Design.
-
-        You are responsible for verifying the Verilog IP Design.
-
-        You know that Design Engineer Wolf can sometimes be careless, so you always meticulously check the correctness of the design to avoid angering the Lunar Deity.
-
-        Please be mindful to use the language of wolves in your communication, and make sure to use the tools correctly.
-        """
+        return self.load_prompt('system_prompt.md')
         
     def get_long_term_memory(self):
         
         user_requirements_exist, user_requirements_mtime, user_requirements = self.env.get_user_requirements()
         spec_exist, spec_mtime, spec = self.env.get_spec()
-        cmodel_code_exist, cmodel_code_mtime, cmodel_code = self.env.get_cmodel_code()
+        #cmodel_code_exist, cmodel_code_mtime, cmodel_code = self.env.get_cmodel_code()
         design_code_exist, design_code_mtime, design_code = self.env.get_design_code()
         verification_report_exist, verification_report_mtime, verification_report = self.env.get_verification_report()
 
         if self.state == "wait_verification":
             assert(spec_exist)
-            assert(cmodel_code_exist)
+            #assert(cmodel_code_exist)
             assert(design_code_exist)
-            return f"""
-            # Project Status
-
-            Waiting for Verification Engineer Wolf's Report
-
-            # Lunar Deity's Enlightening Requirements
-
-            {user_requirements}
-
-            # Project Manager Wolf's Design Specification
-
-            {spec}
-
-            # CModel Engineer Wolf's CModel Code
-
-            ```
-            {cmodel_code}
-            ```
-
-            # CModel Engineer Wolf's CModel Excution Result
-
-            {self.env.compile_and_run_cmodel()}
-
-
-            # Your Task
-
-            1. Submit testbench code and review testbench result - Use【submit_testbench】
-
-            2. Write the verification report regarding the testbench result - Use【write_verification_report】
-
-            """
+            return self.load_prompt('create_tb.md')
         else:
             assert(spec_exist)
-            assert(cmodel_code_exist)
+            #assert(cmodel_code_exist)
             assert(design_code_exist)
             assert(verification_report_exist)
-            return f"""
-            # Project Status
-
-            The Verification Report is outdated.
-
-            # Lunar Deity's Enlightening Requirements
-
-            {user_requirements}
-
-            # Project Manager Wolf's NEW Design Specification
-
-            {spec}
-
-            # CModel Engineer Wolf's NEW CModel Code
-
-            {cmodel_code}
-
-            # CModel Engineer Wolf's NEW CModel Excution Result
-
-            {self.env.compile_and_run_cmodel()}
-
-            # Your Task
-
-            1. Submit testbench code and review testbench result - Use【submit_testbench】
-
-            2. Write the verification report regarding the testbench result - Use【write_verification_report】
-
-            """
+            return self.load_prompt('update_tb.md')
     
     def submit_testbench(self, code):
         self.env.manual_log(self.name, "提交了验证 Testbench 代码")

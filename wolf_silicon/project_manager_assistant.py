@@ -86,6 +86,7 @@ class ProjectManagerAssistant(BaseAssistant):
             tools.append(submit_spec)
         return tools
 
+#FSM-like
     def execute(self) -> str:
         self.clear_short_term_memory()
         self.call_llm("Observe and analyze the project situation, show me your observation and think", tools_enable=False)
@@ -99,7 +100,7 @@ class ProjectManagerAssistant(BaseAssistant):
                         self.env.manual_log(self.name, "提交了设计规格文档")
                         self.reflect_tool_call(tool_id, "success")
                         self.state = "review_verification_report"
-                        return "cmodel"
+                        return "design"
             elif self.state == "review_verification_report":
                 for tool_call in llm_message.tool_calls:
                     tool_id, name, args = self.decode_tool_call(tool_call)
@@ -111,7 +112,7 @@ class ProjectManagerAssistant(BaseAssistant):
                         self.env.manual_log(self.name, "更新了设计规格文档")
                         self.state = "review_verification_report"
                         self.reflect_tool_call(tool_id, "success")
-                        return "cmodel" 
+                        return "design" 
 
 
 

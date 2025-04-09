@@ -1,4 +1,5 @@
 from base_assistant import BaseAssistant
+import os
 
 class DesignEngineerAssistant(BaseAssistant):
     def __init__(self, agent) -> None:
@@ -8,95 +9,43 @@ class DesignEngineerAssistant(BaseAssistant):
         self.state = "wait_design"
         self.max_short_term_memory_len = 10
         self.is_lint_clean = False
+        #define the path to prompt
+        self.prompt_path = os.path.join('prompt', 'design_engineer')
     
+    def load_prompt(self, filename) -> str:
+        with open(os.path.join(self.prompt_path,filename), 'r', encoding='utf-8') as f:
+            md_content = f.read()
+            
+        user_requirements_exist, user_requirements_mtime, user_requirements = self.env.get_user_requirements()
+        spec_exist, spec_mtime, spec = self.env.get_spec()
+        #cmodel_code_exist, cmodel_code_mtime, cmodel_code = self.env.get_cmodel_code()
+
+        md_content = md_content.replace('{user_requirements}', user_requirements)
+        md_content = md_content.replace('{spec}', spec)
+        #md_content = md_content.replace('{cmodel_code}', cmodel_code)
+
+
     def get_system_prompt(self):
-        return """
-        In the vast plains, there is a pack of wolves skilled in hardware IP design.
-
-        You are the Design Engineer Wolf among them. 
-
-        You are skilled in converting design specifications into Verilog IP Designs.
-        
-        Guided by the Lunar Deity, your project holds the promise of transforming into werewolves upon success.
-
-        Within the team are the Project Manager Wolf, CModel Engineer Wolf, and Verification Engineer Wolf.
-
-        The Project Manager Wolf converts the Lunar Deity's enlightening requirements into a design specification.
-
-        The CModel Engineer Wolf provides a CModel that serves as a golden reference for your design.
-
-        You are responsible for converting the design specification into a Verilog IP Design.
-
-        Please be mindful to use the language of wolves in your communication, and make sure to use the tools correctly.
-        """
+        return self.load_prompt('system_prompt.md')
         
     def get_long_term_memory(self):
         
         spec_exist, spec_mtime, spec = self.env.get_spec()
         user_requirements_exist, user_requirements_mtime, user_requirements = self.env.get_user_requirements()
-        cmodel_code_exist, cmodel_code_mtime, cmodel_code = self.env.get_cmodel_code()
+        #cmodel_code_exist, cmodel_code_mtime, cmodel_code = self.env.get_cmodel_code()
         design_code_exist, design_code_mtime, design_code = self.env.get_design_code()
         verification_report_exist, verification_report_mtime, verification_report = self.env.get_verification_report()
 
         if self.state == "wait_design":
             assert(spec_exist)
-            assert(cmodel_code_exist)
-            return f"""
-            # Project Status
-
-            Waiting for Design Engineer Wolf's Design
-
-            # Lunar Deity's Enlightening Requirements
-
-            {user_requirements}
-
-            # Project Manager Wolf's Design Specification
-
-            {spec}
-
-            # CModel Engineer Wolf's CModel Code
-
-            {cmodel_code}
-
-            # CModel Engineer Wolf's CModel Excution Result
-
-            {self.env.compile_and_run_cmodel()}
-
-            # Your Task
-
-            Submit a Verilog Design - Use【submit_design】
-            """
+            #assert(cmodel_code_exist)
+            return self.load_prompt('create_design.md')
         else:
             assert(spec_exist)
-            assert(cmodel_code_exist)
+            #assert(cmodel_code_exist)
             assert(design_code_exist)
             assert(verification_report_exist)
-            return f"""
-            # Project Status
-
-            The Design is outdated.
-
-            # Lunar Deity's NEW Enlightening Requirements
-
-            {user_requirements}
-
-            # Project Manager Wolf's NEW Design Specification
-
-            {spec}
-
-            # CModel Engineer Wolf's NEW CModel Code
-
-            {cmodel_code}
-
-            # CModel Engineer Wolf's NEW CModel Excution Result
-
-            {self.env.compile_and_run_cmodel()}
-
-            # Your Task
-
-            Update your design - Use【submit_design】
-
-            """
+            return self.load_prompt('update_design.md')
     
     def submit_design(self, code):
         self.env.manual_log(self.name, "提交了 IP 设计代码")
