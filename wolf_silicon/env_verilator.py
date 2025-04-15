@@ -52,51 +52,51 @@ class WolfSiliconEnv(object):
         else:
             return False, 0, "No spec found."
     
-    def write_cmodel_code(self, code:str):
-        # 将 cmodel code 写入 {self._cmodel_path}/cmodel.cpp, 固定为 overwrite
-        with open(self._cmodel_code_path, "w") as f:
-            f.write(code+"\n")
+    # def write_cmodel_code(self, code:str):
+    #     # 将 cmodel code 写入 {self._cmodel_path}/cmodel.cpp, 固定为 overwrite
+    #     with open(self._cmodel_code_path, "w") as f:
+    #         f.write(code+"\n")
     
-    def get_cmodel_code(self) -> tuple[bool, float, str]:
-        # 返回 cmodel code 的内容和修改时间
-        if os.path.exists(self._cmodel_code_path):
-            mtime = os.path.getmtime(self._cmodel_code_path)
-            with open(self._cmodel_code_path, "r") as f:
-                return True, mtime, f.read()
-        else:
-            return False, 0, "No cmodel code found."
+    # def get_cmodel_code(self) -> tuple[bool, float, str]:
+    #     # 返回 cmodel code 的内容和修改时间
+    #     if os.path.exists(self._cmodel_code_path):
+    #         mtime = os.path.getmtime(self._cmodel_code_path)
+    #         with open(self._cmodel_code_path, "r") as f:
+    #             return True, mtime, f.read()
+    #     else:
+    #         return False, 0, "No cmodel code found."
     
-    def delete_cmodel_binary(self):
-        # 删除 {self._cmodel_path}/cmodel
-        if os.path.exists(self._cmodel_binary_path):
-            os.remove(self._cmodel_binary_path)
+    # def delete_cmodel_binary(self):
+    #     # 删除 {self._cmodel_path}/cmodel
+    #     if os.path.exists(self._cmodel_binary_path):
+    #         os.remove(self._cmodel_binary_path)
     
-    def is_cmodel_binary_exist(self) -> bool:
-        # 判断 {self._cmodel_path}/cmodel 是否存在
-        return os.path.exists(self._cmodel_binary_path)
+    # def is_cmodel_binary_exist(self) -> bool:
+    #     # 判断 {self._cmodel_path}/cmodel 是否存在
+    #     return os.path.exists(self._cmodel_binary_path)
     
-    def compile_cmodel(self) -> str:
-        # 获取 codebase 中所有 .cpp 文件
-        cpp_files = []
-        for filename in os.listdir(self._cmodel_path):
-            if filename.endswith('.cpp'):
-                cpp_files.append(os.path.join(self._cmodel_path,filename))
-        result = WolfSiliconEnv.execute_command(f"g++  {' '.join(cpp_files)} -I{self._cmodel_path} -o {self._cmodel_path}/cmodel", 300)
-        return result[-4*1024:]
+    # def compile_cmodel(self) -> str:
+    #     # 获取 codebase 中所有 .cpp 文件
+    #     cpp_files = []
+    #     for filename in os.listdir(self._cmodel_path):
+    #         if filename.endswith('.cpp'):
+    #             cpp_files.append(os.path.join(self._cmodel_path,filename))
+    #     result = WolfSiliconEnv.execute_command(f"g++  {' '.join(cpp_files)} -I{self._cmodel_path} -o {self._cmodel_path}/cmodel", 300)
+    #     return result[-4*1024:]
     
-    def run_cmodel(self, timeout_sec:int=180) -> str:
-        # 运行 cmodel binary
-        result = WolfSiliconEnv.execute_command(self._cmodel_binary_path, timeout_sec)
-        return result[-4*1024:]
+    # def run_cmodel(self, timeout_sec:int=180) -> str:
+    #     # 运行 cmodel binary
+    #     result = WolfSiliconEnv.execute_command(self._cmodel_binary_path, timeout_sec)
+    #     return result[-4*1024:]
     
-    def compile_and_run_cmodel(self):
-        self.delete_cmodel_binary()
-        compiler_output = self.compile_cmodel()
-        if not self.is_cmodel_binary_exist():
-            return f"# No cmodel binary found. Compile failed.\n Here is the compiler output \n{compiler_output}"
-        else:
-            cmodel_output = self.run_cmodel()
-            return f"# CModel compiled successfully. Please review the output from the run. \n{cmodel_output}"
+    # def compile_and_run_cmodel(self):
+    #     self.delete_cmodel_binary()
+    #     compiler_output = self.compile_cmodel()
+    #     if not self.is_cmodel_binary_exist():
+    #         return f"# No cmodel binary found. Compile failed.\n Here is the compiler output \n{compiler_output}"
+    #     else:
+    #         cmodel_output = self.run_cmodel()
+    #         return f"# CModel compiled successfully. Please review the output from the run. \n{cmodel_output}"
     
     def write_design_code(self, code:str):
         # 将 design code 写入 {self._design_path}/dut.v, 固定为 overwrite
@@ -252,13 +252,17 @@ class WolfSiliconEnv(object):
     #             print(log_content)
     #             f.write(log_content)
 
-    def manual_log(self, name, message, newline=True):
+    def manual_log(self, name, message):
         with open(self._log_path, "a") as f:
-            if newline:
-                log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                log_content = f"\n【 {log_time} name 】\n\n{message}"
-            else:
-                log_content = f"{message}"
+            chinese_name = {
+                "Project Manager Wolf": "项目头狼",
+                "CModel Engineer Wolf": "CModel工程狼",
+                "Design Engineer Wolf": "设计工程狼",
+                "Verification Engineer Wolf": "验证工程狼",
+                "User": "明月之神"
+            }[name]
+            log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            log_content = f"\n【 {log_time} {'🌕' if name == 'User' else '🐺'} {chinese_name} 】\n\n{message}\n\n"
             print(log_content)
             f.write(log_content)
 
