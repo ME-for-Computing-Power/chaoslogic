@@ -12,8 +12,8 @@ class WolfSiliconAgent(object):
                  user_design_code_path=None,
                  user_verification_code_path=None) -> None:
         # config
-        self.MODEL_NAME = "deepseek-chat"
-        self.TRANSLATION_MODEL_NAME = "deepseek-chat"
+        self.MODEL_NAME = "deepseek-reasoner"
+        self.TRANSLATION_MODEL_NAME = "deepseek-reasoner"
         self.MAX_SHORT_TERM_MEMORY = 10
         self.MAX_RETRY = 10
         self.MAX_TOKENS = 8000

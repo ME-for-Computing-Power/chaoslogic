@@ -32,37 +32,37 @@ class BaseAssistant(object):
         raise NotImplementedError(
             "get_system_prompt() method must be implemented by subclass.")
     
-    def decode_tool_call(self, tool_call):
-        return tool_call.id, tool_call.function.name, json.loads(tool_call.function.arguments)
+    # def decode_tool_call(self, tool_call):
+    #     return tool_call.id, tool_call.function.name, json.loads(tool_call.function.arguments)
     
-    def reflect_tool_call(self, id, result):
-        self.update_short_term_memory({
-            "role":"tool",
-            "tool_call_id":id,
-            "content":result
-        })
-        messages = [
-            {
-                "role": "system",
-                "content": self.get_system_prompt()
-            },
-            {
-                "role": "user",
-                "content": self.get_long_term_memory()
-            },
-            *self.get_short_term_memory()
-        ]
-        completion = self.agent.model_client.chat.completions.create(
-            model=self.agent.MODEL_NAME,
-            messages=messages,
-            tools=self.get_tools_description(),
-            tool_choice="none"
-        )
-        self.update_short_term_memory(completion.choices[0].message)
+    # def reflect_tool_call(self, id, result):
+    #     self.update_short_term_memory({
+    #         "role":"tool",
+    #         "tool_call_id":id,
+    #         "content":result
+    #     })
+    #     messages = [
+    #         {
+    #             "role": "system",
+    #             "content": self.get_system_prompt()
+    #         },
+    #         {
+    #             "role": "user",
+    #             "content": self.get_long_term_memory()
+    #         },
+    #         *self.get_short_term_memory()
+    #     ]
+    #     completion = self.agent.model_client.chat.completions.create(
+    #         model=self.agent.MODEL_NAME,
+    #         messages=messages,
+    #         tools=self.get_tools_description(),
+    #         tool_choice="none"
+    #     )
+    #     self.update_short_term_memory(completion.choices[0].message)
         #self.env.auto_message_log(self.name, completion.choices[0].message)
 
 
-    def call_llm(self, user_message, tools_enable):
+    def call_llm(self, user_message):
         self.env.manual_log(self.name, f"Message: {user_message}")
         self.update_short_term_memory({
             "role": "user",
@@ -79,16 +79,32 @@ class BaseAssistant(object):
             },
             *self.get_short_term_memory()
         ]
-        #Debugging
-        print("Final messages payload:")
-        print(messages)
-        completion = self.agent.model_client.chat.completions.create(
+        self.env.manual_log(self.name, f"Messages: {messages}")
+        response = self.agent.model_client.chat.completions.create(
             model=self.agent.MODEL_NAME,
             messages=messages,
             max_tokens=self.agent.MAX_TOKENS,
-            tools=self.get_tools_description(),
-            tool_choice="required" if tools_enable else "none"
+            stream=True
         )
-        self.update_short_term_memory(completion.choices[0].message)
+        status = 0
+        message = ""
+        for chunk in response:
+            for choice in chunk.choices:
+                # 先打印 reasoning_content
+                if hasattr(choice.delta, "reasoning_content"): 
+                    if(choice.delta.reasoning_content):
+                        if status != 1:
+                            status = 1
+                            self.env.manual_log(self.name, "思考：")
+                        self.env.manual_log(self.name, choice.delta.reasoning_content, False)
+                if hasattr(choice.delta, "content"):
+                    if(choice.delta.content):
+                        if status != 2:
+                            status = 2
+                            self.env.manual_log(self.name, "输出：")
+                        self.env.manual_log(self.name, choice.delta.content, False)
+                        message += choice.delta.content
+                
+        self.update_short_term_memory(message)
         #self.env.auto_message_log(self.name, completion.choices[0].message)
-        return completion.choices[0].message
+        return message
