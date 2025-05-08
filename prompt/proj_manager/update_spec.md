@@ -12,4 +12,4 @@
 
 # 当前任务
 
-根据客户需求更新Spec。Spec中不应有任何代码。可使用 submit_spec 提交该Spec。
+根据客户需求更新Spec。可使用 submit_spec 提交该Spec。
