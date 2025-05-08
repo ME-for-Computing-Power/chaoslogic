@@ -8,4 +8,4 @@
 
 # 当前任务
 
-根据客户需求完成Spec，其中应当包括该模块的Verilog IO定义。使用 submit_spec 以提交该Spec。
+根据客户需求，用中文完成Spec，其中应当包括该模块的Verilog IO定义。使用 submit_spec 以提交该Spec。
