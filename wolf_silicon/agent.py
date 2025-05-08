@@ -29,7 +29,7 @@ class WolfSiliconAgent(object):
         os.makedirs(self.cmodel_path, exist_ok=False)
         os.makedirs(self.design_path, exist_ok=False)
         os.makedirs(self.verification_path, exist_ok=False)
-        self.env = WolfSiliconEnv(self.doc_path, self.cmodel_path, 
+        self.env = WolfSiliconEnv(self.workspace_path, self.doc_path, self.cmodel_path, 
                                   self.design_path, self.verification_path, 
                                   self.model_client, self.TRANSLATION_MODEL_NAME)
         # 初始化环境

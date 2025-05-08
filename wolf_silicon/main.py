@@ -5,9 +5,14 @@ import datetime
 
 def create_workspace(rootpath):
     # 在rootpath创建一个以日期时间编号的 wksp_YYYYMMDD_HHMMSS 文件夹
-    workpath = os.path.join(rootpath, f"wksp_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}")
+    workpath = os.path.join(rootpath, f"wksp_{datetime.datetime.now().strftime('%m%d_%H%M')}")
     workpath = os.path.abspath(workpath)
     os.makedirs(workpath)
+    # 复制mkfile和filelist到工作目录
+    mkfile_path = os.path.join('makefile', "Makefile")
+    filelist_path = os.path.join('makefile', "filelist.f")
+    os.system(f"cp {mkfile_path} {workpath}")
+    os.system(f"cp {filelist_path} {workpath}")
     return workpath
 
 if __name__ == "__main__":
