@@ -53,6 +53,7 @@ class WolfSiliconEnv(object):
         else:
             return False, 0, "No spec found."
     
+
     # def write_cmodel_code(self, code:str):
     #     # 将 cmodel code 写入 {self._cmodel_path}/cmodel.cpp, 固定为 overwrite
     #     with open(self._cmodel_code_path, "w") as f:
@@ -98,6 +99,7 @@ class WolfSiliconEnv(object):
     #     else:
     #         cmodel_output = self.run_cmodel()
     #         return f"# CModel compiled successfully. Please review the output from the run. \n{cmodel_output}"
+
     
     def write_design_code(self, code:str):
         # 将 design code 写入 {self._design_path}/dut.v, 固定为 overwrite

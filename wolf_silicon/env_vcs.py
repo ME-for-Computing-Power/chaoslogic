@@ -4,7 +4,9 @@ import threading
 import queue
 import os
 import re
+
 import sys
+
 
 class WolfSiliconEnv(object):
     
@@ -273,6 +275,7 @@ class WolfSiliconEnv(object):
     #             log_content = f"\n【 {log_time} 🐺 {chinese_name} 】\n\n{self.translate_log(message.content)}\n\n"
     #             print(log_content)
     #             f.write(log_content)
+
 
     def manual_log(self, name, message, newline=True):
         with open(self._log_path, "a") as f:
