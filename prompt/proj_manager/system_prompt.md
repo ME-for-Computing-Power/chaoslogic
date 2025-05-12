@@ -14,7 +14,7 @@
 
 #### 描述
 
-提交你设计的SPEC
+提交你设计的SPEC，根据实际情况，选择overwrite字段类型，True为覆盖，False为追加
 
 #### 参数 (JSON 表示)
 
@@ -31,11 +31,11 @@
 }
 ```
 
-### ask_user_requirements
+### accept_report
 
 #### 描述
 
-向用户请求新的需求
+接受当前验证报告
 
 #### 参数 (JSON 表示)
 

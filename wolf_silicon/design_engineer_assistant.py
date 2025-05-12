@@ -70,10 +70,10 @@ class DesignEngineerAssistant(BaseAssistant):
         while True:
             if not self.ready_to_handover():
                 llm_message = self.call_llm("""
-                    使用外部工具提交你的设计。
+                    使用MCP提交你的设计。
                                             
                     设计应当仅在一个.v文件中存储，且符合verilog-2000标准。
-                    设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               
+                    设计的结果将送往语法检查。当没有语法错误时，设计即会通过               
                     """)
             elif not self.is_lint_clean:
                 llm_message = self.call_llm(f"""

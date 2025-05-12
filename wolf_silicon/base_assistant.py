@@ -13,7 +13,7 @@ class BaseAssistant(object):
         self.short_term_memory.append(msg)
         if len(self.short_term_memory) > self.max_short_term_memory_len:
             self.short_term_memory.pop(0)
-        while self.short_term_memory and self.short_term_memory[0]["role"] == "system":
+        while self.short_term_memory and self.short_term_memory[0]["role"] == "assistant":
             self.short_term_memory.pop(0)
 
     def clear_short_term_memory(self):

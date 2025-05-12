@@ -75,8 +75,8 @@ class ProjectManagerAssistant(BaseAssistant):
                 if llm_message["tool_call"]:
                     name = llm_message["tool_call"]["tool_name"]
                     args = llm_message["tool_call"]["parameters"]
-                    if name == "ask_lunar_requirements":
-                        self.state = "new_user_requirements"
+                    if name == "accept_report":
+                        #self.state = "new_user_requirements"
                         return "user"
                     elif name == "submit_spec":
                         self.env.write_spec(args["spec"], args["overwrite"])

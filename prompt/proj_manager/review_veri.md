@@ -14,7 +14,7 @@
 
 根据Spec，审阅验证报告，决定：
 
-1. 批准当前验证报告，并请求新的用户需求。可用 ask_user_requirements 提交。
+1. 批准当前验证报告，可用 accept_report 提交。
 
 或者，
 
