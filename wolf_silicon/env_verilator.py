@@ -191,17 +191,15 @@ class WolfSiliconEnv(object):
         else:
             return False, 0, "No verification report found."
     
-    def execute_command(command, timeout_sec):
+    def execute_command(self, command, timeout_sec):
         def target(q):
-            # 创建子进程
             proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
+            q.put(proc)  # 立即将proc放入队列
             try:
-                # 捕获输出和错误
                 stdout, stderr = proc.communicate()
-                # 将结果和进程对象放入.queue
-                q.put((stdout, stderr, proc))
+                q.put(('output', stdout, stderr))  # 发送输出结果
             except Exception as e:
-                q.put((None, str(e), proc))
+                q.put(('error', str(e)))
 
         q = queue.Queue()
         thread = threading.Thread(target=target, args=(q,))
@@ -209,38 +207,46 @@ class WolfSiliconEnv(object):
         thread.join(timeout_sec)
 
         if thread.is_alive():
-            # 如果线程还活着，则说明超时了
+            # 超时处理
             try:
-                stdout, stderr, proc = q.get_nowait()
+                proc = q.get_nowait()  # 获取proc
             except queue.Empty:
-                proc.terminate()
+                # 连proc都未创建，无法终止
                 thread.join()
-                return "**Process timed out without output**"
+                return "**进程在开始前就已经超时**"
+            
             # 终止进程
             proc.terminate()
             thread.join()
-            return f""" 
-            # stdout
-            ```
-            {stdout}
-            ```
-            # stderr
-            ```
-            {stderr}
-            ```
-            **Process timed out**
-            """
-
-        try:
-            # 获取结果
-            stdout, stderr, _ = q.get_nowait()
-        except queue.Empty:
-            return "**Process failed without output**"
-
-        if stderr:
-            return f"""# stdout\n```\n{stdout}\n```\n# stderr\n```\n{stderr}\n```"""
+            
+            # 尝试获取可能的输出或错误
+            try:
+                result = q.get_nowait()
+                if result[0] == 'output':
+                    stdout, stderr = result[1], result[2]
+                    return f"# stdout\n```\n{stdout}\n```\n# stderr\n```\n{stderr}\n```\n**进程超时**"
+                else:
+                    error_msg = result[1]
+                    return f"**进程报错:** {error_msg}\n**进程超时**"
+            except queue.Empty:
+                return "**进程超时且无输出**"
         else:
-            return f"# stdout\n```\n{stdout}\n```"
+            # 正常执行完成
+            try:
+                # 获取proc和结果
+                proc = q.get_nowait()
+                result_type = q.get_nowait()
+                if result_type[0] == 'output':
+                    stdout, stderr = result_type[1], result_type[2]
+                elif result_type[0] == 'error':
+                    return f"**进程完成，但报错:** {result_type[1]}"
+            except queue.Empty:
+                return "**进程完成且无输出**"
+            
+            if stderr:
+                return f"# stdout\n```\n{stdout}\n```\n# stderr\n```\n{stderr}\n```"
+            else:
+                return f"# stdout\n```\n{stdout}\n```"
     
     # def auto_message_log(self, name, message):
     #     if message.content:
