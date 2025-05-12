@@ -96,7 +96,7 @@ class DesignEngineerAssistant(BaseAssistant):
                 args = llm_message["tool_call"]["parameters"]
                 if name == "submit_design":
                     lint_output = self.submit_design(args["code"])
-                    self.reflect_tool_call(name, lint_output)
+                    #self.reflect_tool_call(name, lint_output)
                 elif name == "handover_to_verification":
                     self.state = "design_outdated"
                     return

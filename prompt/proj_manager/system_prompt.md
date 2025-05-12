@@ -22,11 +22,11 @@
 {
     "spec": {
         "type": "string", 
-        "description": "Design spec content, never insert verilog code here"
+        "description": "SPEC内容，切勿在此插入 Verilog 代码。"
     },
     "overwrite": {
         "type": "boolean", 
-        "description": "Overwrite the existing spec or append to it."
+        "description": "覆盖现有的SPEC或将其追加到现有SPEC中。"
     }
 }
 ```
