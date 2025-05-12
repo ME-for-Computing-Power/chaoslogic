@@ -59,9 +59,8 @@ class DesignEngineerAssistant(BaseAssistant):
             return f"Your code lint failed, please check the lint result: {lint_output}"
     
     def ready_to_handover(self) -> bool:
-        cmodel_code_exist, cmodel_code_mtime, _ = self.env.get_cmodel_code()
         design_code_exist, design_code_mtime, _ = self.env.get_design_code()
-        return design_code_exist and design_code_mtime > cmodel_code_mtime
+        return design_code_exist
     
     
     def execute(self):
