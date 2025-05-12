@@ -80,8 +80,6 @@ class BaseAssistant(object):
             *self.get_short_term_memory()
         ]
         #Debugging
-        print("Final messages payload:")
-        print(messages)
         completion = self.agent.model_client.chat.completions.create(
             model=self.agent.MODEL_NAME,
             messages=messages,
@@ -91,4 +89,8 @@ class BaseAssistant(object):
         )
         self.update_short_term_memory(completion.choices[0].message)
         #self.env.auto_message_log(self.name, completion.choices[0].message)
+        print("User input:")
+        print(user_message)
+        print("LLM response:")
+        print(completion.choices[0].message)
         return completion.choices[0].message

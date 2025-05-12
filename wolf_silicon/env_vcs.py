@@ -3,10 +3,12 @@ import subprocess
 import threading
 import queue
 import os
+import re
 
 class WolfSiliconEnv(object):
     
-    def __init__(self, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
+    def __init__(self, workspace_path:str, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
+        self._workspace_path = workspace_path
         self._doc_path = doc_path
         self._cmodel_path = cmodel_path
         self._design_path = design_path
@@ -17,8 +19,9 @@ class WolfSiliconEnv(object):
         self._cmodel_code_path = os.path.join(self._cmodel_path, "cmodel.cpp")
         self._cmodel_binary_path = os.path.join(self._cmodel_path, "cmodel")
         self._design_code_path = os.path.join(self._design_path, "dut.v")
+        self._design_filelist_path = os.path.join(self._design_path, "filelist")
         self._verification_code_path = os.path.join(self._verification_path, "tb.sv")
-        self._verification_binary_path = os.path.join(self._verification_path, "obj_dir","Vtb")
+        self._verification_binary_path = os.path.join(self._workspace_path, "simv")
         self._verification_report_path = os.path.join(self._doc_path, "verification_report.md")
         self._log_path = os.path.join(self._doc_path, "log.txt")
 
@@ -118,15 +121,22 @@ class WolfSiliconEnv(object):
         for filename in os.listdir(self._design_path):
             if filename.endswith('.v'):
                 v_files.append(os.path.join(self._design_path,filename))
-        # lint 不使用 execute command，直接使用 os.system
-        command = f"verilator -Wno-TIMESCALEMOD -Wno-DECLFILENAME --lint-only {' '.join(v_files)} -I{self._design_path}"
+        # 保存到 filelist 文件中
+        with open(self._design_filelist_path, "w") as f:
+            for filepath in v_files:
+                f.write(filepath + "\n")
+        # lint 不使用 execute command，直接使用 os.system vlogan -full64  -f filelist.f -l test.log
+        command = f"vlogan -full64  -f {self._design_filelist_path}"
         with subprocess.Popen(command.split(' '), 
                       stdout=subprocess.PIPE, 
                       stderr=subprocess.PIPE,
                       text=True) as process:
             stdout, stderr = process.communicate()
-            return (stdout + stderr).rstrip()
-        #return WolfSiliconEnv.execute_command(f"verilator -Wno-TIMESCALEMOD -Wno-DECLFILENAME --lint-only {' '.join(v_files)} -I{self._design_path}", 60)
+        output = stdout + stderr
+        # Remove the matched block
+        cleaned_log = re.sub(r'^.*?(Parsing design file .*)', r'\1', output, flags=re.DOTALL)
+        print(cleaned_log)
+        return cleaned_log
     
     def write_verification_code(self, code:str):
         # 将 verification code 写入 {self._verification_path}/tb.sv, 固定为 overwrite
@@ -150,24 +160,35 @@ class WolfSiliconEnv(object):
         for filename in os.listdir(self._design_path):
             if filename.endswith('.v'):
                 code_file.append(os.path.join(self._design_path, filename))
-        result = WolfSiliconEnv.execute_command(f"verilator -Wno-TIMESCALEMOD -Wno-DECLFILENAME --binary --build --timing {' '.join(code_file)} --top-module tb -I{self._verification_path} -I{self._design_code_path}  --sv -CFLAGS \"-fcoroutines\" --Mdir {self._verification_path}/obj_dir", 300)
-        return result[-4*1024:]
+        # # 保存到 filelist 文件中
+        # with open(self._design_filelist_path, "w") as f:
+        #     for filepath in code_file:
+        #         f.write(filepath + "\n")
+        current_path = os.getcwd()
+        os.chdir(self._workspace_path)
+        result = WolfSiliconEnv.execute_command(f"make run", 300)
+        os.chdir(current_path)
+        cleaned_log = re.sub(r'^.*?(Parsing design file .*)', r'\1', result, flags=re.DOTALL)
+        print(cleaned_log)
+        
+        return cleaned_log
 
     def is_verification_binary_exist(self) -> bool:
         return os.path.exists(self._verification_binary_path)
     
-    def run_verification(self, timeout_sec:int=10) -> str:
+    def run_verification(self, timeout_sec:int=300) -> str:
         result = WolfSiliconEnv.execute_command(self._verification_binary_path, timeout_sec)
-        return result[-4*1024:]
+        print(result)
+        return result
     
     def compile_and_run_verification(self) -> str:
         self.delete_verification_binary()
         compiler_output = self.compile_verification()
         if not self.is_verification_binary_exist():
-            return f"# No Vtb binary found. Compile failed.\n Here is the compiler output \n{compiler_output}"
+            return f"# 编译错误\n 报错如下：\n{compiler_output}"
         else:
             verification_output = self.run_verification()
-            return f"# Vtb compiled successfully. Please review the output from the run. \n{verification_output}"
+            return f"# 编译成功！\n 请审阅输出：\n{verification_output}"
     
     def delete_verification_binary(self):
         if os.path.exists(self._verification_binary_path):

@@ -1,8 +1,8 @@
-The game Lemmings involves critters with fairly simple brains. So simple that we are going to model it using a finite state machine.
-In the Lemmings' 2D world, Lemmings can be in one of two states: walking left or walking right. It will switch directions if it hits an obstacle. In particular, if a Lemming is bumped on the left, it will walk right. If it's bumped on the right, it will walk left. If it's bumped on both sides at the same time, it will still switch directions.
-Implement a Moore state machine with two states, two inputs, and one output that models this behaviour.
+用有限状态机（finite state machine）来模拟老鼠。
+在老鼠的二维世界中，它仅处于两种状态之一：向左走或向右走。如果遇到障碍物，它会改变方向。具体来说，如果老鼠撞到左边，它就会向右走；如果撞到右边，则会向左走；如果同时撞到两侧，它仍然会改变方向。
+实现一个具有两个状态、两个输入和一个输出的Moore型有限状态机，以模拟这种行为。
 
-Module Declaration
+模块声明：
 module top_module(
     input clk,
     input areset,    // Freshly brainwashed Lemmings walk left.

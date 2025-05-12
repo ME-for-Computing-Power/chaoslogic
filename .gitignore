@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 playground/
+work/
 
 __pycache__/
 *.py[cod]
@@ -165,3 +166,4 @@ cython_debug/
 playground/
 model_client.py
 to_fj_test.py
+ucli.key
