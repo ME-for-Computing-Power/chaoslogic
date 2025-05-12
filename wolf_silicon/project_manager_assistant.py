@@ -75,7 +75,7 @@ class ProjectManagerAssistant(BaseAssistant):
             "type": "function",
             "function": {
                 "name": "ask_lunar_requirements",
-                "description": "Ask lunar for new requirements.",
+                "description": "Ask user for new requirements.",
                 "strict": True
             }
         }
