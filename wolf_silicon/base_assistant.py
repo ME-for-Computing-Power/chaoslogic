@@ -79,8 +79,8 @@ class BaseAssistant(object):
             },
             *self.get_short_term_memory()
         ]
-        self.env.manual_log(self.name, f"Messages: {messages}")
-        response = self.agent.model_client.chat.completions.create(
+        #Debugging
+        completion = self.agent.model_client.chat.completions.create(
             model=self.agent.MODEL_NAME,
             messages=messages,
             max_tokens=self.agent.MAX_TOKENS,
@@ -107,4 +107,8 @@ class BaseAssistant(object):
                 
         self.update_short_term_memory(message)
         #self.env.auto_message_log(self.name, completion.choices[0].message)
-        return message
+        print("User input:")
+        print(user_message)
+        print("LLM response:")
+        print(completion.choices[0].message)
+        return completion.choices[0].message
