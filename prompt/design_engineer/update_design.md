@@ -8,4 +8,4 @@
 
 # 当前任务
 
-根据客户需求更新Spec。Spec中不应有任何代码。可使用 submit_spec 提交该Spec。
+根据更新后的Spec迭代RTL代码，并用 submit_design 提交。提交中只能有Verilog代码。
