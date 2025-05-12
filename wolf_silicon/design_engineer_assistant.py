@@ -4,7 +4,7 @@ import os
 class DesignEngineerAssistant(BaseAssistant):
     def __init__(self, agent) -> None:
         super().__init__(agent)
-        self.name = "Design Engineer Wolf"
+        self.name = "设计工程师"
         # State wait_design, design_outdated
         self.state = "wait_design"
         self.max_short_term_memory_len = 10
@@ -63,37 +63,6 @@ class DesignEngineerAssistant(BaseAssistant):
         design_code_exist, design_code_mtime, _ = self.env.get_design_code()
         return design_code_exist and design_code_mtime > cmodel_code_mtime
     
-    def get_tools_description(self):
-        
-        submit_design = {
-            "type": "function",
-            "function": {
-                "name": "submit_design",
-                "description": "Submit Your Verilog Design Code. The Design Code Saved in a single .v file. Your Design Code will be lint automatically after submission.",
-                "strict": True,
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "code": {"type": "string", "description": "Design Verilog Code"}
-                    },
-                    "required": ["code"],
-                    "additionalProperties": False
-                }
-            }
-        }
-        handover_to_verification = {
-            "type": "function",
-            "function": {
-                "name": "handover_to_verification",
-                "description": "Handover the Design to the Verification Engineer Wolf for further verification.",
-                "strict": True
-            }
-        }
-
-        if self.ready_to_handover():
-            return [submit_design, handover_to_verification]
-        else:
-            return [submit_design]
     
     def execute(self):
         self.clear_short_term_memory()
@@ -106,7 +75,7 @@ class DesignEngineerAssistant(BaseAssistant):
                                             
                     设计应当仅在一个.v文件中存储，且符合verilog-2000标准。
                     设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               
-                    """, tools_enable=True)
+                    """)
             elif not self.is_lint_clean:
                 llm_message = self.call_llm(f"""
                     刚才的代码中存在语法错误：
@@ -115,19 +84,20 @@ class DesignEngineerAssistant(BaseAssistant):
                     ```
                     修改错误，并用 submit_design 重新提交。
 
-                    """, tools_enable=True)
+                    """)
             else:
                 llm_message = self.call_llm(f"""
                     刚才的代码中没有语法错误。
                                                 
                     若仍要修改，则使用 submit_design 重新提交。
                     若确认无误，则使用 handover_to_verification提交验证部门。
-                    """, tools_enable=True) 
-            for tool_call in llm_message.tool_calls:
-                tool_id, name, args = self.decode_tool_call(tool_call)
+                    """) 
+            if llm_message["tool_call"]:
+                name = llm_message["tool_call"]["tool_name"]
+                args = llm_message["tool_call"]["parameters"]
                 if name == "submit_design":
                     lint_output = self.submit_design(args["code"])
-                    self.reflect_tool_call(tool_id, lint_output)
+                    self.reflect_tool_call(name, lint_output)
                 elif name == "handover_to_verification":
                     self.state = "design_outdated"
                     return
