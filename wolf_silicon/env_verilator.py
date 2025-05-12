@@ -3,10 +3,11 @@ import subprocess
 import threading
 import queue
 import os
+import sys
 
 class WolfSiliconEnv(object):
     
-    def __init__(self, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
+    def __init__(self, workspace_path:str, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
         self._doc_path = doc_path
         self._cmodel_path = cmodel_path
         self._design_path = design_path
@@ -17,7 +18,6 @@ class WolfSiliconEnv(object):
         self._cmodel_code_path = os.path.join(self._cmodel_path, "cmodel.cpp")
         self._cmodel_binary_path = os.path.join(self._cmodel_path, "cmodel")
         self._design_code_path = os.path.join(self._design_path, "dut.v")
-        self._design_filelist_path = os.path.join(self._design_path, "filelist")
         self._verification_code_path = os.path.join(self._verification_path, "tb.sv")
         self._verification_binary_path = os.path.join(self._verification_path, "obj_dir","Vtb")
         self._verification_report_path = os.path.join(self._doc_path, "verification_report.md")
@@ -53,51 +53,53 @@ class WolfSiliconEnv(object):
         else:
             return False, 0, "No spec found."
     
-    def write_cmodel_code(self, code:str):
-        # 将 cmodel code 写入 {self._cmodel_path}/cmodel.cpp, 固定为 overwrite
-        with open(self._cmodel_code_path, "w") as f:
-            f.write(code+"\n")
+
+    # def write_cmodel_code(self, code:str):
+    #     # 将 cmodel code 写入 {self._cmodel_path}/cmodel.cpp, 固定为 overwrite
+    #     with open(self._cmodel_code_path, "w") as f:
+    #         f.write(code+"\n")
     
-    def get_cmodel_code(self) -> tuple[bool, float, str]:
-        # 返回 cmodel code 的内容和修改时间
-        if os.path.exists(self._cmodel_code_path):
-            mtime = os.path.getmtime(self._cmodel_code_path)
-            with open(self._cmodel_code_path, "r") as f:
-                return True, mtime, f.read()
-        else:
-            return False, 0, "No cmodel code found."
+    # def get_cmodel_code(self) -> tuple[bool, float, str]:
+    #     # 返回 cmodel code 的内容和修改时间
+    #     if os.path.exists(self._cmodel_code_path):
+    #         mtime = os.path.getmtime(self._cmodel_code_path)
+    #         with open(self._cmodel_code_path, "r") as f:
+    #             return True, mtime, f.read()
+    #     else:
+    #         return False, 0, "No cmodel code found."
     
-    def delete_cmodel_binary(self):
-        # 删除 {self._cmodel_path}/cmodel
-        if os.path.exists(self._cmodel_binary_path):
-            os.remove(self._cmodel_binary_path)
+    # def delete_cmodel_binary(self):
+    #     # 删除 {self._cmodel_path}/cmodel
+    #     if os.path.exists(self._cmodel_binary_path):
+    #         os.remove(self._cmodel_binary_path)
     
-    def is_cmodel_binary_exist(self) -> bool:
-        # 判断 {self._cmodel_path}/cmodel 是否存在
-        return os.path.exists(self._cmodel_binary_path)
+    # def is_cmodel_binary_exist(self) -> bool:
+    #     # 判断 {self._cmodel_path}/cmodel 是否存在
+    #     return os.path.exists(self._cmodel_binary_path)
     
-    def compile_cmodel(self) -> str:
-        # 获取 codebase 中所有 .cpp 文件
-        cpp_files = []
-        for filename in os.listdir(self._cmodel_path):
-            if filename.endswith('.cpp'):
-                cpp_files.append(os.path.join(self._cmodel_path,filename))
-        result = WolfSiliconEnv.execute_command(f"g++  {' '.join(cpp_files)} -I{self._cmodel_path} -o {self._cmodel_path}/cmodel", 300)
-        return result[-4*1024:]
+    # def compile_cmodel(self) -> str:
+    #     # 获取 codebase 中所有 .cpp 文件
+    #     cpp_files = []
+    #     for filename in os.listdir(self._cmodel_path):
+    #         if filename.endswith('.cpp'):
+    #             cpp_files.append(os.path.join(self._cmodel_path,filename))
+    #     result = WolfSiliconEnv.execute_command(f"g++  {' '.join(cpp_files)} -I{self._cmodel_path} -o {self._cmodel_path}/cmodel", 300)
+    #     return result[-4*1024:]
     
-    def run_cmodel(self, timeout_sec:int=180) -> str:
-        # 运行 cmodel binary
-        result = WolfSiliconEnv.execute_command(self._cmodel_binary_path, timeout_sec)
-        return result[-4*1024:]
+    # def run_cmodel(self, timeout_sec:int=180) -> str:
+    #     # 运行 cmodel binary
+    #     result = WolfSiliconEnv.execute_command(self._cmodel_binary_path, timeout_sec)
+    #     return result[-4*1024:]
     
-    def compile_and_run_cmodel(self):
-        self.delete_cmodel_binary()
-        compiler_output = self.compile_cmodel()
-        if not self.is_cmodel_binary_exist():
-            return f"# No cmodel binary found. Compile failed.\n Here is the compiler output \n{compiler_output}"
-        else:
-            cmodel_output = self.run_cmodel()
-            return f"# CModel compiled successfully. Please review the output from the run. \n{cmodel_output}"
+    # def compile_and_run_cmodel(self):
+    #     self.delete_cmodel_binary()
+    #     compiler_output = self.compile_cmodel()
+    #     if not self.is_cmodel_binary_exist():
+    #         return f"# No cmodel binary found. Compile failed.\n Here is the compiler output \n{compiler_output}"
+    #     else:
+    #         cmodel_output = self.run_cmodel()
+    #         return f"# CModel compiled successfully. Please review the output from the run. \n{cmodel_output}"
+
     
     def write_design_code(self, code:str):
         # 将 design code 写入 {self._design_path}/dut.v, 固定为 overwrite
@@ -119,19 +121,16 @@ class WolfSiliconEnv(object):
         for filename in os.listdir(self._design_path):
             if filename.endswith('.v'):
                 v_files.append(os.path.join(self._design_path,filename))
-        # 保存到 filelist 文件中
-        with open(self._design_filelist_path, "w") as f:
-            for filepath in v_files:
-                f.write(filepath + "\n")
-        # lint 不使用 execute command，直接使用 os.system vlogan -full64  -f filelist.f -l test.log
-        command = f"vlogan -full64  -f {self._design_filelist_path}"
+        # lint 不使用 execute command，直接使用 os.system
+        command = f"verilator -Wno-TIMESCALEMOD -Wno-DECLFILENAME --lint-only {' '.join(v_files)} -I{self._design_path}"
         with subprocess.Popen(command.split(' '), 
                       stdout=subprocess.PIPE, 
                       stderr=subprocess.PIPE,
                       text=True) as process:
             stdout, stderr = process.communicate()
             return (stdout + stderr).rstrip()
-
+        #return WolfSiliconEnv.execute_command(f"verilator -Wno-TIMESCALEMOD -Wno-DECLFILENAME --lint-only {' '.join(v_files)} -I{self._design_path}", 60)
+    
     def write_verification_code(self, code:str):
         # 将 verification code 写入 {self._verification_path}/tb.sv, 固定为 overwrite
         with open(self._verification_code_path, "w") as f:
@@ -191,7 +190,7 @@ class WolfSiliconEnv(object):
         else:
             return False, 0, "No verification report found."
     
-    def execute_command(self, command, timeout_sec):
+    def execute_command(command, timeout_sec):
         def target(q):
             proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
             q.put(proc)  # 立即将proc放入队列
@@ -262,18 +261,15 @@ class WolfSiliconEnv(object):
     #             print(log_content)
     #             f.write(log_content)
 
-    def manual_log(self, name, message):
+    def manual_log(self, name, message, newline=True):
         with open(self._log_path, "a") as f:
-            chinese_name = {
-                "Project Manager Wolf": "项目头狼",
-                "CModel Engineer Wolf": "CModel工程狼",
-                "Design Engineer Wolf": "设计工程狼",
-                "Verification Engineer Wolf": "验证工程狼",
-                "User": "明月之神"
-            }[name]
-            log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            log_content = f"\n【 {log_time} {'🌕' if name == 'User' else '🐺'} {chinese_name} 】\n\n{message}\n\n"
-            print(log_content)
+            if newline:
+                log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                log_content = f"\n【 {log_time} {name} 】\n\n{message}"
+            else:
+                log_content = f"{message}"
+            print(log_content, end="")
+            sys.stdout.flush()
             f.write(log_content)
 
     

@@ -35,7 +35,7 @@ class VerificationEngineerAssistant(BaseAssistant):
         design_code_exist, design_code_mtime, design_code = self.env.get_design_code()
         verification_report_exist, verification_report_mtime, verification_report = self.env.get_verification_report()
 
-        if self.state == "wait_verification":
+        if self.state == "wait_verification" or self.state == "review_testbench":
             assert(spec_exist)
             #assert(cmodel_code_exist)
             assert(design_code_exist)
@@ -50,48 +50,6 @@ class VerificationEngineerAssistant(BaseAssistant):
     def submit_testbench(self, code):
         self.env.manual_log(self.name, "提交了验证 Testbench 代码")
         self.env.write_verification_code(code)
-        compile_run_output = self.env.compile_and_run_verification()
-        return compile_run_output
-    
-    def get_tools_description(self):
-        
-        submit_testbench = {
-            "type": "function",
-            "function": {
-                "name": "submit_testbench",
-                "description": "Submit Your Testbench Code. The Testbench Saved in a tb.v file. Your testbench code will compile and run automatically, please note the result.",
-                "strict": True,
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "code": {"type": "string", "description": "Testbench Code"}
-                    },
-                    "required": ["code"],
-                    "additionalProperties": False
-                }
-            }
-        }
-        write_verification_report = {
-            "type": "function",
-            "function": {
-                "name": "write_verification_report",
-                "description": "Write down your verification report",
-                "strict": True,
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "report": {"type": "string", "description": "Verification Report"}
-                    },
-                    "required": ["report"],
-                    "additionalProperties": False
-                }
-            }
-        }
-
-        if self.env.is_verification_binary_exist():
-            return [submit_testbench, write_verification_report]
-        else:
-            return [submit_testbench]
     
     def execute(self):
         self.clear_short_term_memory()
@@ -99,30 +57,32 @@ class VerificationEngineerAssistant(BaseAssistant):
         #self.call_llm("Observe and analyze the project situation, show me your observation and think", tools_enable=False)
 
         while True:
-            if (not self.env.is_verification_binary_exist()):
+            if (self.state == "wait_verification" or self.state == "verification_outdated"):
                 llm_message = self.call_llm("""
                     提交你的 Testbench。
                     Testbench 中应利用 assertion 检查设计是否正确。
                     提交后，Testbench将会编译并运行。
-                    """, tools_enable=True)
-            else:
+                    """)
+            elif(self.state == "review_testbench"):
                 llm_message = self.call_llm(f"""
                 Testbench 编译、运行结果如下：
                 ```
-                {self.env.run_verification()}
+                {self.env.compile_and_run_verification()}
                 ```
                 若 Testbench 本身存在问题，使用 submit_testbench 提交修改后的Testbench。
 
                 当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则该错误应当写入测试报告中，使用 write_verification_report 提交测试报告。
-                """, tools_enable=True)
-            for tool_call in llm_message.tool_calls:
-                tool_id, name, args = self.decode_tool_call(tool_call)
+                """)
+            if llm_message["tool_call"]:
+                name = llm_message["tool_call"]["tool_name"]
+                args = llm_message["tool_call"]["parameters"]
                 if name == "submit_testbench":
-                    output = self.submit_testbench(args["code"])
-                    self.reflect_tool_call(tool_id, output)
+                    self.submit_testbench(args["code"])
+                    #self.reflect_tool_call(name, output)
+                    self.state = "review_testbench"
                 elif name == "write_verification_report":
                     self.env.write_verification_report(args["report"])
-                    self.reflect_tool_call(tool_id, "success")
+                    #self.reflect_tool_call(name, "success")
                     self.state = "verification_outdated"
                     return
                 

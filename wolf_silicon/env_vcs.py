@@ -5,6 +5,9 @@ import queue
 import os
 import re
 
+import sys
+
+
 class WolfSiliconEnv(object):
     
     def __init__(self, workspace_path:str, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
@@ -273,18 +276,16 @@ class WolfSiliconEnv(object):
     #             print(log_content)
     #             f.write(log_content)
 
-    def manual_log(self, name, message):
+
+    def manual_log(self, name, message, newline=True):
         with open(self._log_path, "a") as f:
-            chinese_name = {
-                "Project Manager Wolf": "项目头狼",
-                "CModel Engineer Wolf": "CModel工程狼",
-                "Design Engineer Wolf": "设计工程狼",
-                "Verification Engineer Wolf": "验证工程狼",
-                "User": "明月之神"
-            }[name]
-            log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            log_content = f"\n【 {log_time} {'🌕' if name == 'User' else '🐺'} {chinese_name} 】\n\n{message}\n\n"
-            print(log_content)
+            if newline:
+                log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                log_content = f"\n【 {log_time} {name} 】\n\n{message}"
+            else:
+                log_content = f"{message}"
+            print(log_content, end="")
+            sys.stdout.flush()
             f.write(log_content)
 
     

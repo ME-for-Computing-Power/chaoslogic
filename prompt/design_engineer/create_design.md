@@ -10,4 +10,4 @@
 
 # 当前任务
 
-根据Spec设计Verilog RTL代码，并用 submit_design 提交。提交中只能有Verilog代码。
+根据Spec设计Verilog RTL代码，输出只包含RTL代码，并以原始文本而不是通过markdown进行输出。
