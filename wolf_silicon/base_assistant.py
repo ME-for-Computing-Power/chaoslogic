@@ -1,4 +1,5 @@
 import json
+import re
 
 class BaseAssistant(object):
 
@@ -98,8 +99,10 @@ class BaseAssistant(object):
         
         return ret
 
-    def process_code(self, code):
-        return code.replace("```json", "").replace("```", "")
+    def process_code(code):
+        pattern = r"```json\s+(.*?)\s+```"
+        matches = re.findall(pattern, code, re.DOTALL)
+        return matches
     
     def call_llm(self, user_message):
         self.env.manual_log(self.name, f"Message: {user_message}")
