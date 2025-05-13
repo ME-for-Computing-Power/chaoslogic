@@ -99,10 +99,10 @@ class BaseAssistant(object):
         
         return ret
 
-    def process_code(code):
+    def process_code(self, code):
         pattern = r"```json\s+(.*?)\s+```"
         matches = re.findall(pattern, code, re.DOTALL)
-        return matches
+        return matches[0]
     
     def call_llm(self, user_message):
         self.env.manual_log(self.name, f"Message: {user_message}")
