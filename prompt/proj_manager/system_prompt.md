@@ -22,7 +22,7 @@
 {
     "spec": {
         "type": "string", 
-        "description": "SPEC内容，切勿在此插入 Verilog 代码。"
+        "description": "SPEC内容"
     },
     "overwrite": {
         "type": "boolean", 

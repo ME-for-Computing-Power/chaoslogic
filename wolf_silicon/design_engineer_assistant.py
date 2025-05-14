@@ -13,7 +13,9 @@ class DesignEngineerAssistant(BaseAssistant):
         self.prompt_path = os.path.join('prompt', 'design_engineer')
     
     def load_prompt(self, filename) -> str:
-        with open(os.path.join(self.prompt_path,filename), 'r', encoding='utf-8') as f:
+        prompt_path = os.path.join(self.prompt_path,filename)
+        print("Loading prompt from ", prompt_path)
+        with open(prompt_path, 'r', encoding='utf-8') as f:
             md_content = f.read()
             
         user_requirements_exist, user_requirements_mtime, user_requirements = self.env.get_user_requirements()
