@@ -3,11 +3,10 @@ import subprocess
 import threading
 import queue
 import os
-import sys
 
 class WolfSiliconEnv(object):
     
-    def __init__(self, workspace_path:str, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
+    def __init__(self, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
         self._doc_path = doc_path
         self._cmodel_path = cmodel_path
         self._design_path = design_path
@@ -269,11 +268,10 @@ class WolfSiliconEnv(object):
         with open(self._log_path, "a") as f:
             if newline:
                 log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                log_content = f"\n【 {log_time} {name} 】\n\n{message}"
+                log_content = f"\n【 {log_time} name 】\n\n{message}"
             else:
                 log_content = f"{message}"
-            print(log_content, end="")
-            sys.stdout.flush()
+            print(log_content)
             f.write(log_content)
 
     
