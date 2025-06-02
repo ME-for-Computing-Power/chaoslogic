@@ -37,7 +37,7 @@ class VerificationEngineerAssistant(BaseAssistant):
         design_code_exist, design_code_mtime, design_code = self.env.get_design_code()
         verification_report_exist, verification_report_mtime, verification_report = self.env.get_verification_report()
 
-        if self.state == "wait_verification" or self.state == "review_testbench":
+        if self.state == "wait_verification":
             assert(spec_exist)
             #assert(cmodel_code_exist)
             assert(design_code_exist)
@@ -52,6 +52,8 @@ class VerificationEngineerAssistant(BaseAssistant):
     def submit_testbench(self, code):
         self.env.manual_log(self.name, "提交了验证 Testbench 代码")
         self.env.write_verification_code(code)
+        compile_run_output = self.env.compile_and_run_verification()
+        return compile_run_output
     
     def execute(self):
         self.clear_short_term_memory()
@@ -59,17 +61,17 @@ class VerificationEngineerAssistant(BaseAssistant):
         #self.call_llm("Observe and analyze the project situation, show me your observation and think", tools_enable=False)
 
         while True:
-            if (self.state == "wait_verification" or self.state == "verification_outdated"):
+            if (not self.env.is_verification_binary_exist()):
                 llm_message = self.call_llm("""
                     提交你的 Testbench。
                     Testbench 中应利用 assertion 检查设计是否正确。
                     提交后，Testbench将会编译并运行。
                     """)
-            elif(self.state == "review_testbench"):
+            else:
                 llm_message = self.call_llm(f"""
                 Testbench 编译、运行结果如下：
                 ```
-                {self.env.compile_and_run_verification()}
+                {self.env.run_verification()}
                 ```
                 若 Testbench 本身存在问题，使用 submit_testbench 提交修改后的Testbench。
 
@@ -79,12 +81,11 @@ class VerificationEngineerAssistant(BaseAssistant):
                 name = llm_message["tool_call"]["tool_name"]
                 args = llm_message["tool_call"]["parameters"]
                 if name == "submit_testbench":
-                    self.submit_testbench(args["code"])
-                    #self.reflect_tool_call(name, output)
-                    self.state = "review_testbench"
+                    output = self.submit_testbench(args["code"])
+                    self.reflect_tool_call(name, output)
                 elif name == "write_verification_report":
                     self.env.write_verification_report(args["report"])
-                    #self.reflect_tool_call(name, "success")
+                    self.reflect_tool_call(name, "success")
                     self.state = "verification_outdated"
                     return
                 

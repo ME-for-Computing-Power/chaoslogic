@@ -190,7 +190,7 @@ class WolfSiliconEnv(object):
         else:
             return False, 0, "No verification report found."
     
-    def execute_command(command, timeout_sec):
+    def execute_command(self, command, timeout_sec):
         def target(q):
             proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
             q.put(proc)  # 立即将proc放入队列

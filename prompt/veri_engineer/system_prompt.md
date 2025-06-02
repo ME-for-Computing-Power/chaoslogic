@@ -43,7 +43,7 @@ Testbench module 的名字固定为 `tb` 。
     "report": 
     {
         "type": "string", 
-        "description": "验证报告"
+        "description": "Verification Report"
     }
 }
 ```

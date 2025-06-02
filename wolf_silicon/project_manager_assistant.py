@@ -65,7 +65,7 @@ class ProjectManagerAssistant(BaseAssistant):
                     if name == "submit_spec":
                         self.env.write_spec(args["spec"], args["overwrite"])
                         self.env.manual_log(self.name, "提交了设计规格文档")
-                        #self.reflect_tool_call(name, "success")
+                        self.reflect_tool_call(name, "success")
                         self.state = "review_verification_report"
                         return "design"
                     else:
@@ -82,7 +82,7 @@ class ProjectManagerAssistant(BaseAssistant):
                         self.env.write_spec(args["spec"], args["overwrite"])
                         self.env.manual_log(self.name, "更新了设计规格文档")
                         self.state = "review_verification_report"
-                        #self.reflect_tool_call(name, "success")
+                        self.reflect_tool_call(name, "success")
                         return "design" 
 
 

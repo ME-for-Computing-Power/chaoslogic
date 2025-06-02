@@ -26,7 +26,7 @@
     },
     "overwrite": {
         "type": "boolean", 
-        "description": "覆盖现有的SPEC或将其追加到现有SPEC中。"
+        "description": "Overwrite the existing spec or append to it."
     }
 }
 ```
