@@ -93,9 +93,9 @@ class ProjectManagerAssistant(BaseAssistant):
         self.clear_short_term_memory()
         #self.call_llm("分析项目情况，给出你的观察和想法", tools_enable=False)
         while True:
-            llm_message = self.call_llm("使用外部工具提交Spec", tools_enable=True)
+            llm_message, func_call_list = self.call_llm("使用外部工具提交Spec", tools_enable=True)
             if self.state == "wait_spec" or self.state == "new_user_requirements":
-                for tool_call in llm_message.tool_calls:
+                for tool_call in func_call_list:
                     tool_id, name, args = self.decode_tool_call(tool_call)
                     if name == "submit_spec":
                         self.env.write_spec(args["spec"], args["overwrite"])

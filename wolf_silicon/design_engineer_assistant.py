@@ -103,14 +103,14 @@ class DesignEngineerAssistant(BaseAssistant):
         self.is_lint_clean = False
         while True:
             if not self.ready_to_handover():
-                llm_message = self.call_llm("""
+                llm_message, func_call_list = self.call_llm("""
                     使用MCP提交你的设计。
                                             
                     设计应当仅在一个.v文件中存储，且符合verilog-2000标准。
                     设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               
                     """, tools_enable=True)
             elif not self.is_lint_clean:
-                llm_message = self.call_llm(f"""
+                llm_message, func_call_list = self.call_llm(f"""
                     刚才的代码中存在语法错误：
                     ```
                     {self.env.lint_design()}
@@ -119,13 +119,13 @@ class DesignEngineerAssistant(BaseAssistant):
 
                     """, tools_enable=True)
             else:
-                llm_message = self.call_llm(f"""
+                llm_message, func_call_list = self.call_llm(f"""
                     刚才的代码中没有语法错误。
                                                 
                     若仍要修改，则使用 submit_design 重新提交。
                     若确认无误，则使用 handover_to_verification提交验证部门。
                     """, tools_enable=True) 
-            for tool_call in llm_message.tool_calls:
+            for tool_call in func_call_list:
                 tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_design":
                     lint_output = self.submit_design(args["code"])
