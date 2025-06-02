@@ -38,33 +38,33 @@ class BaseAssistant(object):
     # def decode_tool_call(self, tool_call):
     #     return tool_call.id, tool_call.function.name, json.loads(tool_call.function.arguments)
     
-    def reflect_tool_call(self, name, result):
-        self.call_llm("RESPONSE:\n" + json.dumps({
-                "tool_call": {
-                    "name": name,
-                    "result": result
-                }
-            }))
+    # def reflect_tool_call(self, id, result):
+    #     self.update_short_term_memory({
+    #         "role":"tool",
+    #         "tool_call_id":id,
+    #         "content":result
+    #     })
+    #     messages = [
+    #         {
+    #             "role": "system",
+    #             "content": self.get_system_prompt()
+    #         },
+    #         {
+    #             "role": "user",
+    #             "content": self.get_long_term_memory()
+    #         },
+    #         *self.get_short_term_memory()
+    #     ]
+    #     completion = self.agent.model_client.chat.completions.create(
+    #         model=self.agent.MODEL_NAME,
+    #         messages=messages,
+    #         tools=self.get_tools_description(),
+    #         tool_choice="none"
+    #     )
+    #     self.update_short_term_memory(completion.choices[0].message)
+        #self.env.auto_message_log(self.name, completion.choices[0].message)
 
-    def process_message(self, message):
-        #判断message的第一行
-        ret = {}
-        if message.startswith("TYPE: ANSWER"):
-            ret["content"] = "\n".join(message.split("\n")[1:])
-        elif message.startswith("TYPE: MCP"):
-            code = self.process_code("\n".join(message.split("\n")[1:]))
-            tool_call = json.loads(code)
-            ret["tool_call"] = tool_call
-        else:
-            raise ValueError("Invalid message format")
-        
-        return ret
 
-    def process_code(self, code):
-        pattern = r"```json\s+(.*?)\s+```"
-        matches = re.findall(pattern, code, re.DOTALL)
-        return matches[0]
-    
     def call_llm(self, user_message):
         self.env.manual_log(self.name, f"Message: {user_message}")
         self.update_short_term_memory({
@@ -77,7 +77,7 @@ class BaseAssistant(object):
                 "content": self.get_system_prompt()
             },
             {
-                "role": "system",
+                "role": "user",
                 "content": self.get_long_term_memory()
             },
             *self.get_short_term_memory()
@@ -108,10 +108,6 @@ class BaseAssistant(object):
                         self.env.manual_log(self.name, choice.delta.content, False)
                         message += choice.delta.content
                 
-        self.update_short_term_memory({   
-            "role": "assistant",
-            "content": message
-        })
-        
+        self.update_short_term_memory(message)
         #self.env.auto_message_log(self.name, completion.choices[0].message)
-        return self.process_message(message)
+        return message
