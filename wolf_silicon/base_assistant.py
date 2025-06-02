@@ -35,13 +35,14 @@ class BaseAssistant(object):
         raise NotImplementedError(
             "get_system_prompt() method must be implemented by subclass.")
     
-    # def decode_tool_call(self, tool_call):
-    #     return tool_call.id, tool_call.function.name, json.loads(tool_call.function.arguments)
+    def decode_tool_call(self, tool_call):
+        return tool_call["id"], tool_call["function"]["name"], json.loads(tool_call["function"]["arguments"])
     
-    def reflect_tool_call(self, name, result):
+    def reflect_tool_call(self, id, result):
         self.update_short_term_memory({
-            "role": "user",
-            "content": f"RESPONSE:{result}\n"
+            "role":"tool",
+            "tool_call_id":id,
+            "content":result
         })
         messages = [
             {
@@ -49,7 +50,7 @@ class BaseAssistant(object):
                 "content": self.get_system_prompt()
             },
             {
-                "role": "system",
+                "role": "user",
                 "content": self.get_long_term_memory()
             },
             *self.get_short_term_memory()
@@ -59,52 +60,18 @@ class BaseAssistant(object):
             model=self.agent.MODEL_NAME,
             messages=messages,
             max_tokens=self.agent.MAX_TOKENS,
-            stream=True
+            stream=True,
+            tools=self.get_tools_description(),
+            tool_choice = "none"
         )
-        status = 0
-        message = ""
-        for chunk in response:
-            for choice in chunk.choices:
-                # 先打印 reasoning_content
-                if hasattr(choice.delta, "reasoning_content"): 
-                    if(choice.delta.reasoning_content):
-                        if status != 1:
-                            status = 1
-                            self.env.manual_log(self.name, "思考：")
-                        self.env.manual_log(self.name, choice.delta.reasoning_content, False)
-                if hasattr(choice.delta, "content"):
-                    if(choice.delta.content):
-                        if status != 2:
-                            status = 2
-                            self.env.manual_log(self.name, "输出：")
-                        self.env.manual_log(self.name, choice.delta.content, False)
-                        message += choice.delta.content
-                
-        self.update_short_term_memory({   
+        message, func_call_list= self.handle_chat_response(response) 
+        self.update_short_term_memory({
             "role": "assistant",
             "content": message
         })
 
-    def process_message(self, message):
-        #判断message的第一行
-        ret = {}
-        if message.startswith("TYPE: ANSWER"):
-            ret["content"] = "\n".join(message.split("\n")[1:])
-        elif message.startswith("TYPE: MCP"):
-            code = self.process_code("\n".join(message.split("\n")[1:]))
-            tool_call = json.loads(code)
-            ret["tool_call"] = tool_call
-        else:
-            raise ValueError("Invalid message format")
-        
-        return ret
 
-    def process_code(self, code):
-        pattern = r"```json\s+(.*?)\s+```"
-        matches = re.findall(pattern, code, re.DOTALL)
-        return matches[0]
-    
-    def call_llm(self, user_message):
+    def call_llm(self, user_message,tools_enable=False):
         self.env.manual_log(self.name, f"Message: {user_message}")
         self.update_short_term_memory({
             "role": "user",
@@ -116,7 +83,7 @@ class BaseAssistant(object):
                 "content": self.get_system_prompt()
             },
             {
-                "role": "system",
+                "role": "user",
                 "content": self.get_long_term_memory()
             },
             *self.get_short_term_memory()
@@ -126,31 +93,54 @@ class BaseAssistant(object):
             model=self.agent.MODEL_NAME,
             messages=messages,
             max_tokens=self.agent.MAX_TOKENS,
-            stream=True
+            stream=True,
+            tools=self.get_tools_description(),
+            tool_choice = "auto" if tools_enable else "none"
         )
+        message, func_call_list = self.handle_chat_response(response) 
+        self.update_short_term_memory({
+            "role": "assistant",
+            "content": message,
+            "tool_calls": func_call_list
+        })
+        return message, func_call_list
+
+    def handle_chat_response(self, response):
         status = 0
         message = ""
+        func_call_list = []
+        tool_status = 0
         for chunk in response:
             for choice in chunk.choices:
-                # 先打印 reasoning_content
-                if hasattr(choice.delta, "reasoning_content"): 
-                    if(choice.delta.reasoning_content):
-                        if status != 1:
-                            status = 1
-                            self.env.manual_log(self.name, "思考：")
-                        self.env.manual_log(self.name, choice.delta.reasoning_content, False)
-                if hasattr(choice.delta, "content"):
-                    if(choice.delta.content):
-                        if status != 2:
-                            status = 2
-                            self.env.manual_log(self.name, "输出：")
-                        self.env.manual_log(self.name, choice.delta.content, False)
-                        message += choice.delta.content
-                
-        self.update_short_term_memory({   
-            "role": "assistant",
-            "content": message
-        })
-        
-        #self.env.auto_message_log(self.name, completion.choices[0].message)
-        return self.process_message(message)
+                if hasattr(choice.delta, "tool_calls") and choice.delta.tool_calls:
+                    for tcchunk in choice.delta.tool_calls:
+                        if len(func_call_list) <= tcchunk.index:
+                            func_call_list.append({
+                                "id": "",
+                                "name": "",
+                                "type": "function", 
+                                "function": { "name": "", "arguments": "" } 
+                            })
+                        tc = func_call_list[tcchunk.index]
+                        if tcchunk.id:
+                            tc["id"] += tcchunk.id
+                        if tcchunk.function.name:
+                            tc["function"]["name"] += tcchunk.function.name
+                        if tcchunk.function.arguments:
+                            if tool_status == 0:
+                                tool_status = 1
+                                self.env.manual_log(self.name, "调用工具：")
+                            tc["function"]["arguments"] += tcchunk.function.arguments 
+                            self.env.manual_log(self.name, tcchunk.function.arguments, False)
+                if hasattr(choice.delta, "reasoning_content") and choice.delta.reasoning_content:
+                    if status != 1:
+                        status = 1
+                        self.env.manual_log(self.name, "思考：")
+                    self.env.manual_log(self.name, choice.delta.reasoning_content, False)
+                if hasattr(choice.delta, "content") and choice.delta.content:
+                    if status != 2:
+                        status = 2
+                        self.env.manual_log(self.name, "输出：")
+                    self.env.manual_log(self.name, choice.delta.content, False)
+                    message += choice.delta.content
+        return message,func_call_list

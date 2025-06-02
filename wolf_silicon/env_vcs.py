@@ -278,7 +278,7 @@ class WolfSiliconEnv(object):
 
 
     def manual_log(self, name, message, newline=True):
-        with open(self._log_path, "a") as f:
+       with open(self._log_path, "a") as f:
             if newline:
                 log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 log_content = f"\n【 {log_time} {name} 】\n\n{message}"

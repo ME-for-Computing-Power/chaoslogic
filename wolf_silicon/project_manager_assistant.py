@@ -12,7 +12,7 @@ class ProjectManagerAssistant(BaseAssistant):
     
     def load_prompt(self, filename) -> str:
         prompt_path = os.path.join(self.prompt_path,filename)
-        print("Loading prompt from ", prompt_path)
+        # print("Loading prompt from ", prompt_path)
         with open(prompt_path, 'r', encoding='utf-8') as f:
             md_content = f.read()
             
@@ -52,37 +52,71 @@ class ProjectManagerAssistant(BaseAssistant):
             assert (verification_report_exist)
             return self.load_prompt('update_spec.md')
 
+    def get_tools_description(self):
+        tools = []
+        submit_spec = {
+            "type": "function",
+            "function": {
+                "name": "submit_spec",
+                "description": "提交SPEC文档。",
+                "strict": True,
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "spec": {"type": "string", "description": "SPEC文档内容，不要在这里插入verilog代码"},
+                        "overwrite": {"type": "boolean", "description": "true表示覆盖现有的SPEC，false表示将其追加到现有SPEC中"}
+                    },
+                    "required": ["spec", "overwrite"],
+                    "additionalProperties": False
+                }
+            }
+        }
+        ask_user_requirements = {
+            "type": "function",
+            "function": {
+                "name": "ask_user_requirements",
+                "description": "向用户提出新的需求。",
+                "strict": True
+            }
+        }
+        if self.state == "wait_spec":
+            tools.append(submit_spec)
+        elif self.state == "review_verification_report":
+            tools.append(ask_user_requirements)
+            tools.append(submit_spec)
+        else:
+            tools.append(submit_spec)
+        return tools
+
 #FSM-like
     def execute(self) -> str:
         self.clear_short_term_memory()
         #self.call_llm("分析项目情况，给出你的观察和想法", tools_enable=False)
         while True:
+            llm_message, func_call_list = self.call_llm("使用工具提交Spec", tools_enable=True)
+            print(func_call_list)
             if self.state == "wait_spec" or self.state == "new_user_requirements":
-                llm_message = self.call_llm("使用外部工具提交Spec")
-                if llm_message["tool_call"]:
-                    name = llm_message["tool_call"]["tool_name"]
-                    args = llm_message["tool_call"]["parameters"]
+                for tool_call in func_call_list:
+                    tool_id, name, args = self.decode_tool_call(tool_call)
                     if name == "submit_spec":
                         self.env.write_spec(args["spec"], args["overwrite"])
                         self.env.manual_log(self.name, "提交了设计规格文档")
-                        #self.reflect_tool_call(name, "success")
+                        self.reflect_tool_call(tool_id, "success")
                         self.state = "review_verification_report"
                         return "design"
                     else:
                         raise Exception("未知的Function Call")
             elif self.state == "review_verification_report":
-                llm_message = self.call_llm("审阅验证报告，并调用合适的工具")
-                if llm_message["tool_call"]:
-                    name = llm_message["tool_call"]["tool_name"]
-                    args = llm_message["tool_call"]["parameters"]
-                    if name == "accept_report":
-                        #self.state = "new_user_requirements"
+                for tool_call in llm_message.tool_calls:
+                    tool_id, name, args = self.decode_tool_call(tool_call)
+                    if name == "ask_user_requirements":
+                        self.state = "new_user_requirements"
                         return "user"
                     elif name == "submit_spec":
                         self.env.write_spec(args["spec"], args["overwrite"])
                         self.env.manual_log(self.name, "更新了设计规格文档")
                         self.state = "review_verification_report"
-                        #self.reflect_tool_call(name, "success")
+                        self.reflect_tool_call(tool_id, "success")
                         return "design" 
 
 

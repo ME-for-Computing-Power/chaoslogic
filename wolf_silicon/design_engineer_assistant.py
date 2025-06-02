@@ -14,7 +14,7 @@ class DesignEngineerAssistant(BaseAssistant):
     
     def load_prompt(self, filename) -> str:
         prompt_path = os.path.join(self.prompt_path,filename)
-        print("Loading prompt from ", prompt_path)
+        # print("Loading prompt from ", prompt_path)
         with open(prompt_path, 'r', encoding='utf-8') as f:
             md_content = f.read()
             
@@ -61,9 +61,41 @@ class DesignEngineerAssistant(BaseAssistant):
             return f"Your code lint failed, please check the lint result: {lint_output}"
     
     def ready_to_handover(self) -> bool:
+        cmodel_code_exist, cmodel_code_mtime, _ = self.env.get_cmodel_code()
         design_code_exist, design_code_mtime, _ = self.env.get_design_code()
-        return design_code_exist
+        return design_code_exist and design_code_mtime > cmodel_code_mtime
     
+    def get_tools_description(self):
+        
+        submit_design = {
+            "type": "function",
+            "function": {
+                "name": "submit_design",
+                "description": "提交你的 Verilog 设计代码。设计代码将保存在一个 .v 文件中。你的设计代码在提交后会自动进行语法检查。",
+                "strict": True,
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "code": {"type": "string", "description": "Verilog设计代码"}
+                    },
+                    "required": ["code"],
+                    "additionalProperties": False
+                }
+            }
+        }
+        handover_to_verification = {
+            "type": "function",
+            "function": {
+                "name": "handover_to_verification",
+                "description": "将设计交接给验证工程师进行后续验证。",
+                "strict": True
+            }
+        }
+
+        if self.ready_to_handover():
+            return [submit_design, handover_to_verification]
+        else:
+            return [submit_design]
     
     def execute(self):
         self.clear_short_term_memory()
@@ -71,34 +103,33 @@ class DesignEngineerAssistant(BaseAssistant):
         self.is_lint_clean = False
         while True:
             if not self.ready_to_handover():
-                llm_message = self.call_llm("""
-                    使用MCP提交你的设计。
+                llm_message, func_call_list = self.call_llm("""
+                    使用工具提交你的设计。
                                             
                     设计应当仅在一个.v文件中存储，且符合verilog-2000标准。
-                    设计的结果将送往语法检查。当没有语法错误时，设计即会通过               
-                    """)
+                    设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               
+                    """, tools_enable=True)
             elif not self.is_lint_clean:
-                llm_message = self.call_llm(f"""
+                llm_message, func_call_list = self.call_llm(f"""
                     刚才的代码中存在语法错误：
                     ```
                     {self.env.lint_design()}
                     ```
                     修改错误，并用 submit_design 重新提交。
 
-                    """)
+                    """, tools_enable=True)
             else:
-                llm_message = self.call_llm(f"""
+                llm_message, func_call_list = self.call_llm(f"""
                     刚才的代码中没有语法错误。
                                                 
                     若仍要修改，则使用 submit_design 重新提交。
                     若确认无误，则使用 handover_to_verification提交验证部门。
-                    """) 
-            if llm_message["tool_call"]:
-                name = llm_message["tool_call"]["tool_name"]
-                args = llm_message["tool_call"]["parameters"]
+                    """, tools_enable=True) 
+            for tool_call in func_call_list:
+                tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_design":
                     lint_output = self.submit_design(args["code"])
-                    #self.reflect_tool_call(name, lint_output)
+                    self.reflect_tool_call(tool_id, lint_output)
                 elif name == "handover_to_verification":
                     self.state = "design_outdated"
                     return

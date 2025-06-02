@@ -1,4 +1,4 @@
-from env_vcs import WolfSiliconEnv
+from env_verilator import WolfSiliconEnv
 import os
 from project_manager_assistant import ProjectManagerAssistant
 from cmodel_engineer_assistant import CModelEngineerAssistant
@@ -16,7 +16,7 @@ class WolfSiliconAgent(object):
         self.TRANSLATION_MODEL_NAME = "deepseek-reasoner"
         self.MAX_SHORT_TERM_MEMORY = 10
         self.MAX_RETRY = 10
-        self.MAX_TOKENS = 8000
+        self.MAX_TOKENS = 32000
         # connect to model_client
         self.model_client = mc
         # 在 workspace 目录下创建doc、cmodel、design、verification文件夹

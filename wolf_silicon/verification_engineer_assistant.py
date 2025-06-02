@@ -4,7 +4,7 @@ import os
 class VerificationEngineerAssistant(BaseAssistant):
     def __init__(self, agent) -> None:
         super().__init__(agent)
-        self.name = "Verification Engineer Wolf"
+        self.name = "验证工程师"
         # State wait_verification, verification_outdated
         self.state = "wait_verification"
         #define the path to prompt
@@ -12,7 +12,7 @@ class VerificationEngineerAssistant(BaseAssistant):
     
     def load_prompt(self, filename) -> str:
         prompt_path = os.path.join(self.prompt_path,filename)
-        print("Loading prompt from ", prompt_path)
+        # print("Loading prompt from ", prompt_path)
         with open(prompt_path, 'r', encoding='utf-8') as f:
             md_content = f.read()
             
@@ -37,7 +37,7 @@ class VerificationEngineerAssistant(BaseAssistant):
         design_code_exist, design_code_mtime, design_code = self.env.get_design_code()
         verification_report_exist, verification_report_mtime, verification_report = self.env.get_verification_report()
 
-        if self.state == "wait_verification" or self.state == "review_testbench":
+        if self.state == "wait_verification" or self.state == "review_testbench_1":
             assert(spec_exist)
             #assert(cmodel_code_exist)
             assert(design_code_exist)
@@ -52,6 +52,44 @@ class VerificationEngineerAssistant(BaseAssistant):
     def submit_testbench(self, code):
         self.env.manual_log(self.name, "提交了验证 Testbench 代码")
         self.env.write_verification_code(code)
+        compile_run_output = self.env.compile_and_run_verification()
+        return compile_run_output
+    
+    def get_tools_description(self):
+        
+        submit_testbench = {
+            "type": "function",
+            "function": {
+                "name": "submit_testbench",
+                "description": "提交你的 Testbench 代码。Testbench 将保存在一个 tb.v 文件中。你的 Testbench 代码会自动编译并运行，请注意运行结果。",
+                "strict": True,
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "code": {"type": "string", "description": "Testbench代码"}
+                    },
+                    "required": ["code"],
+                    "additionalProperties": False
+                }
+            }
+        }
+        write_verification_report = {
+            "type": "function",
+            "function": {
+                "name": "write_verification_report",
+                "description": "撰写验证报告。",
+                "strict": True,
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "report": {"type": "string", "description": "验证报告"}
+                    },
+                    "required": ["report"],
+                    "additionalProperties": False
+                }
+            }
+        }
+        return [submit_testbench, write_verification_report]
     
     def execute(self):
         self.clear_short_term_memory()
@@ -60,31 +98,33 @@ class VerificationEngineerAssistant(BaseAssistant):
 
         while True:
             if (self.state == "wait_verification" or self.state == "verification_outdated"):
-                llm_message = self.call_llm("""
-                    提交你的 Testbench。
+                llm_message, func_call_list = self.call_llm("""
+                    使用工具提交 Testbench。
                     Testbench 中应利用 assertion 检查设计是否正确。
                     提交后，Testbench将会编译并运行。
-                    """)
-            elif(self.state == "review_testbench"):
-                llm_message = self.call_llm(f"""
+                    """, tools_enable=True)
+            else:
+                llm_message, func_call_list = self.call_llm(f"""
                 Testbench 编译、运行结果如下：
                 ```
-                {self.env.compile_and_run_verification()}
+                {self.env.run_verification()}
                 ```
                 若 Testbench 本身存在问题，使用 submit_testbench 提交修改后的Testbench。
 
                 当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则该错误应当写入测试报告中，使用 write_verification_report 提交测试报告。
-                """)
-            if llm_message["tool_call"]:
-                name = llm_message["tool_call"]["tool_name"]
-                args = llm_message["tool_call"]["parameters"]
+                """, tools_enable=True)
+            for tool_call in func_call_list:
+                tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_testbench":
-                    self.submit_testbench(args["code"])
-                    #self.reflect_tool_call(name, output)
-                    self.state = "review_testbench"
+                    output = self.submit_testbench(args["code"])
+                    self.reflect_tool_call(tool_id, output)
+                    if self.state == "wait_verification":
+                        self.state = "review_testbench_1"
+                    elif self.state == "verification_outdated":
+                        self.state = "review_testbench_2"
                 elif name == "write_verification_report":
                     self.env.write_verification_report(args["report"])
-                    #self.reflect_tool_call(name, "success")
+                    self.reflect_tool_call(tool_id, "success")
                     self.state = "verification_outdated"
                     return
                 
