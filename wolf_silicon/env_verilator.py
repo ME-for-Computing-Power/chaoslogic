@@ -84,12 +84,12 @@ class WolfSiliconEnv(object):
         for filename in os.listdir(self._cmodel_path):
             if filename.endswith('.cpp'):
                 cpp_files.append(os.path.join(self._cmodel_path,filename))
-        result = WolfSiliconEnv.execute_command(f"g++  {' '.join(cpp_files)} -I{self._cmodel_path} -o {self._cmodel_path}/cmodel", 300)
+        result = self.execute_command(f"g++  {' '.join(cpp_files)} -I{self._cmodel_path} -o {self._cmodel_path}/cmodel", 300)
         return result[-4*1024:]
     
     def run_cmodel(self, timeout_sec:int=180) -> str:
         # 运行 cmodel binary
-        result = WolfSiliconEnv.execute_command(self._cmodel_binary_path, timeout_sec)
+        result = self.execute_command(self._cmodel_binary_path, timeout_sec)
         return result[-4*1024:]
     
     # def compile_and_run_cmodel(self):
@@ -127,7 +127,7 @@ class WolfSiliconEnv(object):
             for filepath in v_files:
                 f.write(filepath + "\n")
         # lint 不使用 execute command，直接使用 os.system vlogan -full64  -f filelist.f -l test.log
-        command = f"vlogan -full64  -f {self._design_filelist_path}"
+        command = f"verilator -Wno-TIMESCALEMOD -Wno-DECLFILENAME --lint-only {' '.join(v_files)} -I{self._design_path}"
         with subprocess.Popen(command.split(' '), 
                       stdout=subprocess.PIPE, 
                       stderr=subprocess.PIPE,
@@ -157,14 +157,14 @@ class WolfSiliconEnv(object):
         for filename in os.listdir(self._design_path):
             if filename.endswith('.v'):
                 code_file.append(os.path.join(self._design_path, filename))
-        result = WolfSiliconEnv.execute_command(f"verilator -Wno-TIMESCALEMOD -Wno-DECLFILENAME --binary --build --timing {' '.join(code_file)} --top-module tb -I{self._verification_path} -I{self._design_code_path}  --sv -CFLAGS \"-fcoroutines\" --Mdir {self._verification_path}/obj_dir", 300)
+        result = self.execute_command(f"verilator -Wno-TIMESCALEMOD -Wno-DECLFILENAME --binary --build --timing {' '.join(code_file)} --top-module tb -I{self._verification_path} -I{self._design_code_path}  --sv -CFLAGS \"-fcoroutines\" --Mdir {self._verification_path}/obj_dir", 300)
         return result[-4*1024:]
 
     def is_verification_binary_exist(self) -> bool:
         return os.path.exists(self._verification_binary_path)
     
     def run_verification(self, timeout_sec:int=10) -> str:
-        result = WolfSiliconEnv.execute_command(self._verification_binary_path, timeout_sec)
+        result = self.execute_command(self._verification_binary_path, timeout_sec)
         return result[-4*1024:]
     
     def compile_and_run_verification(self) -> str:

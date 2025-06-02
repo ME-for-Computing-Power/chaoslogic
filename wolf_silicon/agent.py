@@ -1,4 +1,4 @@
-from env_vcs import WolfSiliconEnv
+from env_verilator import WolfSiliconEnv
 import os
 from project_manager_assistant import ProjectManagerAssistant
 from cmodel_engineer_assistant import CModelEngineerAssistant

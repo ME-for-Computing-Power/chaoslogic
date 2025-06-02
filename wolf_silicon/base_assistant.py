@@ -55,6 +55,7 @@ class BaseAssistant(object):
             },
             *self.get_short_term_memory()
         ]
+        self.env.manual_log(self.name, f"Messages: {messages}")
         response = self.agent.model_client.chat.completions.create(
             model=self.agent.MODEL_NAME,
             messages=messages,
@@ -63,7 +64,7 @@ class BaseAssistant(object):
             tools=self.get_tools_description(),
             tool_choice = "none"
         )
-        message= self.handle_chat_response(response) 
+        message, func_call_list= self.handle_chat_response(response) 
         self.update_short_term_memory({
             "role": "assistant",
             "content": message
