@@ -4,7 +4,7 @@ import os
 class DesignEngineerAssistant(BaseAssistant):
     def __init__(self, agent) -> None:
         super().__init__(agent)
-        self.name = "Design Engineer Wolf"
+        self.name = "设计工程师"
         # State wait_design, design_outdated
         self.state = "wait_design"
         self.max_short_term_memory_len = 10
@@ -14,7 +14,7 @@ class DesignEngineerAssistant(BaseAssistant):
     
     def load_prompt(self, filename) -> str:
         prompt_path = os.path.join(self.prompt_path,filename)
-        print("Loading prompt from ", prompt_path)
+        # print("Loading prompt from ", prompt_path)
         with open(prompt_path, 'r', encoding='utf-8') as f:
             md_content = f.read()
             
@@ -71,12 +71,12 @@ class DesignEngineerAssistant(BaseAssistant):
             "type": "function",
             "function": {
                 "name": "submit_design",
-                "description": "Submit Your Verilog Design Code. The Design Code Saved in a single .v file. Your Design Code will be lint automatically after submission.",
+                "description": "提交你的 Verilog 设计代码。设计代码将保存在一个 .v 文件中。你的设计代码在提交后会自动进行语法检查。",
                 "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "code": {"type": "string", "description": "Design Verilog Code"}
+                        "code": {"type": "string", "description": "Verilog设计代码"}
                     },
                     "required": ["code"],
                     "additionalProperties": False
@@ -87,7 +87,7 @@ class DesignEngineerAssistant(BaseAssistant):
             "type": "function",
             "function": {
                 "name": "handover_to_verification",
-                "description": "Handover the Design to the Verification Engineer Wolf for further verification.",
+                "description": "将设计交接给验证工程师进行后续验证。",
                 "strict": True
             }
         }
@@ -104,7 +104,7 @@ class DesignEngineerAssistant(BaseAssistant):
         while True:
             if not self.ready_to_handover():
                 llm_message, func_call_list = self.call_llm("""
-                    使用MCP提交你的设计。
+                    使用工具提交你的设计。
                                             
                     设计应当仅在一个.v文件中存储，且符合verilog-2000标准。
                     设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               

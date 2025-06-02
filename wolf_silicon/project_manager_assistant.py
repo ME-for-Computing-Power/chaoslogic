@@ -4,7 +4,7 @@ import os
 class ProjectManagerAssistant(BaseAssistant):
     def __init__(self, agent) -> None:
         super().__init__(agent)
-        self.name = "Project Manager Wolf"
+        self.name = "项目经理"
         #State: wait_spec, review_verification_report, new_user_requirements.
         self.state = "wait_spec"
         #define the path to prompt
@@ -12,7 +12,7 @@ class ProjectManagerAssistant(BaseAssistant):
     
     def load_prompt(self, filename) -> str:
         prompt_path = os.path.join(self.prompt_path,filename)
-        print("Loading prompt from ", prompt_path)
+        # print("Loading prompt from ", prompt_path)
         with open(prompt_path, 'r', encoding='utf-8') as f:
             md_content = f.read()
             
@@ -58,13 +58,13 @@ class ProjectManagerAssistant(BaseAssistant):
             "type": "function",
             "function": {
                 "name": "submit_spec",
-                "description": "Submit your design spec.",
+                "description": "提交SPEC文档。",
                 "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "spec": {"type": "string", "description": "Design spec content, never insert verilog code here"},
-                        "overwrite": {"type": "boolean", "description": "Overwrite the existing spec or append to it."}
+                        "spec": {"type": "string", "description": "SPEC文档内容，不要在这里插入verilog代码"},
+                        "overwrite": {"type": "boolean", "description": "true表示覆盖现有的SPEC，false表示将其追加到现有SPEC中"}
                     },
                     "required": ["spec", "overwrite"],
                     "additionalProperties": False
@@ -74,8 +74,8 @@ class ProjectManagerAssistant(BaseAssistant):
         ask_user_requirements = {
             "type": "function",
             "function": {
-                "name": "ask_lunar_requirements",
-                "description": "Ask user for new requirements.",
+                "name": "ask_user_requirements",
+                "description": "向用户提出新的需求。",
                 "strict": True
             }
         }
@@ -93,7 +93,8 @@ class ProjectManagerAssistant(BaseAssistant):
         self.clear_short_term_memory()
         #self.call_llm("分析项目情况，给出你的观察和想法", tools_enable=False)
         while True:
-            llm_message, func_call_list = self.call_llm("使用外部工具提交Spec", tools_enable=True)
+            llm_message, func_call_list = self.call_llm("使用工具提交Spec", tools_enable=True)
+            print(func_call_list)
             if self.state == "wait_spec" or self.state == "new_user_requirements":
                 for tool_call in func_call_list:
                     tool_id, name, args = self.decode_tool_call(tool_call)
@@ -108,7 +109,7 @@ class ProjectManagerAssistant(BaseAssistant):
             elif self.state == "review_verification_report":
                 for tool_call in llm_message.tool_calls:
                     tool_id, name, args = self.decode_tool_call(tool_call)
-                    if name == "ask_lunar_requirements":
+                    if name == "ask_user_requirements":
                         self.state = "new_user_requirements"
                         return "user"
                     elif name == "submit_spec":

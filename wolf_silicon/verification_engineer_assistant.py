@@ -4,7 +4,7 @@ import os
 class VerificationEngineerAssistant(BaseAssistant):
     def __init__(self, agent) -> None:
         super().__init__(agent)
-        self.name = "Verification Engineer Wolf"
+        self.name = "验证工程师"
         # State wait_verification, verification_outdated
         self.state = "wait_verification"
         #define the path to prompt
@@ -12,7 +12,7 @@ class VerificationEngineerAssistant(BaseAssistant):
     
     def load_prompt(self, filename) -> str:
         prompt_path = os.path.join(self.prompt_path,filename)
-        print("Loading prompt from ", prompt_path)
+        # print("Loading prompt from ", prompt_path)
         with open(prompt_path, 'r', encoding='utf-8') as f:
             md_content = f.read()
             
@@ -61,12 +61,12 @@ class VerificationEngineerAssistant(BaseAssistant):
             "type": "function",
             "function": {
                 "name": "submit_testbench",
-                "description": "Submit Your Testbench Code. The Testbench Saved in a tb.v file. Your testbench code will compile and run automatically, please note the result.",
+                "description": "提交你的 Testbench 代码。Testbench 将保存在一个 tb.v 文件中。你的 Testbench 代码会自动编译并运行，请注意运行结果。",
                 "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "code": {"type": "string", "description": "Testbench Code"}
+                        "code": {"type": "string", "description": "Testbench代码"}
                     },
                     "required": ["code"],
                     "additionalProperties": False
@@ -77,12 +77,12 @@ class VerificationEngineerAssistant(BaseAssistant):
             "type": "function",
             "function": {
                 "name": "write_verification_report",
-                "description": "Write down your verification report",
+                "description": "撰写验证报告。",
                 "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "report": {"type": "string", "description": "Verification Report"}
+                        "report": {"type": "string", "description": "验证报告"}
                     },
                     "required": ["report"],
                     "additionalProperties": False
