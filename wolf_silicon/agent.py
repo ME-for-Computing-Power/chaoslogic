@@ -72,17 +72,18 @@ class WolfSiliconAgent(object):
 
     def run(self):
         first_loop = True
+        res = "design"
         try:
             while True:
-                if not first_loop and self.start_from == "project":
+                if not first_loop or self.start_from == "project":
                     res = self.project_manager_assistent.execute()
                     first_loop = False
                 if res == "design":
                     #self.cmodel_engineer_assistant.execute()
-                    if not first_loop and self.start_from == "design":
+                    if not first_loop or self.start_from == "design":
                         self.design_engineer_assistant.execute()
                         first_loop = False
-                    if not first_loop and self.start_from == "verification":
+                    if not first_loop or self.start_from == "verification":
                         self.verification_engineer_assistant.execute()
                         first_loop = False
                 else:
