@@ -19,11 +19,17 @@ if __name__ == "__main__":
     # 设置可选参数 --req 
     parser = argparse.ArgumentParser()
     parser.add_argument("--req", type=str, help="User requirements file path")
-    parser.add_argument("--name",type=str, help="Name of workspace")
+    parser.add_argument("--name",type=str, help="Name of workspace", default="wksp",required=False)
+    parser.add_argument("--workpath", type=str, help="Workspace root path",required=False)
+    parser.add_argument("--start_from", type=str, help="Start from a specific step (project, design, verification)", 
+                        choices=["project", "design", "verification"], default="project", required=False)
     args = parser.parse_args()
     # 在指定目录下创建工作目录
-    workpath = create_workspace("./playground",args.name)
+    if args.workpath:
+        workpath = args.workspace
+    else:
+        workpath = create_workspace("./playground",args.name)
     # 创建 WolfSiliconAgent
-    agent = WolfSiliconAgent(workspace_path=workpath, user_requirements_path=args.req)
+    agent = WolfSiliconAgent(workspace_path=workpath, user_requirements_path=args.req, start_from=args.start_from)
     if agent.run() == 0:
         exit

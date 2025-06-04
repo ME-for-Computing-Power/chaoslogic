@@ -1,4 +1,12 @@
-from env_vcs import WolfSiliconEnv
+import shutil
+
+if shutil.which("vcs"):
+    from env_vcs import WolfSiliconEnv
+elif shutil.which("verilator"):
+    from env_verilator import WolfSiliconEnv
+else:
+    raise RuntimeError("Neither VCS nor Verilator found in PATH. Please install one of them to proceed.")
+
 import os
 from project_manager_assistant import ProjectManagerAssistant
 from cmodel_engineer_assistant import CModelEngineerAssistant
@@ -10,7 +18,8 @@ class WolfSiliconAgent(object):
     def __init__(self, workspace_path, user_requirements_path=None, 
                  user_cmodel_code_path=None, 
                  user_design_code_path=None,
-                 user_verification_code_path=None) -> None:
+                 user_verification_code_path=None,
+                 start_from="project") -> None:
         # config
         self.MODEL_NAME = "deepseek-reasoner"
         self.TRANSLATION_MODEL_NAME = "deepseek-reasoner"
@@ -25,6 +34,7 @@ class WolfSiliconAgent(object):
         self.cmodel_path = os.path.join(workspace_path, "cmodel")
         self.design_path = os.path.join(workspace_path, "design")
         self.verification_path = os.path.join(workspace_path, "verification")
+        self.start_from = start_from
         os.makedirs(self.doc_path, exist_ok=False)
         os.makedirs(self.cmodel_path, exist_ok=False)
         os.makedirs(self.design_path, exist_ok=False)
@@ -61,13 +71,20 @@ class WolfSiliconAgent(object):
         self.verification_engineer_assistant = VerificationEngineerAssistant(self)
 
     def run(self):
+        first_loop = True
         try:
             while True:
-                res = self.project_manager_assistent.execute()
+                if not first_loop and self.start_from == "project":
+                    res = self.project_manager_assistent.execute()
+                    first_loop = False
                 if res == "design":
                     #self.cmodel_engineer_assistant.execute()
-                    self.design_engineer_assistant.execute()
-                    self.verification_engineer_assistant.execute()
+                    if not first_loop and self.start_from == "design":
+                        self.design_engineer_assistant.execute()
+                        first_loop = False
+                    if not first_loop and self.start_from == "verification":
+                        self.verification_engineer_assistant.execute()
+                        first_loop = False
                 else:
                     print("\n**** 完成 ****\n")
                     return 0
