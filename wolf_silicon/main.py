@@ -26,7 +26,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # 在指定目录下创建工作目录
     if args.workpath:
-        workpath = args.workspace
+        workpath = os.path.join("./playground", args.workpath)
     else:
         workpath = create_workspace("./playground",args.name)
     # 创建 WolfSiliconAgent
