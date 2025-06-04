@@ -35,10 +35,10 @@ class WolfSiliconAgent(object):
         self.design_path = os.path.join(workspace_path, "design")
         self.verification_path = os.path.join(workspace_path, "verification")
         self.start_from = start_from
-        os.makedirs(self.doc_path, exist_ok=False)
-        os.makedirs(self.cmodel_path, exist_ok=False)
-        os.makedirs(self.design_path, exist_ok=False)
-        os.makedirs(self.verification_path, exist_ok=False)
+        os.makedirs(self.doc_path, exist_ok=True)
+        os.makedirs(self.cmodel_path, exist_ok=True)
+        os.makedirs(self.design_path, exist_ok=True)
+        os.makedirs(self.verification_path, exist_ok=True)
         self.env = WolfSiliconEnv(self.workspace_path, self.doc_path, self.cmodel_path, 
                                   self.design_path, self.verification_path, 
                                   self.model_client, self.TRANSLATION_MODEL_NAME)
