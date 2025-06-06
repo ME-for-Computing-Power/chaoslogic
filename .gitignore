@@ -169,3 +169,4 @@ to_fj_test.py
 ucli.key
 wolf_silicon/test.py
 
+*.vcd

@@ -14,7 +14,7 @@ class BaseAssistant(object):
         self.short_term_memory.append(msg)
         if len(self.short_term_memory) > self.max_short_term_memory_len:
             self.short_term_memory.pop(0)
-        while self.short_term_memory and self.short_term_memory[0]["role"] == "assistant":
+        while self.short_term_memory and self.short_term_memory[0]["role"] != "user":
             self.short_term_memory.pop(0)
 
     def clear_short_term_memory(self):
@@ -44,7 +44,7 @@ class BaseAssistant(object):
             "tool_call_id":id,
             "content":result
         })
-        messages = [
+        """messages = [
             {
                 "role": "system",
                 "content": self.get_system_prompt()
@@ -68,7 +68,7 @@ class BaseAssistant(object):
         self.update_short_term_memory({
             "role": "assistant",
             "content": message
-        })
+        })"""
 
 
     def call_llm(self, user_message,tools_enable=False):

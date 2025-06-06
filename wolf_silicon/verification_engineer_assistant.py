@@ -52,8 +52,8 @@ class VerificationEngineerAssistant(BaseAssistant):
     def submit_testbench(self, code):
         self.env.manual_log(self.name, "提交了验证 Testbench 代码")
         self.env.write_verification_code(code)
-        compile_run_output = self.env.compile_and_run_verification()
-        return compile_run_output
+        #compile_run_output = self.env.compile_and_run_verification()
+        #return compile_run_output
     
     def get_tools_description(self):
         
@@ -107,7 +107,7 @@ class VerificationEngineerAssistant(BaseAssistant):
                 llm_message, func_call_list = self.call_llm(f"""
                 Testbench 编译、运行结果如下：
                 ```
-                {self.env.run_verification()}
+                {self.env.compile_and_run_verification()}
                 ```
                 若 Testbench 本身存在问题，使用 submit_testbench 提交修改后的Testbench。
 
@@ -116,15 +116,15 @@ class VerificationEngineerAssistant(BaseAssistant):
             for tool_call in func_call_list:
                 tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_testbench":
-                    output = self.submit_testbench(args["code"])
-                    self.reflect_tool_call(tool_id, output)
+                    self.submit_testbench(args["code"])
+                    self.reflect_tool_call(tool_id, "success")
                     if self.state == "wait_verification":
                         self.state = "review_testbench_1"
                     elif self.state == "verification_outdated":
                         self.state = "review_testbench_2"
                 elif name == "write_verification_report":
                     self.env.write_verification_report(args["report"])
-                    # self.reflect_tool_call(tool_id, "success")
+                    self.reflect_tool_call(tool_id, "success")
                     self.state = "verification_outdated"
                     return
                 
