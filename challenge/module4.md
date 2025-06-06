@@ -2,7 +2,7 @@
 
 整体说明：将并行格雷码数据data_gray根据vld_ch选择数据串行输出通道 1~8 (`data_out_ch1~8`)、数据有效信号通道 1~8 (`data_vld_ch1~8`)和顶层crc_valid。根据data_count和16*clk_out，具体决定输出data_vld_ch的持续周期，即整个输出周期。
 
-## IO
+## 顶层IO
 
 |信号|位宽|I/O|
 |-----|-----|-----|
