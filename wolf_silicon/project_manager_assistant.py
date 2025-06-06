@@ -71,18 +71,18 @@ class ProjectManagerAssistant(BaseAssistant):
                 }
             }
         }
-        ask_user_requirements = {
+        accept_report = {
             "type": "function",
             "function": {
-                "name": "ask_user_requirements",
-                "description": "向用户提出新的需求。",
+                "name": "accept_report",
+                "description": "批准当前报告。",
                 "strict": True
             }
         }
         if self.state == "wait_spec":
             tools.append(submit_spec)
         elif self.state == "review_verification_report":
-            tools.append(ask_user_requirements)
+            tools.append(accept_report)
             tools.append(submit_spec)
         else:
             tools.append(submit_spec)
@@ -95,7 +95,7 @@ class ProjectManagerAssistant(BaseAssistant):
         while True:
             llm_message, func_call_list = self.call_llm("使用工具提交Spec", tools_enable=True)
             print(func_call_list)
-            if self.state == "wait_spec" or self.state == "new_user_requirements":
+            if self.state == "wait_spec":
                 for tool_call in func_call_list:
                     tool_id, name, args = self.decode_tool_call(tool_call)
                     if name == "submit_spec":
@@ -109,8 +109,8 @@ class ProjectManagerAssistant(BaseAssistant):
             elif self.state == "review_verification_report":
                 for tool_call in llm_message.tool_calls:
                     tool_id, name, args = self.decode_tool_call(tool_call)
-                    if name == "ask_user_requirements":
-                        self.state = "new_user_requirements"
+                    if name == "accept_report":
+                        self.state = "accept_report"
                         return "user"
                     elif name == "submit_spec":
                         self.env.write_spec(args["spec"], args["overwrite"])
