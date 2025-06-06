@@ -98,11 +98,17 @@ class BaseAssistant(object):
             tool_choice = "auto" if tools_enable else "none"
         )
         message, func_call_list = self.handle_chat_response(response) 
-        self.update_short_term_memory({
-            "role": "assistant",
-            "content": message,
-            "tool_calls": func_call_list
-        })
+        if func_call_list:
+            self.update_short_term_memory({
+                "role": "assistant",
+                "content": message,
+                "tool_calls": func_call_list
+            })
+        else:
+            self.update_short_term_memory({
+                "role": "assistant",
+                "content": message
+            })
         return message, func_call_list
 
     def handle_chat_response(self, response):
