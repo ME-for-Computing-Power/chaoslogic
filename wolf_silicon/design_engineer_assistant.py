@@ -129,9 +129,10 @@ class DesignEngineerAssistant(BaseAssistant):
                 tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_design":
                     lint_output = self.submit_design(args["code"])
-                    self.reflect_tool_call(tool_id, lint_output)
+                    self.reflect_tool_call(tool_id, "success")
                 elif name == "handover_to_verification":
                     self.state = "design_outdated"
+                    self.reflect_tool_call(tool_id, "success")
                     return
                 
 
