@@ -124,7 +124,7 @@ class VerificationEngineerAssistant(BaseAssistant):
                         self.state = "review_testbench_2"
                 elif name == "write_verification_report":
                     self.env.write_verification_report(args["report"])
-                    self.reflect_tool_call(tool_id, "success")
+                    # self.reflect_tool_call(tool_id, "success")
                     self.state = "verification_outdated"
                     return
                 
