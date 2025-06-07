@@ -1,0 +1,9 @@
+#!/bin/sh -h 
+PYTHONHOME=/eda/vcs/etc/search/pyh
+export PYTHONHOME
+PYTHONPATH=/eda/vcs/linux64/lib/pylib27
+export PYTHONPATH
+LD_LIBRARY_PATH=/eda/vcs/linux64/lib:/eda/vcs/linux64/lib/pylib27
+export LD_LIBRARY_PATH
+/eda/vcs/linux64/bin/vcsfind_create_index.exe  -z  "/mnt/d/project/chaoslogic/verification/simv.daidir/debug_dump/fsearch/./idents_KSPdCP.xml.gz" "/mnt/d/project/chaoslogic/verification/simv.daidir/debug_dump/fsearch/./idents_tapi.xml.gz" -o "/mnt/d/project/chaoslogic/verification/simv.daidir/debug_dump/fsearch/fsearch.db_tmp"
+\mv "/mnt/d/project/chaoslogic/verification/simv.daidir/debug_dump/fsearch/fsearch.db_tmp" "/mnt/d/project/chaoslogic/verification/simv.daidir/debug_dump/fsearch/fsearch.db"

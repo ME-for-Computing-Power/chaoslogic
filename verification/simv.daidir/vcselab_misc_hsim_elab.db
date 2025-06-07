@@ -1205,7 +1205,7 @@ fHsCgOptNewSelCheck                	1
 fFgpReportUnsafeFuncs              	0
 fHsCgOptUncPrlThreshold            	4
 fHsimCosimGatesProp                	0
-fHsSVNettypePerfOpt                	0
+fHsSVNettypePerfOpt                	1
 fHsCgOptHashFixMap                 	1
 fHsimLowPowerRetAnalysisInChild    	0
 fRetainWithDelayedSig              	0

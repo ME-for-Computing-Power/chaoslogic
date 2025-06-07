@@ -685,7 +685,7 @@ fHsFgpSchedCgUcLoads               	1
 fHsCgOptNewSelCheck                	1
 fFgpReportUnsafeFuncs              	0
 fHsCgOptUncPrlThreshold            	4
-fHsSVNettypePerfOpt                	0
+fHsSVNettypePerfOpt                	1
 fHsimLowPowerRetAnalysisInChild    	0
 fRetainWithDelayedSig              	0
 fHsimChargeDecay                   	0
