@@ -36,7 +36,11 @@ class BaseAssistant(object):
             "get_system_prompt() method must be implemented by subclass.")
     
     def decode_tool_call(self, tool_call):
-        return tool_call["id"], tool_call["function"]["name"], json.loads(tool_call["function"]["arguments"])
+        arguments = tool_call["function"]["arguments"]
+        protected = arguments.replace('\\n', '<<<NEWLINE>>>')
+        filtered = protected.replace('\r', '').replace('\n', '')
+        filtered_arguments = filtered.replace('<<<NEWLINE>>>', '\\n')
+        return tool_call["id"], tool_call["function"]["name"], json.loads(filtered_arguments)
     
     def reflect_tool_call(self, id, result):
         self.update_short_term_memory({
