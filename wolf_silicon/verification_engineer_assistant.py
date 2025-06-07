@@ -121,8 +121,6 @@ Testbench 中应利用 assertion 检查设计是否正确。
                     {compile_output}
                     ```
                     使用 submit_testbench 提交修改后的Testbench。
-
-                    当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则该错误应当写入测试报告中，使用 write_verification_report 提交测试报告。
                     # """, tools_enable=True)
                 else: #编译通过
                     sim_log = self.env.run_verification()
