@@ -4,11 +4,9 @@
 ######################################
 
 # Project Settings
-TOP_MODULE     ?= tb_frame_detector        # 顶层测试模块
-TIMESCALE      ?= timescale=1ns/1ps  # 时间精度 (e.g., "1ns/1ps")
-DUMP_WAVEFORM  ?= 1          # 是否生成波形文件 (0/1)
-COVERAGE       ?= 0          # 是否收集覆盖率 (0/1)
-UVM_CASE       ?= my_case0
+TOP_MODULE     ?= tb_frame_detector# 顶层测试模块
+TIMESCALE      ?= timescale=1ns/1ps# 时间精度 (e.g., "1ns/1ps")
+DUMP_WAVEFORM  ?= 0          # 是否生成波形文件 (0/1)
 
 # Tool Paths
 VCS            = vcs
@@ -22,8 +20,8 @@ TB_SOURCES    += ./tb.sv
 INC_DIRS      += ./tb
 
 # Compilation Options
-VCS_OPTS      += -R -full64 +v2k     # 64-bit compilation
-VCS_OPTS      += -sverilog    # SystemVerilog support
+VCS_OPTS      += -R -full64 +v2k# 64-bit compilation
+VCS_OPTS      += -sverilog# SystemVerilog support
 # VCS_OPTS      += +incdir+$(INC_DIRS)
 # VCS_OPTS      += -debug_acc   # Debugging access
 # VCS_OPTS      += +define+UVM_OBJECT_MUST_HAVE_CONSTRUCTOR
@@ -45,11 +43,11 @@ ifeq ($(DUMP_WAVEFORM), 1)
 endif
 
 # Coverage Options
-ifeq ($(COVERAGE), 1)
-  VCS_OPTS    += -cm line+cond+fsm+branch+tgl
-  VCS_OPTS    += -cm_name $(TOP_MODULE)_cov
-  SIM_OPTS    += -cm line+cond+fsm+branch+tgl
-endif
+VCS_OPTS    += -cm line+cond+fsm+branch+tgl
+VCS_OPTS    += -cm_name $(TOP_MODULE)_cov
+VCS_OPTS    += -cm_dir ./covdir.vdb
+SIM_OPTS    += -cm line+cond+fsm+branch+tgl
+
 
 # Default Target
 all: compile run
@@ -72,6 +70,8 @@ wave:
 verdi:
 	$(VERDI) -ssf novas.fsdb &
 
+cov:
+	$(DVE) -full64 -covdir *.vdb &
 # Cleanup
 clean:
 	rm -rf csrc simv* *.vpd *.key *.log *.vdb *.fsdb urgReport DVEfiles *.bak
@@ -83,6 +83,7 @@ help:
 	@echo "make run          - Run simulation"
 	@echo "make wave         - Open waveform in DVE"
 	@echo "make verdi        - Open waveform in Verdi"
+	@echo "make cov          - Open coverage in DVE"
 	@echo "make clean        - Remove generated files"
 	@echo "make all          - Compile and run (default)"
 	@echo "------------------------------------------------------"

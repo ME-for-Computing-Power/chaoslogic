@@ -1,5 +1,5 @@
 0 
-28
+34
 +v2k
 -Mamsrun=
 -Masflags=
@@ -18,32 +18,38 @@
 -Mvcsaceobjs=
 -Mxcflags= -pipe -fPIC -I/eda/vcs/include
 -Xvcs_run_simv=1
+-cm
+-cm_dir
+-cm_name
 -full64
 -gen_obj
 -picarchive
 -sverilog
 -timescale=1ns/1ps
 -top
+./covdir.vdb
 ./rtl/dut.sv
 ./tb.sv
 /eda/vcs/linux64/bin/vcs1
+line+cond+fsm+branch+tgl
 tb_frame_detector
-69
+tb_frame_detector_cov
+70
 sysc_uni_pwd=/mnt/d/project/chaoslogic/verification
 no_proxy=192.168.*,172.31.*,172.30.*,172.29.*,172.28.*,172.27.*,172.26.*,172.25.*,172.24.*,172.23.*,172.22.*,172.21.*,172.20.*,172.19.*,172.18.*,172.17.*,172.16.*,10.*,127.*,localhost,<local>
 https_proxy=http://127.0.0.1:7890
 http_proxy=http://127.0.0.1:7890
 ZSH=/home/zhanyue/.oh-my-zsh
+ZDOTDIR=/home/zhanyue
 YOSYS_HOME=/home/zhanyue/ysyx/yosys-sta
 XDG_RUNTIME_DIR=/run/user/1000/
-WT_SESSION=e41161b4-f727-4d7d-87b6-7a8a1d9d64a4
-WT_PROFILE_ID={215fe440-1092-5e72-bc07-977014b3cd9e}
-WSL_INTEROP=/run/WSL/837_interop
+WSL_INTEROP=/run/WSL/72518_interop
 WSL_DISTRO_NAME=Ubuntu
-WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID:
+WSLENV=VSCODE_WSL_EXT_LOCATION/up
 WSL2_GUI_APPS_ENABLED=1
 WAYLAND_DISPLAY=wayland-0
-VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-ef73fded-4265-492b-a810-586d72e7e181.sock
+VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-f4e458c1-cddc-4858-96a2-2692aaf62dbc.sock
+VSCODE_INJECTION=1
 VSCODE_GIT_IPC_HANDLE=/run/user/1000/vscode-git-c2d6884bb7.sock
 VSCODE_GIT_ASKPASS_NODE=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/node
 VSCODE_GIT_ASKPASS_MAIN=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/extensions/git/dist/askpass-main.js
@@ -58,6 +64,7 @@ VCS_ARG_ADDED_FOR_TMP=1
 VCS_ARCH_OVERRIDE=linux
 VCS_ARCH=linux64
 UVM_HOME=/home/zhanyue/uvm/uvm-1.1a
+USER_ZDOTDIR=/home/zhanyue
 UNAME=/bin/uname
 TOOL_HOME=/eda/vcs/linux64
 TERM_PROGRAM_VERSION=1.99.3
@@ -75,13 +82,13 @@ NPC_HOME=/home/zhanyue/ysyx/ysyx-workbench/npc
 NO_PROXY=192.168.*,172.31.*,172.30.*,172.29.*,172.28.*,172.27.*,172.26.*,172.25.*,172.24.*,172.23.*,172.22.*,172.21.*,172.20.*,172.19.*,172.18.*,172.17.*,172.16.*,10.*,127.*,localhost,<local>
 NOVAS_HOME=/eda/verdi
 NEMU_HOME=/home/zhanyue/ysyx/ysyx-workbench/nemu
-NAME=Code
+NAME=LG-GRAM16
 MTASIM_HOME=/home/zhanyue/map_whole/MTASim
 MPTLS_HOME=/home/zhanyue/map_whole/maptools/maptools
 MFLAGS=
 MANPAGER=sh -c "col -b | code --wait --reuse-window -"
-MAKE_TERMOUT=/dev/pts/8
-MAKE_TERMERR=/dev/pts/8
+MAKE_TERMOUT=/dev/pts/10
+MAKE_TERMERR=/dev/pts/10
 MAKELEVEL=1
 MAKEFLAGS=
 LSCOLORS=Gxfxcxdxbxegedabagacad
@@ -99,13 +106,14 @@ AUTOJUMP_SOURCED=1
 AUTOJUMP_ERROR_PATH=/home/zhanyue/.local/share/autojump/errors.log
 AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 0
-2
+3
 1749298850 ./tb.sv
 1749298463 ./rtl/dut.sv
+1551421444 /eda/vcs/include/cm_vcsd.tab
 4
 1551422344 /eda/vcs/linux64/lib/libvirsim.so
 1551421792 /eda/vcs/linux64/lib/liberrorinf.so
 1551421768 /eda/vcs/linux64/lib/libsnpsmalloc.so
 1551421789 /eda/vcs/linux64/lib/libvfs.so
-1749298858 simv.daidir
+1749300141 simv.daidir
 -1 partitionlib

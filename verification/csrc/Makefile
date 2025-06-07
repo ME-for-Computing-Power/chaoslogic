@@ -19,7 +19,7 @@ PRODUCT_TIMESTAMP=product_timestamp
 # Path to runtime library
 DEPLIBS=
 VCSUCLI=-lvcsucli
-RUNTIME=-lvcsnew -lsimprofile -luclinative /eda/vcs/linux64/lib/vcs_tls.o $(DEPLIBS) 
+RUNTIME=-lvcsnew -lsimprofile -lreader_common /eda/vcs/linux64/lib/libBA.a -luclinative /eda/vcs/linux64/lib/vcs_tls.o $(DEPLIBS) 
 
 VCS_SAVE_RESTORE_OBJ=/eda/vcs/linux64/lib/vcs_save_restore_new.o
 
@@ -112,6 +112,6 @@ $(PRODUCT_TIMESTAMP) : product_clean_order
 	@touch $(PRODUCT_TIMESTAMP)
 	@-if [ -d ./objs ]; then find ./objs -type d -empty -delete; fi
 
-$(PRODUCT) :  $(LD_VERSION_CHECK)  $(OBJS) $(DOTLIBS) $(DPI_STUB_OBJS) $(PLI_STUB_OBJS) $(CMODLIB) /eda/vcs/linux64/lib/libvcsnew.so /eda/vcs/linux64/lib/libsimprofile.so /eda/vcs/linux64/lib/libuclinative.so /eda/vcs/linux64/lib/vcs_tls.o /eda/vcs/linux64/lib/libvcsucli.so  $(VCS_SAVE_RESTORE_OBJ) 
+$(PRODUCT) :  $(LD_VERSION_CHECK)  $(OBJS) $(DOTLIBS) $(DPI_STUB_OBJS) $(PLI_STUB_OBJS) $(CMODLIB) /eda/vcs/linux64/lib/libvcsnew.so /eda/vcs/linux64/lib/libsimprofile.so /eda/vcs/linux64/lib/libreader_common.so /eda/vcs/linux64/lib/libBA.a /eda/vcs/linux64/lib/libuclinative.so /eda/vcs/linux64/lib/vcs_tls.o /eda/vcs/linux64/lib/libvcsucli.so  $(VCS_SAVE_RESTORE_OBJ) 
 	@touch $(PRODUCT)
 
