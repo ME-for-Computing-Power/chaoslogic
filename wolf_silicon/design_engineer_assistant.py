@@ -119,20 +119,22 @@ class DesignEngineerAssistant(BaseAssistant):
 
                     """, tools_enable=True)
             else:
-                llm_message, func_call_list = self.call_llm(f"""
-                    刚才的代码中没有语法错误。
+                # llm_message, func_call_list = self.call_llm(f"""
+                #     刚才的代码中没有语法错误。
                                                 
-                    若仍要修改，则使用 submit_design 重新提交。
-                    若确认无误，则使用 handover_to_verification提交验证部门。
-                    """, tools_enable=True) 
+                #     若仍要修改，则使用 submit_design 重新提交。
+                #     若确认无误，则使用 handover_to_verification提交验证部门。
+                #     """, tools_enable=True) 
+                self.state = "design_outdated"
+                return
             for tool_call in func_call_list:
                 tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_design":
                     lint_output = self.submit_design(args["code"])
                     self.reflect_tool_call(tool_id, "success")
-                elif name == "handover_to_verification":
-                    self.state = "design_outdated"
-                    self.reflect_tool_call(tool_id, "success")
-                    return
+                # elif name == "handover_to_verification":
+                #     self.state = "design_outdated"
+                #     self.reflect_tool_call(tool_id, "success")
+                #     return
                 
 

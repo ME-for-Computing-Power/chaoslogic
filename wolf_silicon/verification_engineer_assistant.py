@@ -99,20 +99,43 @@ class VerificationEngineerAssistant(BaseAssistant):
         while True:
             if (self.state == "wait_verification" or self.state == "verification_outdated"):
                 llm_message, func_call_list = self.call_llm("""
-                    使用工具提交 Testbench。
-                    Testbench 中应利用 assertion 检查设计是否正确。
-                    提交后，Testbench将会编译并运行。
+使用工具提交 Testbench。Testbench module 的名字固定为 `tb`，毋需设置`timescale`，因其在编译时将自动给出
+Testbench 中应利用 assertion 检查设计是否正确。
+提交后，Testbench将会编译并运行，仿真时间限制为32768时间单位。
                     """, tools_enable=True)
-            else:
-                llm_message, func_call_list = self.call_llm(f"""
-                Testbench 编译、运行结果如下：
-                ```
-                {self.env.compile_and_run_verification()}
-                ```
-                若 Testbench 本身存在问题，使用 submit_testbench 提交修改后的Testbench。
+            else:#这一步的编译和运行应该分成两部分，避免误判
+                # llm_message, func_call_list = self.call_llm(f"""
+                # Testbench 编译、运行结果如下：
+                # ```
+                # {self.env.compile_and_run_verification()}
+                # ```
+                # 若 Testbench 本身存在问题，使用 submit_testbench 提交修改后的Testbench。
 
-                当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则该错误应当写入测试报告中，使用 write_verification_report 提交测试报告。
-                """, tools_enable=True)
+                # 当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则该错误应当写入测试报告中，使用 write_verification_report 提交测试报告。
+                # """, tools_enable=True)
+                compile_output = self.env.compile_and_check_verification()
+                if  compile_output!= 'Success':#编译报错
+                    llm_message, func_call_list = self.call_llm(f"""
+                    Testbench 编译报错如下：
+                    ```
+                    {compile_output}
+                    ```
+                    使用 submit_testbench 提交修改后的Testbench。
+
+                    当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则该错误应当写入测试报告中，使用 write_verification_report 提交测试报告。
+                    # """, tools_enable=True)
+                else: #编译通过
+                    sim_log = self.env.run_verification()
+                    llm_message, func_call_list = self.call_llm(f"""
+                    Testbench 成功编译，运行记录如下：
+                    ```
+                    {sim_log}
+                    ```
+                    当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则该错误应当写入测试报告中，使用 write_verification_report 提交测试报告。
+                    
+                    若Testbench有问题，则可使用 submit_testbench 提交修改后的Testbench。
+
+                    # """, tools_enable=True)
             for tool_call in func_call_list:
                 tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_testbench":

@@ -49,7 +49,7 @@ class WolfSiliconAgent(object):
                 user_requirements = f.read()
                 self.env.write_user_requirements(user_requirements)
         else: # 用户未提供输入文件，提示用户输入需求
-            user_requirements = input("\n 🌕 明月之神的旨意: ")
+            user_requirements = input("\n 用户输入: ")
             self.env.write_user_requirements(user_requirements)
         if user_cmodel_code_path:
             # 如果用户提供了 C++ CModel 代码路径，复制其中文件到 cmodel 文件夹
@@ -89,14 +89,6 @@ class WolfSiliconAgent(object):
                 else:
                     print("\n**** 完成 ****\n")
                     return 0
-                    # new_user_requirements = input(" 🌕 明月之神的旨意 (y/Y表示同意当前结果并退出， 或者给出新的需求):")
-                    # if new_user_requirements.lower() == "y":
-                    #     print("\n**** 🐺🐺🐺🐺 狼群在感激中仰头长啸，它们变身成了狼人，在草原深处建立起 “野狼Silicon半导体设计公司” ****\n")
-                    #     return
-                    # else:
-                    #     self.env.write_user_requirements(f"\n\n====Requirements Updated!=======\n\n{new_user_requirements}\n\n")
-                    #     self.env.manual_log("User", f"给出了新的旨意: {new_user_requirements}")
-                    #     continue
         except KeyboardInterrupt:
             print("\n键盘输入中断")
 

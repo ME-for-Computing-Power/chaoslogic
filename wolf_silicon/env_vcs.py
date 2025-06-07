@@ -6,8 +6,9 @@ import os
 import re
 
 import sys
-
-
+import itertools
+import textwrap
+import signal
 class WolfSiliconEnv(object):
     
     def __init__(self, workspace_path:str, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
@@ -156,13 +157,13 @@ class WolfSiliconEnv(object):
             return False, 0, "No verification code found."
     
     def compile_verification(self) -> str:
-        code_file = []
-        for filename in os.listdir(self._verification_path):
-            if filename.endswith('.v') or filename.endswith('.sv'):
-                code_file.append(os.path.join(self._verification_path, filename))
-        for filename in os.listdir(self._design_path):
-            if filename.endswith('.v'):
-                code_file.append(os.path.join(self._design_path, filename))
+        # code_file = []
+        # for filename in os.listdir(self._verification_path):
+        #     if filename.endswith('.v') or filename.endswith('.sv'):
+        #         code_file.append(os.path.join(self._verification_path, filename))
+        # for filename in os.listdir(self._design_path):
+        #     if filename.endswith('.v'):
+        #         code_file.append(os.path.join(self._design_path, filename))
         # # 保存到 filelist 文件中
         # with open(self._design_filelist_path, "w") as f:
         #     for filepath in code_file:
@@ -180,10 +181,18 @@ class WolfSiliconEnv(object):
         return os.path.exists(self._verification_binary_path)
     
     def run_verification(self, timeout_sec:int=300) -> str:
-        result = WolfSiliconEnv.execute_command(self._verification_binary_path, timeout_sec)
+        result = WolfSiliconEnv.execute_command(self._verification_binary_path + " "+"+vcs+finish+32768" , timeout_sec)
         print(result)
         return result
     
+    def compile_and_check_verification(self) -> str:
+        self.delete_verification_binary()
+        compiler_output = self.compile_verification()
+        if not self.is_verification_binary_exist():
+            return f"# 编译错误\n 报错如下：\n{compiler_output}"
+        else:
+            return 'Success'
+        
     def compile_and_run_verification(self) -> str:
         self.delete_verification_binary()
         compiler_output = self.compile_verification()
@@ -210,97 +219,73 @@ class WolfSiliconEnv(object):
                 return True, mtime, f.read()
         else:
             return False, 0, "No verification report found."
-    
-    def execute_command(command, timeout_sec):
-    # 在外层先定义 proc，用于线程内外共享
-        proc = None
-
-        def target(q):
-            nonlocal proc  # 声明要修改外层的 proc 变量
-            # 创建子进程
-            proc = subprocess.Popen(
-                command,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                shell=True
-            )
-            try:
-                # 捕获输出和错误
-                stdout, stderr = proc.communicate()
-                # 将结果放入队列，不再需要传 proc，因为外层变量已有
-                q.put((stdout, stderr))
-            except Exception as e:
-                # 遇到异常时，把异常信息放入队列
-                q.put((None, str(e)))
-
-        q = queue.Queue()
-        thread = threading.Thread(target=target, args=(q,))
-        thread.start()
-        thread.join(timeout_sec)
-
-        # ---- 超时处理分支 ----
-        if thread.is_alive():
-            # 子线程还活着，说明超时了
-            if proc is not None:
-                # 先终止子进程
-                proc.terminate()
-                # 等待子进程真正退出，以及target函数中的communicate完成
-                thread.join()
-
-                # 下面尝试从队列里取出已经捕获到的 stdout、stderr
-                try:
-                    stdout, stderr = q.get_nowait()
-                except queue.Empty:
-                    # 如果队列里没有内容，则表示 target 里还没来得及 put，
-                    # 这时我们手动再读一次 communicate 来确保拿到所有输出
-                    try:
-                        stdout, stderr = proc.communicate(timeout=1)
-                    except Exception:
-                        stdout, stderr = ("", "")
+    def compress_lines( text: str) -> str:
+        """
+        将连续重复的行压缩为“内容 [重复 N 次]”形式。
+        例如：
+        A
+        A
+        A
+        B
+        B
+        会被压缩为：
+        A [重复 3 次]
+        B [重复 2 次]
+        """
+        lines = text.splitlines()
+        compressed = []
+        for line, group in itertools.groupby(lines):
+            count = sum(1 for _ in group)
+            if count > 5:
+                compressed.append(f"{line}  [重复 {count} 次]")
             else:
-                # 如果 proc 还是 None，说明子线程还没来得及创建进程，直接将输出置空
-                stdout, stderr = ("", "")
-
-            # 拿到 return code（对于 terminate 的进程，一般是 -SIGTERM 或者其他系统码）
-            return_code = proc.returncode if proc is not None else None
-
-            # 返回包含 stdout、stderr 以及 return code 的信息
-            return (
-                f"# stdout\n```\n{stdout}\n```\n"
-                f"# stderr\n```\n{stderr}\n```\n"
-                f"**Process timed out (exit code: {return_code})**"
-            )
-
-        try:
-            # 获取结果
-            stdout, stderr = q.get_nowait()
-        except queue.Empty:
-            # 如果队列里仍然没有输出，说明子进程或线程异常退出
-            return "**Process failed without output**"
-
-        # 如果 stderr 非空，返回 stdout 和 stderr
-        if stderr:
-            return (
-                f"# stdout\n```\n{stdout}\n```\n"
-                f"# stderr\n```\n{stderr}\n```"
-            )
-        else:
-            return f"# stdout\n```\n{stdout}\n```"
+                compressed.append(line)
+        # 保留末尾可能缺少的 '\n'
+        return "\n".join(compressed) + ("\n" if text.endswith("\n") else "")
     
-    # def auto_message_log(self, name, message):
-    #     if message.content:
-    #         with open(self._log_path, "a") as f:
-    #             chinese_name = {
-    #                 "Project Manager Wolf": "项目头狼",
-    #                 "CModel Engineer Wolf": "CModel工程狼",
-    #                 "Design Engineer Wolf": "设计工程狼",
-    #                 "Verification Engineer Wolf": "验证工程狼"
-    #             }[name]
-    #             log_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    #             log_content = f"\n【 {log_time} 🐺 {chinese_name} 】\n\n{self.translate_log(message.content)}\n\n"
-    #             print(log_content)
-    #             f.write(log_content)
+    def execute_command(command: str, timeout_sec: float) -> str:
+        """
+        在 Linux shell 中执行给定的命令字符串，并捕获所有输出和错误。
+        如果超过 timeout_sec 秒仍未结束，则强制终止进程，并返回包括超时信息、
+        已产生的输出和错误在内的完整日志。
+
+        :param command: 要执行的 shell 命令
+        :param timeout_sec: 最长允许运行时间（秒）
+        :return: 包含 stdout、stderr 以及可能的超时提示的完整字符串
+        """
+        # 启动一个新的进程组，以便后面能一并终止所有子进程
+        proc = subprocess.Popen(
+            command,
+            shell=True,
+            executable="/bin/bash",
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            preexec_fn=os.setsid
+        )
+        pid = proc.pid
+        print ("PID is ", pid) 
+        try:
+            stdout, stderr = proc.communicate(timeout=timeout_sec)
+            output = textwrap.dedent(f"""\
+                [正常结束]
+                --- STDOUT ---
+                {stdout}
+                --- STDERR ---
+                {stderr}""")
+            return WolfSiliconEnv.compress_lines(output)
+        except subprocess.TimeoutExpired:
+            # 超时：终止整个进程组
+            os.killpg(proc.pid, signal.SIGTERM)
+            # 再次收集可能已有的输出
+            stdout, stderr = proc.communicate()
+            output = textwrap.dedent(f"""\
+                [超时，已在 {timeout_sec:.1f} 秒后终止]
+                --- STDOUT（超时内容） ---
+                {stdout}
+                --- STDERR（超时内容） ---
+                {stderr}""")
+            return WolfSiliconEnv.compress_lines(output)
 
 
     def manual_log(self, name, message, newline=True):
@@ -313,43 +298,3 @@ class WolfSiliconEnv(object):
             print(log_content, end="")
             sys.stdout.flush()
             f.write(log_content)
-
-    
-    # def translate_log(self, log_content):
-    #     if self.translation_model_name:
-    #         completion = self.model_client.chat.completions.create(
-    #             model=self.translation_model_name,
-    #             messages=[{
-    #                 "role":"system",
-    #                 "content":"""你是一个专业的中文科普翻译员，请将用户提供的内容翻译成中文，
-
-    #                 保留科普童话内容的风格，兼具硬件设计专业术语的准确性（术语可以不翻译成中文），
-
-    #                 文中部分英文词语与中文词语的对应关系：
-
-    #                 Lunar Deity - 明月之神
-
-    #                 Lunar Deity's Enlightnment（或者类似的表述） - 明月之神的启示、的指引（或类似表述）
-
-    #                 Project Manager Wolf - 项目头狼
-
-    #                 CModel Engineer Wolf - CModel工程狼
-
-    #                 Design Engineer Wolf - 设计工程狼
-
-    #                 Verification Engineer Wolf - 验证工程狼
-
-    #                 如果结尾是疑问句，尽量改成肯定的陈述句。
-
-    #                 狼之间互相称呼用“兄弟”，称呼群体用“狼群”，称呼月亮为“神明”
-                    
-    #                 输出内容时不要包含除了翻译结果外的其他信息。"""
-    #             },
-    #             {
-    #                 "role":"user",
-    #                 "content":log_content
-    #             }],
-    #         )
-    #         return completion.choices[0].message.content
-    #     else:
-    #         return log_content

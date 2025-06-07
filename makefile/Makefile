@@ -1,7 +1,7 @@
 # VCS
 COMPILER = vcs -full64 -cc gcc -cpp g++ -LDFLAGS -Wl,-no-as-needed
 TOP_MODULE = -top tb
-TIMESCALE = -timescale=100ps/1ps
+TIMESCALE = -timescale=1ns/100ps
 INCDIR = +incdir+config
 DEBUG = -debug_access
 VCD   = +vcs+dumpvars+test.vcd
