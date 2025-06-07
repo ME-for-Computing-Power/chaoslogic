@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser.add_argument("--name",type=str, help="Name of workspace", default="wksp",required=False)
     parser.add_argument("--workpath", type=str, help="Workspace root path",required=False)
     parser.add_argument("--start_from", type=str, help="Start from a specific step (project, design, verification)", 
-                        choices=["project", "design", "verification"], default="project", required=False)
+                        choices=["project", "design", "verification", "iter"], default="project", required=False)
     args = parser.parse_args()
     # 在指定目录下创建工作目录
     if args.workpath:

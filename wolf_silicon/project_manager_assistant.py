@@ -94,7 +94,6 @@ class ProjectManagerAssistant(BaseAssistant):
         #self.call_llm("分析项目情况，给出你的观察和想法", tools_enable=False)
         while True:
             llm_message, func_call_list = self.call_llm("使用工具提交Spec", tools_enable=True)
-            print(func_call_list)
             if self.state == "wait_spec":
                 for tool_call in func_call_list:
                     tool_id, name, args = self.decode_tool_call(tool_call)

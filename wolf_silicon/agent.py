@@ -48,23 +48,22 @@ class WolfSiliconAgent(object):
             with open(user_requirements_path, "r") as f:
                 user_requirements = f.read()
                 self.env.write_user_requirements(user_requirements)
-        else: # 用户未提供输入文件，提示用户输入需求
-            user_requirements = input("\n 用户输入: ")
-            self.env.write_user_requirements(user_requirements)
-        if user_cmodel_code_path:
-            # 如果用户提供了 C++ CModel 代码路径，复制其中文件到 cmodel 文件夹
-            for filename in os.listdir(user_cmodel_code_path):
-                os.copy(os.path.join(user_cmodel_code_path, filename), self.cmodel_path)
-        if user_design_code_path:
-            # 如果用户提供了 Verilog 设计代码路径，复制其中文件到 design 文件夹
-            for filename in os.listdir(user_design_code_path):
-                os.copy(os.path.join(user_design_code_path, filename), self.design_path)
-        if user_verification_code_path:
-            # 如果用户提供了 SystemVerilog 验证代码路径，复制其中文件到 verification 文件夹
-            for filename in os.listdir(user_verification_code_path):
-                os.copy(os.path.join(user_verification_code_path, filename), self.verification_path)
+        # else: # 用户未提供输入文件，提示用户输入需求
+        #     user_requirements = input("\n 用户输入: ")
+        #     self.env.write_user_requirements(user_requirements)
+        # if user_cmodel_code_path:
+        #     # 如果用户提供了 C++ CModel 代码路径，复制其中文件到 cmodel 文件夹
+        #     for filename in os.listdir(user_cmodel_code_path):
+        #         os.copy(os.path.join(user_cmodel_code_path, filename), self.cmodel_path)
+        # if user_design_code_path:
+        #     # 如果用户提供了 Verilog 设计代码路径，复制其中文件到 design 文件夹
+        #     for filename in os.listdir(user_design_code_path):
+        #         os.copy(os.path.join(user_design_code_path, filename), self.design_path)
+        # if user_verification_code_path:
+        #     # 如果用户提供了 SystemVerilog 验证代码路径，复制其中文件到 verification 文件夹
+        #     for filename in os.listdir(user_verification_code_path):
+        #         os.copy(os.path.join(user_verification_code_path, filename), self.verification_path)
         # 创建 AssistantAgent
-        # TODO
         self.project_manager_assistent = ProjectManagerAssistant(self)
         self.cmodel_engineer_assistant = CModelEngineerAssistant(self)
         self.design_engineer_assistant = DesignEngineerAssistant(self)
@@ -73,6 +72,10 @@ class WolfSiliconAgent(object):
     def run(self):
         first_loop = True
         res = "design"
+        if self.start_from != None:
+            if self.start_from not in ["project", "design", "verification", "iter"]:
+                raise ValueError("start_from must be one of 'project', 'design', 'verification', or 'iter'")
+            self.env.manual_log("Admin", f"从{self.start_from} 状态断点复原")
         try:
             while True:
                 if not first_loop or self.start_from == "project":
@@ -83,9 +86,21 @@ class WolfSiliconAgent(object):
                     if not first_loop or self.start_from == "design":
                         self.design_engineer_assistant.execute()
                         first_loop = False
-                    if not first_loop or self.start_from == "verification":
-                        self.verification_engineer_assistant.execute()
+                    if not first_loop or self.start_from == "verification" or self.start_from == "iter":
                         first_loop = False
+                        i=0
+                        if self.start_from == "iter":#认为iter状态是指验证工程师检查到设计工程师的设计有错误，已完成feedback.md文件
+                            self.start_from == None#删除start_from
+                            self.design_engineer_assistant.state = 'design_error'
+                            self.design_engineer_assistant.execute()
+                        while True:#循环一直执行，直到验证工程师认为设计工程师没有错误
+                            if self.verification_engineer_assistant.execute() != 'Error in Design' :
+                                break
+                            i+=1
+                            iter_msg = "验证工程师发起了第"+str(i)+"次迭代"
+                            self.env.manual_log("Admin",iter_msg)
+                            self.design_engineer_assistant.state = 'design_error'
+                            self.design_engineer_assistant.execute()
                 else:
                     print("\n**** 完成 ****\n")
                     return 0
