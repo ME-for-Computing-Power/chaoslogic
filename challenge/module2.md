@@ -22,7 +22,7 @@
 `clk_out`: fifo输出时钟域的时钟，与 `clk_in` 为同频异步。
 `rst_n`:异步复位信号，低电平有效
 `fifo_w_enable`：fifo写使能信号
-`fifo_r_enable`：fifo读使能信号，恒输入1
+`fifo_r_enable`：fifo读使能信号
 `data_to_fifo`：fifo输入数据
 `data_from_fifo`：fifo输出数据
 `fifo_empty`：fifo空信号

@@ -212,53 +212,79 @@ class WolfSiliconEnv(object):
             return False, 0, "No verification report found."
     
     def execute_command(command, timeout_sec):
+    # 在外层先定义 proc，用于线程内外共享
+        proc = None
+
         def target(q):
+            nonlocal proc  # 声明要修改外层的 proc 变量
             # 创建子进程
-            proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
+            proc = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                shell=True
+            )
             try:
                 # 捕获输出和错误
                 stdout, stderr = proc.communicate()
-                # 将结果和进程对象放入.queue
-                q.put((stdout, stderr, proc))
+                # 将结果放入队列，不再需要传 proc，因为外层变量已有
+                q.put((stdout, stderr))
             except Exception as e:
-                q.put((None, str(e), proc))
+                # 遇到异常时，把异常信息放入队列
+                q.put((None, str(e)))
 
         q = queue.Queue()
         thread = threading.Thread(target=target, args=(q,))
         thread.start()
         thread.join(timeout_sec)
 
+        # ---- 超时处理分支 ----
         if thread.is_alive():
-            # 如果线程还活着，则说明超时了
-            try:
-                stdout, stderr, proc = q.get_nowait()
-            except queue.Empty:
+            # 子线程还活着，说明超时了
+            if proc is not None:
+                # 先终止子进程
                 proc.terminate()
+                # 等待子进程真正退出，以及target函数中的communicate完成
                 thread.join()
-                return "**Process timed out without output**"
-            # 终止进程
-            proc.terminate()
-            thread.join()
-            return f""" 
-            # stdout
-            ```
-            {stdout}
-            ```
-            # stderr
-            ```
-            {stderr}
-            ```
-            **Process timed out**
-            """
+
+                # 下面尝试从队列里取出已经捕获到的 stdout、stderr
+                try:
+                    stdout, stderr = q.get_nowait()
+                except queue.Empty:
+                    # 如果队列里没有内容，则表示 target 里还没来得及 put，
+                    # 这时我们手动再读一次 communicate 来确保拿到所有输出
+                    try:
+                        stdout, stderr = proc.communicate(timeout=1)
+                    except Exception:
+                        stdout, stderr = ("", "")
+            else:
+                # 如果 proc 还是 None，说明子线程还没来得及创建进程，直接将输出置空
+                stdout, stderr = ("", "")
+
+            # 拿到 return code（对于 terminate 的进程，一般是 -SIGTERM 或者其他系统码）
+            return_code = proc.returncode if proc is not None else None
+
+            # 返回包含 stdout、stderr 以及 return code 的信息
+            return (
+                f"# stdout\n```\n{stdout}\n```\n"
+                f"# stderr\n```\n{stderr}\n```\n"
+                f"**Process timed out (exit code: {return_code})**"
+            )
 
         try:
             # 获取结果
-            stdout, stderr, _ = q.get_nowait()
+            stdout, stderr = q.get_nowait()
         except queue.Empty:
+            # 如果队列里仍然没有输出，说明子进程或线程异常退出
             return "**Process failed without output**"
 
+        # 如果 stderr 非空，返回 stdout 和 stderr
         if stderr:
-            return f"""# stdout\n```\n{stdout}\n```\n# stderr\n```\n{stderr}\n```"""
+            return (
+                f"# stdout\n```\n{stdout}\n```\n"
+                f"# stderr\n```\n{stderr}\n```"
+            )
         else:
             return f"# stdout\n```\n{stdout}\n```"
     
