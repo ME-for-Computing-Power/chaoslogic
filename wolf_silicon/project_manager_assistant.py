@@ -107,7 +107,7 @@ class ProjectManagerAssistant(BaseAssistant):
                     else:
                         raise Exception("未知的Function Call")
             elif self.state == "review_verification_report":
-                for tool_call in llm_message.tool_calls:
+                for tool_call in func_call_list:
                     tool_id, name, args = self.decode_tool_call(tool_call)
                     if name == "accept_report":
                         self.state = "accept_report"
