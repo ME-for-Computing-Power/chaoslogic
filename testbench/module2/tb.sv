@@ -12,6 +12,8 @@ module tb;
 
     // reference model
     logic [DW-1:0] ref_queue[$];
+    // 随机写入读出测试用变量
+    int i, wcnt, rcnt;
 
     // 实例化被测模块
     async_fifo u_dut (
@@ -118,7 +120,6 @@ module tb;
 
         // 随机写入读出测试
         do_reset();
-        int i, wcnt, rcnt;
         wcnt = 0;
         rcnt = 0;
         for (i = 0; i < 20; i++) begin
