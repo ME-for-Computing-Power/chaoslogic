@@ -61,12 +61,17 @@ module tb;
         fifo_r_enable = 1;
         @(posedge clk_out);
         fifo_r_enable = 0;
-        // reference model pop & compare
-        if (!fifo_empty && ref_queue.size() > 0) begin
-            logic [DW-1:0] ref_data = ref_queue.pop_front();
-            if (data_from_fifo !== ref_data)
-                $display("[ASSERT FAIL] 参考模型比对失败: 期望 %h, 实际 %h", ref_data, data_from_fifo);
-        end
+        fork
+            begin
+                @(posedge clk_out);
+                // reference model pop & compare
+                if (!fifo_empty && ref_queue.size() > 0) begin
+                    logic [DW-1:0] ref_data = ref_queue.pop_front();
+                    if (data_from_fifo !== ref_data)
+                        $display("[ASSERT FAIL] 参考模型比对失败: 期望 %h, 实际 %h", ref_data, data_from_fifo);
+                end
+            end
+        join_none
     endtask
 
     // 检查信号
