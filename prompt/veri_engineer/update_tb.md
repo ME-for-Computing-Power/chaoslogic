@@ -7,6 +7,10 @@ Spec 已更新
 
 {spec}
 
+# 验证计划
+
+{veri_plan}
+
 # 当前任务
 
 1. 使用 submit_testbench 提交testbench，并观察对应结果
