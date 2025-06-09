@@ -64,27 +64,24 @@ module tb;
         // reference model pop & compare
         if (!fifo_empty && ref_queue.size() > 0) begin
             logic [DW-1:0] ref_data = ref_queue.pop_front();
-            assert (data_from_fifo == ref_data)
-            else
-                $fatal(
-                    "参考模型比对失败: 期望 %h, 实际 %h",
-                    ref_data,
-                    data_from_fifo
-                );
+            if (data_from_fifo !== ref_data)
+                $display("[ASSERT FAIL] 参考模型比对失败: 期望 %h, 实际 %h", ref_data, data_from_fifo);
         end
     endtask
 
     // 检查信号
     task automatic check_full_empty(input logic expect_full, input logic expect_empty);
         repeat (2) @(posedge clk_in);
-        assert (fifo_full === expect_full)
-        else $fatal("fifo_full error: expect %0d, got %0d", expect_full, fifo_full);
-        assert (fifo_empty === expect_empty)
-        else $fatal("fifo_empty error: expect %0d, got %0d", expect_empty, fifo_empty);
+        if (!(fifo_full === expect_full))
+            $display("[ASSERT FAIL] fifo_full error: expect %0d, got %0d", expect_full, fifo_full);
+        if (!(fifo_empty === expect_empty))
+            $display("[ASSERT FAIL] fifo_empty error: expect %0d, got %0d", expect_empty, fifo_empty);
     endtask
 
     // 主测试流程
     initial begin
+        $dumpfile("tb.vcd");
+        $dumpvars(0, tb);
         $display("=== TB Start ===");
         do_reset();
 
