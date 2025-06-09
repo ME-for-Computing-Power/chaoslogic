@@ -179,7 +179,7 @@ wolf_silicon/test.py
 *.blg
 *.dvi
 *.out
-*.pdf
+svg-inkscape/
 *.xdv
 *.fls
 *.synctex.gz
