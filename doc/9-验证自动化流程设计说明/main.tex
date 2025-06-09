@@ -1,9 +1,9 @@
 \documentclass[UTF8]{ctexart}
 
 \usepackage{geometry}
-\geometry{a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm}
+%\geometry{a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm}
 
-\usepackage{fontspec}
+%\usepackage{fontspec}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -22,14 +22,32 @@
 \maketitle
 
 \begin{abstract}
-本文档主要介绍验证自动化流程的设计思路、实现方法及相关注意事项。
+本文档主要介绍本软件的设计思路、实现方法及相关注意事项。
 \end{abstract}
 
 \section{介绍}
 %简要介绍文档背景和目的。
-本项目设计了一套由大模型驱动的RTL代码的生成与验证自动化流程，旨在提高IC设计的效率和准确性。
+本项目设计了一套由大语言模型（Large Language Model, LLM）驱动的RTL代码的生成与验证自动化软件，旨在提高IC设计的效率和准确性。
+
 \section{流程设计}
-详细描述自动化流程的设计方案。
+软件通过设置项目管理、设计工程师和验证工程师三个Agent，模仿一般的IC设计流程，使通用LLM
+生成可靠的RTL代码。下面，介绍各个Agent的设计。
+
+\subsection{项目工程师Agent}
+项目工程师解读用户的需求，生成项目的技术规范（下文简称Spec），并将其存储在文件中。
+
+当设计完成时，项目工程师还会根据验证工程师的验证报告，检查设计是否满足规范要求。
+
+
+\subsection{设计工程师Agent}
+设计工程师根据项目工程师提供的Spec，生成RTL代码。设计工程师会将生成的代码存储在文件中，并在必要时进行修改。为避免LLM生成的代码存在语法错误，每次设计工程师提交代码时，都会使用VCS的vlogan工具进行语法检查。若检查出语法错误，设计工程师会根据错误信息进行修改，直到消除所有报错为止。
+
+另外，设计工程师还会根据验证工程师的反馈，修改RTL代码以满足验证需求。
+
+\subsection{验证工程师Agent}
+验证工程师根据项目工程师提供的Spec与用户提供的验证方案，生成验证计划，并编写测试用例。验证工程师会使用VCS编译仿真程序，并运行测试用例，生成验证报告。同样，当编译仿真程序时，若出现编译错误，验证工程师也会根据错误信息进行修改，直至成功编译得到simv仿真程序为止。
+接下来，验证工程师会检查simv仿真程序的输出，判断RTL代码是否存在问题。当RTL代码存在问题时，验证工程师会将问题反馈给设计工程师，并要求其修改RTL代码。当验证工程师认为RTL代码满足验证需求时，会将验证报告提交给项目工程师。
+
 
 \section{实现方法}
 说明具体的实现细节和技术选型。
