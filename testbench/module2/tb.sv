@@ -97,6 +97,7 @@ module tb;
         read_fifo();
         read_fifo();
         check_full_empty(0, 1);  // 空
+        $display("[TB] 空满信号测试完成");
 
         // 复位测试
         write_fifo($urandom);
@@ -104,6 +105,7 @@ module tb;
         check_full_empty(1, 0);
         do_reset();
         check_full_empty(0, 1);
+        $display("[TB] 复位测试完成");
 
         // 写使能信号测试
         do_reset();
@@ -117,6 +119,7 @@ module tb;
         read_fifo();
         repeat (2) @(posedge clk_out);
         // 参考模型比对已在read_fifo中自动完成
+        $display("[TB] 写使能信号测试完成");
 
         // 随机写入读出测试
         do_reset();
@@ -131,8 +134,7 @@ module tb;
                 read_fifo();
             end
         end
-
-        $display("随机写入次数: %0d, 随机读出次数: %0d", wcnt, rcnt);
+        $display("[TB] 随机写入读出测试完成，随机写入次数: %0d, 随机读出次数: %0d", wcnt, rcnt);
 
         $display("=== TB Finish ===");
         $finish;
