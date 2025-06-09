@@ -1,9 +1,10 @@
 \documentclass[UTF8]{ctexart}
 
 \usepackage{geometry}
-%\geometry{a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm}
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm}
 
 %\usepackage{fontspec}
+\usepackage{float}
 
 \usepackage{graphicx}
 \usepackage{svg}
@@ -24,7 +25,7 @@
 \maketitle
 
 \begin{abstract}
-本文档主要介绍本软件的设计思路、实现方法及相关注意事项。
+本软件通过设置项目管理、设计工程师和验证工程师三个Agent，模仿一般的IC设计流程，使通用大语言模型（LLM）生成可靠的RTL代码。本文档将详细介绍各个Agent的设计，以及软件的运行流程。
 \end{abstract}
 
 \section{介绍}
@@ -59,16 +60,14 @@
 为了避免设计工程师的错误误导验证工程师，设计工程师和验证工程师将分别根据项目工程师提供的Spec与用户提供的验证方案生成各自的代码和测试用例。整个流程中多次出现的语法检查和编译步骤，确保了生成的代码和测试用例都是正确的。
 
 
-\newpage
-
 %流程图
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
-    \includesvg[width=0.8\textwidth]{flow.drawio.svg}
+    \includesvg[width=0.99\textwidth]{flow.drawio.svg}
     \caption{程序流程图}
     \label{fig:flowchart}
 \end{figure}
-\newpage
+
 
 
 
