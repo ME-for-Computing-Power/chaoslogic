@@ -37,3 +37,11 @@
 `fifo_empty`：fifo空信号
 
 `fifo_full`：fifo满信号
+
+## 时序说明
+
+数据将在`fifo_w_enable`被拉高的下一个时钟周期被写入，支持流水线
+
+数据将在`fifo_r_enable`被拉高的下一个时钟周期被读出，支持流水线
+
+`fifo_empty`与`fifo_full`最多有两个时钟周期的延迟

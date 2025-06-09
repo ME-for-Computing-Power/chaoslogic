@@ -6,6 +6,14 @@
 
 等待验证工程师的报告
 
+# 项目管理员的Spec
+
+{spec}
+
+# 验证计划
+
+{veri_plan}
+
 # 当前任务
 
 1. 使用 submit_testbench 提交 testbench ，testbench 将自动执行，并返回测试结果

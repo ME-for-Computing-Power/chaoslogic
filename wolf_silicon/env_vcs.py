@@ -19,6 +19,7 @@ class WolfSiliconEnv(object):
         self._verification_path = verification_path
 
         self._user_requirements_path = os.path.join(self._doc_path, "user_requirements.md")
+        self._veri_plan_path = os.path.join(self._doc_path, "veri_plan.md")
         self._spec_path = os.path.join(self._doc_path, "spec.md")
         self._cmodel_code_path = os.path.join(self._cmodel_path, "cmodel.cpp")
         self._cmodel_binary_path = os.path.join(self._cmodel_path, "cmodel")
@@ -36,6 +37,11 @@ class WolfSiliconEnv(object):
         # 将 requirements 写入 {self._doc_path}/user_requirements.md，固定为追加写入
         with open(self._user_requirements_path, "a") as f:
             f.write(requirements+"\n")
+            
+    def write_veri_plan(self, veri_plan:str):
+        # 将 requirements 写入 {self._doc_path}/user_requirements.md，固定为追加写入
+        with open(self._veri_plan_path, "a") as f:
+            f.write(veri_plan+"\n")
     
     def get_user_requirements(self) -> tuple[bool, float, str]:
         # 返回 user requirements 的内容和修改时间
@@ -45,6 +51,15 @@ class WolfSiliconEnv(object):
                 return True, mtime, f.read()
         else:
             return False, 0, "No user requirements found."
+        
+    def get_veri_plan(self) -> tuple[bool, float, str]:
+        # 返回 veri plan 的内容和修改时间
+        if os.path.exists(self._veri_plan_path):
+            mtime = os.path.getmtime(self._veri_plan_path)
+            with open(self._veri_plan_path, "r") as f:
+                return True, mtime, f.read()
+        else:
+            return False, 0, "No verification plan found."
         
     def write_spec(self, spec:str, overwrite:bool=False):
         # 将 spec 写入 {self._doc_path}/spec.md，如果 overwrite 为 False，追加写入
