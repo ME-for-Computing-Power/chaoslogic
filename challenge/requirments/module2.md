@@ -1,6 +1,8 @@
 # 异步fifo
 
-整体说明：一个传统的异步fifo，宽度为140位，深度为2，提供 fifo 空、fifo 满信号状态指示
+命名：`async_fifo`
+
+整体说明: 传统的异步fifo，宽度为140位，深度为2，提供 fifo 空、fifo 满信号状态指示
 
 ## 顶层IO
 
@@ -19,11 +21,27 @@
 ## 信号说明
 
 `clk_in`：fifo输入时钟域的时钟
+
 `clk_out`: fifo输出时钟域的时钟，与 `clk_in` 为同频异步。
+
 `rst_n`:异步复位信号，低电平有效
+
 `fifo_w_enable`：fifo写使能信号
+
 `fifo_r_enable`：fifo读使能信号
+
 `data_to_fifo`：fifo输入数据
+
 `data_from_fifo`：fifo输出数据
+
 `fifo_empty`：fifo空信号
+
 `fifo_full`：fifo满信号
+
+## 时序说明
+
+数据将在`fifo_w_enable`被拉高的下一个时钟周期被写入，支持流水线
+
+数据将在`fifo_r_enable`被拉高的下一个时钟周期被读出，支持流水线
+
+`fifo_empty`与`fifo_full`最多有两个时钟周期的延迟

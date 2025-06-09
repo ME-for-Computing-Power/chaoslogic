@@ -1,12 +1,15 @@
 # 项目当前状态
 
-之前的设计出现问题
-根据你的错误，Spec已更新
+你的设计存在错误
 
-# 更新后的Spec
+# 出错的rtl代码
 
-{spec}
+{rtl_code}
+
+# 验证工程师的反馈
+
+{feedback}
 
 # 当前任务
 
-根据更新后的Spec迭代RTL代码，并用 submit_design 提交
+根据反馈迭代设计，并用 submit_design 提交

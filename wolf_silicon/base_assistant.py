@@ -92,14 +92,16 @@ class BaseAssistant(object):
             },
             *self.get_short_term_memory()
         ]
-        self.env.manual_log(self.name, f"Messages: {messages}")
+        ##将 message 中的 \n 替换为真的换行符，改善log的可读性
+        message_for_logging = json.dumps(messages, ensure_ascii=False).replace('\\n', '\n')
+        self.env.manual_log(self.name, f"Messages: {message_for_logging}")
         response = self.agent.model_client.chat.completions.create(
             model=self.agent.MODEL_NAME,
             messages=messages,
             max_tokens=self.agent.MAX_TOKENS,
             stream=True,
             tools=self.get_tools_description(),
-            tool_choice = "auto" if tools_enable else "none"
+            tool_choice = "required" if tools_enable else "none"
         )
         message, func_call_list = self.handle_chat_response(response) 
         if func_call_list:
@@ -140,8 +142,10 @@ class BaseAssistant(object):
                             if tool_status == 0:
                                 tool_status = 1
                                 self.env.manual_log(self.name, "调用工具：")
+                            #将 tcchunk.function.arguments 中的 \n 替换为真的换行符，改善log的可读性
+                            tcchunk_logging = tcchunk.function.arguments.replace('\\n', '\n')
+                            self.env.manual_log(self.name, tcchunk_logging, False)
                             tc["function"]["arguments"] += tcchunk.function.arguments 
-                            self.env.manual_log(self.name, tcchunk.function.arguments, False)
                 if hasattr(choice.delta, "reasoning_content") and choice.delta.reasoning_content:
                     if status != 1:
                         status = 1

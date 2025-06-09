@@ -19,23 +19,29 @@ class WolfSiliconEnv(object):
         self._verification_path = verification_path
 
         self._user_requirements_path = os.path.join(self._doc_path, "user_requirements.md")
+        self._veri_plan_path = os.path.join(self._doc_path, "veri_plan.md")
         self._spec_path = os.path.join(self._doc_path, "spec.md")
         self._cmodel_code_path = os.path.join(self._cmodel_path, "cmodel.cpp")
         self._cmodel_binary_path = os.path.join(self._cmodel_path, "cmodel")
         self._design_code_path = os.path.join(self._design_path, "dut.v")
         self._design_filelist_path = os.path.join(self._design_path, "filelist")
         self._verification_code_path = os.path.join(self._verification_path, "tb.sv")
+        self._verification_feedback_path = os.path.join(self._doc_path, "feedback.md")
         self._verification_binary_path = os.path.join(self._workspace_path, "simv")
         self._verification_report_path = os.path.join(self._doc_path, "verification_report.md")
         self._log_path = os.path.join(self._doc_path, "log.txt")
 
         self.model_client = model_client
-        self.translation_model_name = translation_model_name
 
     def write_user_requirements(self, requirements:str):
         # 将 requirements 写入 {self._doc_path}/user_requirements.md，固定为追加写入
         with open(self._user_requirements_path, "a") as f:
             f.write(requirements+"\n")
+            
+    def write_veri_plan(self, veri_plan:str):
+        # 将 requirements 写入 {self._doc_path}/user_requirements.md，固定为追加写入
+        with open(self._veri_plan_path, "a") as f:
+            f.write(veri_plan+"\n")
     
     def get_user_requirements(self) -> tuple[bool, float, str]:
         # 返回 user requirements 的内容和修改时间
@@ -45,6 +51,15 @@ class WolfSiliconEnv(object):
                 return True, mtime, f.read()
         else:
             return False, 0, "No user requirements found."
+        
+    def get_veri_plan(self) -> tuple[bool, float, str]:
+        # 返回 veri plan 的内容和修改时间
+        if os.path.exists(self._veri_plan_path):
+            mtime = os.path.getmtime(self._veri_plan_path)
+            with open(self._veri_plan_path, "r") as f:
+                return True, mtime, f.read()
+        else:
+            return False, 0, "No verification plan found."
         
     def write_spec(self, spec:str, overwrite:bool=False):
         # 将 spec 写入 {self._doc_path}/spec.md，如果 overwrite 为 False，追加写入
@@ -130,7 +145,7 @@ class WolfSiliconEnv(object):
             for filepath in v_files:
                 f.write(filepath + "\n")
         # lint 不使用 execute command，直接使用 os.system vlogan -full64  -f filelist.f -l test.log
-        command = f"vlogan -full64  -f {self._design_filelist_path}"
+        command = f"vlogan -full64  -f {self._design_filelist_path} -sverilog"
         with subprocess.Popen(command.split(' '), 
                       stdout=subprocess.PIPE, 
                       stderr=subprocess.PIPE,
@@ -146,6 +161,18 @@ class WolfSiliconEnv(object):
         # 将 verification code 写入 {self._verification_path}/tb.sv, 固定为 overwrite
         with open(self._verification_code_path, "w") as f:
             f.write(code+"\n")
+        
+    def write_feedback(self, text:str):
+        with open(self._verification_feedback_path, "w") as f:
+            f.write(text+"\n")
+
+    def get_feedback(self) -> tuple[bool, float, str]:
+        if os.path.exists(self._verification_feedback_path):
+            mtime = os.path.getmtime(self._verification_feedback_path)
+            with open(self._verification_feedback_path, "r") as f:
+                return True, mtime, f.read()
+        else:
+            return False, 0, "No feedback found."
         
     def get_verification_code(self) -> tuple[bool, float, str]:
         # 返回 verification code 的内容和修改时间
@@ -181,7 +208,7 @@ class WolfSiliconEnv(object):
         return os.path.exists(self._verification_binary_path)
     
     def run_verification(self, timeout_sec:int=300) -> str:
-        result = WolfSiliconEnv.execute_command(self._verification_binary_path + " "+"+vcs+finish+32768" , timeout_sec)
+        result = WolfSiliconEnv.execute_command(self._verification_binary_path + " "+"+vcs+finish+999999" , timeout_sec)
         print(result)
         return result
     
@@ -263,12 +290,9 @@ class WolfSiliconEnv(object):
             text=True,
             preexec_fn=os.setsid
         )
-        pid = proc.pid
-        print ("PID is ", pid) 
         try:
             stdout, stderr = proc.communicate(timeout=timeout_sec)
             output = textwrap.dedent(f"""\
-                [正常结束]
                 --- STDOUT ---
                 {stdout}
                 --- STDERR ---
