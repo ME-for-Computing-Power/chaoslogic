@@ -1,15 +1,15 @@
 {
-    "std": [
-        "std",
-        "reYIK",
-        "module",
-        1
-    ],
     "...MASTER...": [
         "SIM",
         "amcQw",
         "module",
         3
+    ],
+    "std": [
+        "std",
+        "reYIK",
+        "module",
+        1
     ],
     "tb_frame_detector": [
         "tb_frame_detector",

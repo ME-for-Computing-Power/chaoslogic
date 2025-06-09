@@ -125,15 +125,15 @@ class BaseAssistant(object):
         for chunk in response:
             for choice in chunk.choices:
                 if hasattr(choice.delta, "tool_calls") and choice.delta.tool_calls:
-                    for tcchunk in choice.delta.tool_calls:
-                        if len(func_call_list) <= tcchunk.index:
+                    for index, tcchunk in enumerate(choice.delta.tool_calls):
+                        if len(func_call_list) <= index:
                             func_call_list.append({
                                 "id": "",
                                 "name": "",
                                 "type": "function", 
                                 "function": { "name": "", "arguments": "" } 
                             })
-                        tc = func_call_list[tcchunk.index]
+                        tc = func_call_list[index]
                         if tcchunk.id:
                             tc["id"] += tcchunk.id
                         if tcchunk.function.name:

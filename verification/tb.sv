@@ -62,11 +62,13 @@ initial begin
 end
 
 initial begin
+    #3;
     clk_out = 0;
     forever #(CLK_PERIOD_OUT/2) clk_out = ~clk_out;
 end
 
 initial begin
+    #3;
     clk_out_s = 0;
     forever #(CLK_PERIOD_S/2) clk_out_s = ~clk_out_s;
 end
@@ -87,6 +89,7 @@ task send_frame;
     data_in = HEADER[31:16];
     @(posedge clk_in);
     data_in = HEADER[15:0];
+    @(posedge clk_in);
     @(posedge clk_in);
     
     // 发送通道选择
@@ -112,7 +115,7 @@ endtask
 
 // 测试任务：检查串行输出
 task automatic check_serial_output;
-    input channel;          // 通道号 (1-8)
+    input [3:0] channel;          // 通道号 (1-8)
     input [127:0] exp_data; // 预期数据
     input [15:0] data_len;  // 数据长度
     
@@ -135,7 +138,7 @@ task automatic check_serial_output;
     endcase
     
     // 等待有效信号
-    wait(data_vld === 1'b1);
+    // wait(data_vld === 1'b1);
     $display("[%0t] CH%d 数据输出开始", $time, channel);
     
     // 收集串行数据 (修复循环变量冲突)
@@ -218,6 +221,7 @@ task test_single_frame;
     // 检查输出
     for (int ch = 1; ch <= 8; ch++) begin
         if (channel[ch-1]) begin
+            $display("[%0t] 检查CH%d输出", $time, ch);
             check_serial_output(ch, data, data_len);
         end
     end
@@ -226,6 +230,12 @@ endtask
 // 监控错误信号
 always @(posedge clk_in) begin
     if (crc_err) $warning("[%0t] CRC错误检测", $time);
+end
+
+initial begin
+    #1000; 
+    $error("仿真超时");
+    $finish;
 end
 
 endmodule

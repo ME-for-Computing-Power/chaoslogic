@@ -570,7 +570,7 @@ fHsimMdbPartInputLimit             	1
 fHsimSdfData                       	0
 fHsimDesignHasSdfAnnotation        	0
 fHsimDesignUsesParallelVcs         	0
-fHsimCMEnabled                     	0
+fHsimCMEnabled                     	1
 fGblMSah                           	0
 fGblMSTe                           	0
 fGblIntPe                          	0
@@ -1205,13 +1205,13 @@ fHsCgOptNewSelCheck                	1
 fFgpReportUnsafeFuncs              	0
 fHsCgOptUncPrlThreshold            	4
 fHsimCosimGatesProp                	0
-fHsSVNettypePerfOpt                	0
+fHsSVNettypePerfOpt                	1
 fHsCgOptHashFixMap                 	1
 fHsimLowPowerRetAnalysisInChild    	0
 fRetainWithDelayedSig              	0
 fHsimChargeDecay                   	0
 fHsimCongruencyConfigFile          	0
 fHsimCongruencyLogFile             	0
-fHsimCoverageEnabled               	0
-fHsimCoverageOptions               	0
-fHsimCoverageDir                   	NULL
+fHsimCoverageEnabled               	1
+fHsimCoverageOptions               	279
+fHsimCoverageDir                   	./covdir.vdb

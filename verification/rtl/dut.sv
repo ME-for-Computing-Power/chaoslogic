@@ -83,6 +83,8 @@ always @(posedge clk_in or negedge rst_n) begin
         
         case(state)
             IDLE: begin
+                fifo_we <= 0;
+                crc_valid <= 0;
                 if (data_in == HEADER[31:16]) begin
                     state <= HEADER1;
                 end
@@ -93,7 +95,7 @@ always @(posedge clk_in or negedge rst_n) begin
                     state <= CHANNEL;
                 end
                 else begin
-                    state <= IDLE;
+                    state <= IDLE; // 帧头不匹配
                 end
             end
             
@@ -130,7 +132,7 @@ always @(posedge clk_in or negedge rst_n) begin
             
             TRAILER2: begin
                 if (data_in == TRAILER[15:0]) begin
-                    state <= VALID;
+                    state <= IDLE;
                     fifo_we <= 1;
                     // 简单CRC验证: 如果CRC非0则有效
                     if (crc_reg != 0) begin
@@ -188,7 +190,7 @@ always @(posedge clk_out_s or negedge rst_n) begin
                 bit_counter <= bit_counter - 1;
             end
             else begin
-                data_vld <= 0;
+                data_vld <= data_vld;
             end
         end
     end
@@ -247,6 +249,28 @@ always @(*) begin
         data_out_ch8 = shift_reg[15];
         data_vld_ch8 = data_vld;
     end
+end
+
+always @(state) begin
+    $display("[%0t] DUT状态变更: %s", $time, 
+        state == IDLE ? "IDLE" :
+        state == HEADER1 ? "HEADER1" :
+        state == HEADER2 ? "HEADER2" :
+        state == CHANNEL ? "CHANNEL" :
+        state == DATA ? "DATA" :
+        state == CRC ? "CRC" :
+        state == TRAILER1 ? "TRAILER1" :
+        state == TRAILER2 ? "TRAILER2" :
+        state == VALID ? "VALID" :
+        // ... 其他状态
+        "UNKNOWN");
+end
+
+always @(posedge clk_in) begin
+        $display("[%0t] 输入检测: state=%d, data_in=%h", 
+                $time, state, data_in);
+        // $display("[%0t] 输出通道1检测: data_vld_ch1=%d, data_out_ch1=%h", 
+        //         $time, data_vld_ch1, data_out_ch1);
 end
 
 endmodule

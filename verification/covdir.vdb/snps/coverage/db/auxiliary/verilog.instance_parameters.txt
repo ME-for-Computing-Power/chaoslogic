@@ -1,0 +1,8 @@
+tb_frame_detector.dut.CHANNEL3
+tb_frame_detector.dut.CRC5
+tb_frame_detector.dut.DATA4
+tb_frame_detector.dut.HEADER11
+tb_frame_detector.dut.IDLE0
+tb_frame_detector.dut.TRAILER16
+tb_frame_detector.dut.TRAILER27
+tb_frame_detector.dut.VALID8
