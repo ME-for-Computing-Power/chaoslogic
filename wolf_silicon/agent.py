@@ -21,11 +21,11 @@ class WolfSiliconAgent(object):
                  user_verification_code_path=None,
                  start_from="project") -> None:
         # config
-        self.MODEL_NAME = "deepseek-reasoner"
-        self.TRANSLATION_MODEL_NAME = "deepseek-reasoner"
+        self.MODEL_NAME = "deepseek-r1-250528"
+        #self.TRANSLATION_MODEL_NAME = "deepseek-reasoner"
         self.MAX_SHORT_TERM_MEMORY = 10
         self.MAX_RETRY = 10
-        self.MAX_TOKENS = 32000
+        self.MAX_TOKENS = 16384
         # connect to model_client
         self.model_client = mc
         # 在 workspace 目录下创建doc、cmodel、design、verification文件夹
@@ -41,7 +41,7 @@ class WolfSiliconAgent(object):
         os.makedirs(self.verification_path, exist_ok=True)
         self.env = WolfSiliconEnv(self.workspace_path, self.doc_path, self.cmodel_path, 
                                   self.design_path, self.verification_path, 
-                                  self.model_client, self.TRANSLATION_MODEL_NAME)
+                                  self.model_client)
         # 初始化环境
         # 读取用户需求，写入user_requirements.md
         if user_requirements_path:
@@ -72,7 +72,7 @@ class WolfSiliconAgent(object):
     def run(self):
         first_loop = True
         res = "design"
-        if self.start_from != None:
+        if self.start_from != 'project':
             if self.start_from not in ["project", "design", "verification", "iter"]:
                 raise ValueError("start_from must be one of 'project', 'design', 'verification', or 'iter'")
             self.env.manual_log("Admin", f"从{self.start_from} 状态断点复原")
@@ -90,8 +90,9 @@ class WolfSiliconAgent(object):
                         first_loop = False
                         i=0
                         if self.start_from == "iter":#认为iter状态是指验证工程师检查到设计工程师的设计有错误，已完成feedback.md文件
-                            self.start_from == None#删除start_from
+                            self.start_from == 'project'#删除start_from
                             self.design_engineer_assistant.state = 'design_error'
+                            self.verification_engineer_assistant.state = 'error_in_design'
                             self.design_engineer_assistant.execute()
                         while True:#循环一直执行，直到验证工程师认为设计工程师没有错误
                             if self.verification_engineer_assistant.execute() != 'Error in Design' :

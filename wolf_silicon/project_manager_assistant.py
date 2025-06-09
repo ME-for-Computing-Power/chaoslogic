@@ -63,7 +63,7 @@ class ProjectManagerAssistant(BaseAssistant):
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "spec": {"type": "string", "description": "SPEC文档内容，不要在这里插入verilog代码"},
+                        "spec": {"type": "string", "description": "SPEC文档内容"},
                         "overwrite": {"type": "boolean", "description": "true表示覆盖现有的SPEC，false表示将其追加到现有SPEC中"}
                     },
                     "required": ["spec", "overwrite"],

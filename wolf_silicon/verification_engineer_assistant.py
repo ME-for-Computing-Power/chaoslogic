@@ -38,15 +38,10 @@ class VerificationEngineerAssistant(BaseAssistant):
         verification_report_exist, verification_report_mtime, verification_report = self.env.get_verification_report()
 
         if self.state == "wait_verification" or self.state == "review_testbench_1":
-            assert(spec_exist)
-            #assert(cmodel_code_exist)
-            assert(design_code_exist)
             return self.load_prompt('create_tb.md')
         else:
-            assert(spec_exist)
-            #assert(cmodel_code_exist)
-            assert(design_code_exist)
-            assert(verification_report_exist)
+            if self.state == "error_in_design":
+                return self.load_prompt('design_updated.md')
             return self.load_prompt('update_tb.md')
     
     def submit_testbench(self, code):
@@ -113,7 +108,10 @@ class VerificationEngineerAssistant(BaseAssistant):
                 }
             }
         }
-        return [submit_testbench, write_feedback, write_verification_report]
+        if self.state == "error_in_design":
+            return [write_feedback, write_verification_report]
+        else:
+            return [submit_testbench, write_feedback, write_verification_report]
     
     def execute(self):
         self.clear_short_term_memory()
@@ -122,14 +120,21 @@ class VerificationEngineerAssistant(BaseAssistant):
 
         while True:
             if (self.state == "wait_verification" or self.state == "verification_finished"):
-                llm_message, func_call_list = self.call_llm("""
-使用工具提交 Testbench。Testbench module 的名字固定为 `tb`，毋需设置`timescale`，因其在编译时将自动给出
-Testbench 中应利用 assertion 检查设计是否正确。采用生成随机数的方式，避免对激励信号直接赋值。
-提交后，Testbench将会编译并运行，仿真时间限制为999999时间单位。
+                llm_message, func_call_list = self.call_llm("""使用工具提交 Testbench。Testbench module 的名字固定为 `tb`，毋需设置`timescale`，因其在编译时将自动给出。Testbench 中应利用 assertion 检查设计是否正确。采用生成随机数的方式，避免对激励信号直接赋值。提交后，Testbench将会编译并运行，仿真时间限制为999999时间单位。
                     """, tools_enable=True)
             else:
                 compile_output = self.env.compile_and_check_verification()
-                if  compile_output!= 'Success':#编译报错
+                if self.state == 'error_in_design':
+                    sim_log = self.env.run_verification()
+                    llm_message, func_call_list = self.call_llm(f"""
+设计工程师已按照你的反馈修改了设计代码，仿真结果如下
+```
+{sim_log}
+```
+若 Testbench 检查出了设计中的错误，则应用 write_feedback 将错误反馈给设计工程师。若确认测试正确无误，则使用 write_verification_report 提交验证报告
+""", tools_enable=True)
+                    
+                elif  compile_output!= 'Success':#编译报错
                     llm_message, func_call_list = self.call_llm(f"""
 Testbench 编译报错如下：
 ```
@@ -140,17 +145,16 @@ Testbench 编译报错如下：
                 else: #编译通过
                     sim_log = self.env.run_verification()
                     llm_message, func_call_list = self.call_llm(f"""
-Testbench 成功编译，运行记录如下：
+Testbench 成功编译，仿真结果如下：
 ```
 {sim_log}
 ```
-当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则应用 write_feedback 将错误反馈给设计工程师
-
-若确认测试正确无误，则使用 write_verification_report 提交验证报告。
-
-若Testbench有问题，则可使用 submit_testbench 提交修改后的Testbench。
+当确认Testbench 本身不存在问题后，若 Testbench 检查出了设计中的错误，则应用 write_feedback 将错误反馈给设计工程师。若确认测试正确无误，则使用 write_verification_report 提交验证报告。若Testbench有问题，则可使用 submit_testbench 提交修改后的Testbench。
 
 """, tools_enable=True)
+            # if toolcall list is empty, raise an error
+            if not func_call_list:
+                raise ValueError("大模型未调用任何工具，请检查大模型的输出。")
             for tool_call in func_call_list:
                 tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_testbench":
@@ -164,7 +168,7 @@ Testbench 成功编译，运行记录如下：
                 if name == 'write_feedback':
                     self.submit_feedback(args["text"])
                     self.reflect_tool_call(tool_id, "success")
-                    self.state = "wait_verification"
+                    self.state = "error_in_design"
                     return 'Error in Design'
 
                 if name == "write_verification_report":

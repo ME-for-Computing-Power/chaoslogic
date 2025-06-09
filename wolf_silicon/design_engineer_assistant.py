@@ -30,7 +30,7 @@ class DesignEngineerAssistant(BaseAssistant):
             if code_exist:
                 md_content = md_content.replace('{rtl_code}',rtl_code)
             else:
-                raise ValueError("Design code not found in environment")
+                raise ValueError("Design code not found in ", self.env._design_path)
             
         if '{feedback}' in md_content:
             feedback_exist, feedback_mtime, feedback = self.env.get_feedback()
@@ -54,6 +54,7 @@ class DesignEngineerAssistant(BaseAssistant):
     def submit_design(self, code):
         self.env.manual_log(self.name, "提交了 IP 设计代码")
         self.env.write_design_code(code)
+        self.env.manual_log(self.name, "开始语法检查")
         lint_output = self.env.lint_design()
         lint_output_lowwer = lint_output.lower()
         self.is_lint_clean = "error" not in lint_output_lowwer and "warning" not in lint_output_lowwer
@@ -107,27 +108,34 @@ class DesignEngineerAssistant(BaseAssistant):
         while True:
             if not self.ready_to_handover():
                 llm_message, func_call_list = self.call_llm("""
-                    使用工具提交你的设计。
-                                            
-                    设计应当仅在一个.v文件中存储，且符合verilog-2000标准。
-                    设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               
+使用`submit_design`提交你的设计。
+                        
+设计仅在一个.v文件中存储，且符合verilog-2000标准。
+设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               
                     """, tools_enable=True)
             elif not self.is_lint_clean:
-                llm_message, func_call_list = self.call_llm(f"""
-                    刚才的代码中存在语法错误：
-                    ```
-                    {self.env.lint_design()}
-                    ```
-                    修改错误，并用 submit_design 重新提交。
-
+                if self.state != "design_error":
+                    llm_message, func_call_list = self.call_llm(f"""
+刚才的代码中存在语法错误：
+```
+{self.env.lint_design()}
+```
+修改错误，并用 submit_design 重新提交。
                     """, tools_enable=True)
+                else:
+
+                    llm_message, func_call_list = self.call_llm('按照反馈修改代码', tools_enable=True)
             else:
                 self.state = "design_finished"
-                return
+                return 0
+            
+            # if toolcall list is empty, raise an error
+            if not func_call_list:
+                raise ValueError("大模型未调用任何工具，请检查大模型的输出。")
             for tool_call in func_call_list:
                 tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_design":
-                    lint_output = self.submit_design(args["code"])
+                    self.submit_design(args["code"])
                     self.reflect_tool_call(tool_id, "success")
                 
 

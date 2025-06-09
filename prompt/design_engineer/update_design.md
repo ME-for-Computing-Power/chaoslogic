@@ -2,10 +2,6 @@
 
 你的设计存在错误
 
-# Spec
-
-{Spec}
-
 # 出错的rtl代码
 
 {rtl_code}

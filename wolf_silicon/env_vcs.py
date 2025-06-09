@@ -31,7 +31,6 @@ class WolfSiliconEnv(object):
         self._log_path = os.path.join(self._doc_path, "log.txt")
 
         self.model_client = model_client
-        self.translation_model_name = translation_model_name
 
     def write_user_requirements(self, requirements:str):
         # 将 requirements 写入 {self._doc_path}/user_requirements.md，固定为追加写入
@@ -276,8 +275,6 @@ class WolfSiliconEnv(object):
             text=True,
             preexec_fn=os.setsid
         )
-        pid = proc.pid
-        print ("PID is ", pid) 
         try:
             stdout, stderr = proc.communicate(timeout=timeout_sec)
             output = textwrap.dedent(f"""\
