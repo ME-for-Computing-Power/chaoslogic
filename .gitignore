@@ -170,3 +170,17 @@ ucli.key
 wolf_silicon/test.py
 
 *.vcd
+
+
+
+# LaTeX files
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.out
+*.pdf
+*.xdv
+*.fls
+*.synctex.gz
+*.fdb_latexmk
