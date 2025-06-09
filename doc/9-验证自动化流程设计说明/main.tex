@@ -5,6 +5,8 @@
 
 %\usepackage{fontspec}
 
+\usepackage{graphicx}
+\usepackage{svg}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
@@ -53,6 +55,12 @@
 接下来，介绍本软件是如何调用各个Agent以完成RTL代码的生成与验证的。
 
 %流程图
+\begin{figure}[htbp]
+    \centering
+    \includesvg[width=0.8\textwidth]{flow.drawio.svg}
+    \caption{程序流程图}
+    \label{fig:flowchart}
+\end{figure}
 
 \section{注意事项}
 列举在设计和实现过程中需要注意的问题。
