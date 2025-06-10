@@ -1,7 +1,7 @@
 \documentclass[UTF8]{ctexart}
 
 \usepackage{geometry}
-\geometry{a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm}
+\geometry{a4paper, left=3cm, right=3cm, top=3cm, bottom=3cm}
 
 %\usepackage{fontspec}
 \usepackage{float}
@@ -9,12 +9,12 @@
 \usepackage{graphicx}
 \usepackage{svg}
 \usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    urlcolor=blue,
-    citecolor=blue
-}
+% \hypersetup{
+%     colorlinks=true,
+%     linkcolor=blue,
+%     urlcolor=blue,
+%     citecolor=blue
+% }
 
 \title{验证自动化流程设计说明}
 \author{孙林涵，诸人豪，张煜}
@@ -22,15 +22,38 @@
 
 \begin{document}
 
-\maketitle
+%\maketitle
+\begin{titlepage}
+    \centering
+    \vspace*{3cm}
+    
+    {\Huge \bfseries 华为杯\\[1em]
+    第八届中国研究生创“芯”大赛\\[3em]}
+    
+    {\LARGE 技术文档\\[5em]}
+    
+    {\Large
+    作品名称：混沌逻辑-大模型多智能体自动数字IC前端\hspace{6cm} \\[2em]
+    团队名称：混沌逻辑\hspace{6cm} \\[2em]
+    参赛队员：孙林涵，诸人豪，张煜\hspace{6cm} \\[5em]
+    }
+    
+    \vfill
+    {\large \today}
+\end{titlepage}
 
 \begin{abstract}
-本软件通过设置项目管理、设计工程师和验证工程师三个Agent，模仿一般的IC设计流程，使通用大语言模型（LLM）生成可靠的RTL代码。本文档将详细介绍各个Agent的设计，以及软件的运行流程。
+本软件通过设置项目管理、设计工程师和验证工程师三个Agent，模仿一般的IC设计流程，使通用大语言模型（LLM）生成可靠的RTL代码。本文档将详细介绍软件各个Agent的设计，以及软件的运行流程。
 \end{abstract}
+
+\tableofcontents
+\newpage
 
 \section{介绍}
 %简要介绍文档背景和目的。
-本项目设计了一套由大语言模型（Large Language Model, LLM）驱动的RTL代码的生成与验证自动化软件，旨在提高IC设计的效率和准确性。
+近年来，随着LLM技术逐渐进入应用场景，越来越多的领域开始尝试使用LLM来辅助工作。IC设计作为一个复杂的工程领域，也开始探索如何利用LLM来提高设计效率和准确性。然而，大模型的幻觉与错误的输出严重降低了其在IC设计领域的实用性。
+
+为了解决这一问题，本项目设计了一套由大语言模型（Large Language Model, LLM）驱动的RTL代码的生成与验证自动化软件，旨在提高IC设计的效率和准确性。
 
 \section{Agent设计}
 软件通过设置项目管理、设计工程师和验证工程师三个Agent，模仿一般的IC设计流程，使通用LLM
@@ -38,7 +61,6 @@
 
 \subsection{项目工程师Agent}
 项目工程师解读用户的需求，生成项目的技术规范（下文简称Spec），并将其存储在文件中。
-
 当设计完成时，项目工程师还会根据验证工程师的验证报告，检查设计是否满足规范要求。
 
 
