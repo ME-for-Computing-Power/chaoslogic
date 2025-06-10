@@ -12,7 +12,7 @@ from project_manager_assistant import ProjectManagerAssistant
 from cmodel_engineer_assistant import CModelEngineerAssistant
 from design_engineer_assistant import DesignEngineerAssistant
 from verification_engineer_assistant import VerificationEngineerAssistant
-from model_client import mc
+from model_client import mc, model_name
 
 class WolfSiliconAgent(object):
     def __init__(self, workspace_path, user_requirements_path=None, 
@@ -22,10 +22,10 @@ class WolfSiliconAgent(object):
                  user_veri_plan_path=None,
                  start_from="project") -> None:
         # config
-        self.MODEL_NAME = "deepseek-r1-250528"
+        self.MODEL_NAME = model_name #在 model_client.py 中定义
         #self.TRANSLATION_MODEL_NAME = "deepseek-reasoner"
-        self.MAX_SHORT_TERM_MEMORY = 10
-        self.MAX_RETRY = 10
+        self.MAX_SHORT_TERM_MEMORY = 4
+        self.MAX_RETRY = 5
         self.MAX_TOKENS = 16384
         # connect to model_client
         self.model_client = mc

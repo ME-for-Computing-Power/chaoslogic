@@ -29,7 +29,7 @@ class WolfSiliconEnv(object):
         self._verification_feedback_path = os.path.join(self._doc_path, "feedback.md")
         self._verification_binary_path = os.path.join(self._workspace_path, "simv")
         self._verification_report_path = os.path.join(self._doc_path, "verification_report.md")
-        self._log_path = os.path.join(self._doc_path, "log.txt")
+        self._log_path = os.path.join(self._doc_path, "chaoslogic.log")
 
         self.model_client = model_client
 

@@ -37,9 +37,9 @@ class BaseAssistant(object):
     
     def decode_tool_call(self, tool_call):
         arguments = tool_call["function"]["arguments"]
-        protected = arguments.replace('\\n', '<<<NEWLINE>>>')
+        protected = arguments.replace('\\n', '<<<TMP_NEWLINE>>>')
         filtered = protected.replace('\r', '').replace('\n', '')
-        filtered_arguments = filtered.replace('<<<NEWLINE>>>', '\\n')
+        filtered_arguments = filtered.replace('<<<TMP_NEWLINE>>>', '\\n')
         return tool_call["id"], tool_call["function"]["name"], json.loads(filtered_arguments)
     
     def reflect_tool_call(self, id, result):
@@ -103,7 +103,33 @@ class BaseAssistant(object):
             tools=self.get_tools_description(),
             tool_choice = "required" if tools_enable else "none"
         )
+
         message, func_call_list = self.handle_chat_response(response) 
+        
+        error_counter = 0
+        while error_counter < self.agent.MAX_RETRY - 1:
+            #检查json格式是否被破坏
+            try:
+                json.loads(message)
+                for func_call in func_call_list:
+                    #检查函数调用的参数是否是合法的json
+                    self.decode_tool_call(func_call)
+                #如果没有异常，说明json格式正常
+                break
+            except json.JSONDecodeError as e:
+                self.env.manual_log('Admin', f"警告：输出内容的JSON格式可能被破坏，错误信息：{str(e)}，进行第 {str(error_counter + 1)} 次重试")
+                
+                error_counter += 1
+                #call llm again to fix the error
+                response = self.agent.model_client.chat.completions.create(
+                    model=self.agent.MODEL_NAME,
+                    messages=messages,
+                    max_tokens=self.agent.MAX_TOKENS,
+                    stream=True,
+                    tools=self.get_tools_description(),
+                    tool_choice = "required" if tools_enable else "none"
+                )
+
         if func_call_list:
             self.update_short_term_memory({
                 "role": "assistant",
@@ -114,6 +140,7 @@ class BaseAssistant(object):
             self.update_short_term_memory({
                 "role": "assistant",
                 "content": message
+
             })
         return message, func_call_list
 
