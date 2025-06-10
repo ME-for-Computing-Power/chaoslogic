@@ -32,7 +32,7 @@
 
 `data_to_fifo`：fifo输入数据
 
-`data_from_fifo`：fifo输出数据
+`data_from_fifo`：fifo输出数据，当`fifo_empty`为1时应读出140‘b0
 
 `fifo_empty`：fifo空信号
 
@@ -40,8 +40,8 @@
 
 ## 时序说明
 
-数据将在`fifo_w_enable`被拉高的下一个时钟周期被写入，支持流水线
+数据将在`fifo_w_enable`被拉高的时钟周期内被写入
 
-数据将在`fifo_r_enable`被拉高的下一个时钟周期被读出，支持流水线
+数据将在`fifo_r_enable`被拉高的时钟周期内被读出
 
-`fifo_empty`与`fifo_full`最多有两个时钟周期的延迟
+`fifo_empty`与`fifo_full`最多有三个时钟周期的延迟
