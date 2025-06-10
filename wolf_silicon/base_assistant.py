@@ -110,7 +110,6 @@ class BaseAssistant(object):
         while error_counter < self.agent.MAX_RETRY - 1:
             #检查json格式是否被破坏
             try:
-                json.loads(message)
                 for func_call in func_call_list:
                     #检查函数调用的参数是否是合法的json
                     self.decode_tool_call(func_call)
@@ -129,6 +128,8 @@ class BaseAssistant(object):
                     tools=self.get_tools_description(),
                     tool_choice = "required" if tools_enable else "none"
                 )
+                
+                message, func_call_list = self.handle_chat_response(response) 
 
         if func_call_list:
             self.update_short_term_memory({
@@ -140,7 +141,6 @@ class BaseAssistant(object):
             self.update_short_term_memory({
                 "role": "assistant",
                 "content": message
-
             })
         return message, func_call_list
 
