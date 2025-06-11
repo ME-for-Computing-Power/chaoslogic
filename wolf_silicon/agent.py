@@ -46,14 +46,16 @@ class WolfSiliconAgent(object):
         # 初始化环境
         # 读取用户需求，写入user_requirements.md
         if user_requirements_path:
-            with open(user_requirements_path, "r") as f:
+            requirements_path = os.path.join(user_requirements_path, "requirements.md")
+            with open(requirements_path, "r") as f:
                 user_requirements = f.read()
                 self.env.write_user_requirements(user_requirements)
-        # 读取用户验证计划，写入 veri_plan.md
-        if user_veri_plan_path:
-            with open(user_veri_plan_path, "r") as f:
+            veri_plan_path = os.path.join(user_requirements_path, "veri_plan.md")
+            with open(veri_plan_path, "r") as f:
                 veri_plan = f.read()
                 self.env.write_veri_plan(veri_plan)
+            
+            
         # else: # 用户未提供输入文件，提示用户输入需求
         #     user_requirements = input("\n 用户输入: ")
         #     self.env.write_user_requirements(user_requirements)

@@ -19,7 +19,6 @@ if __name__ == "__main__":
     # 设置可选参数 --req 
     parser = argparse.ArgumentParser()
     parser.add_argument("--req", type=str, help="User requirements file path")
-    parser.add_argument("--veri", type=str, help="User Veri plan file path")
     parser.add_argument("--name",type=str, help="Name of workspace", default="wksp",required=False)
     parser.add_argument("--workpath", type=str, help="Workspace root path",required=False)
     parser.add_argument("--start_from", type=str, help="Start from a specific step (project, design, verification)", 
@@ -31,7 +30,6 @@ if __name__ == "__main__":
     else:
         workpath = create_workspace("./playground",args.name)
     # 创建 WolfSiliconAgent
-    agent = WolfSiliconAgent(workspace_path=workpath, user_requirements_path=args.req, start_from=args.start_from,
-                             user_veri_plan_path=args.veri)
+    agent = WolfSiliconAgent(workspace_path=workpath, user_requirements_path=args.req, start_from=args.start_from)
     if agent.run() == 0:
         exit
