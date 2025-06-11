@@ -8,4 +8,4 @@ testbench timescale 固定为 1ns/100ps
 
 代码仅可通过外部工具提交，不准生成 markdown 代码块
 
-构建testbench时应当构建参考模型，报错时打印dut与参考模型的对比
+参考模型已提供,模块名为ref_model，端口定义与dut一致，构建testbench时应当例化参考模型，报错时打印dut与参考模型的对比

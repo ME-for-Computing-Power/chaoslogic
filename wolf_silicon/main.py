@@ -10,9 +10,9 @@ def create_workspace(rootpath,name):
     os.makedirs(workpath)
     # 复制mkfile和filelist到工作目录
     mkfile_path = os.path.join('makefile', "Makefile")
-    filelist_path = os.path.join('makefile', "filelist.f")
+    #filelist_path = os.path.join('makefile', "filelist.f")
     os.system(f"cp {mkfile_path} {workpath}")
-    os.system(f"cp {filelist_path} {workpath}")
+    #os.system(f"cp {filelist_path} {workpath}")
     return workpath
 
 if __name__ == "__main__":

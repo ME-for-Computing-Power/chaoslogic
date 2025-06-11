@@ -35,11 +35,13 @@ class WolfSiliconAgent(object):
         self.cmodel_path = os.path.join(workspace_path, "cmodel")
         self.design_path = os.path.join(workspace_path, "design")
         self.verification_path = os.path.join(workspace_path, "verification")
+        self.ref_model_path = os.path.join(workspace_path, "ref_model")
         self.start_from = start_from
         os.makedirs(self.doc_path, exist_ok=True)
         os.makedirs(self.cmodel_path, exist_ok=True)
         os.makedirs(self.design_path, exist_ok=True)
         os.makedirs(self.verification_path, exist_ok=True)
+        os.makedirs(self.ref_model_path, exist_ok=True)
         self.env = WolfSiliconEnv(self.workspace_path, self.doc_path, self.cmodel_path, 
                                   self.design_path, self.verification_path, 
                                   self.model_client)
@@ -54,7 +56,11 @@ class WolfSiliconAgent(object):
             with open(veri_plan_path, "r") as f:
                 veri_plan = f.read()
                 self.env.write_veri_plan(veri_plan)
-            
+            ref_model_path = os.path.join(user_requirements_path, "ref_model")
+            #找到所有以.v结尾的文件，复制到verification_path
+            for filename in os.listdir(ref_model_path):
+                if filename.endswith('.v') or filename.endswith('.sv'):
+                    shutil.copy(os.path.join(user_requirements_path, filename), self.ref_model_path)
             
         # else: # 用户未提供输入文件，提示用户输入需求
         #     user_requirements = input("\n 用户输入: ")
