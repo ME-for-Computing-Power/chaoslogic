@@ -20,7 +20,8 @@ class WolfSiliconAgent(object):
                  user_design_code_path=None,
                  user_verification_code_path=None,
                  user_veri_plan_path=None,
-                 start_from="project") -> None:
+                 start_from="project",
+                 use_spec=False) -> None:
         # config
         self.MODEL_NAME = model_name #在 model_client.py 中定义
         #self.TRANSLATION_MODEL_NAME = "deepseek-reasoner"
@@ -37,6 +38,7 @@ class WolfSiliconAgent(object):
         self.verification_path = os.path.join(workspace_path, "verification")
         self.ref_model_path = os.path.join(workspace_path, "ref_model")
         self.start_from = start_from
+        self.use_spec = use_spec
         os.makedirs(self.doc_path, exist_ok=True)
         os.makedirs(self.cmodel_path, exist_ok=True)
         os.makedirs(self.design_path, exist_ok=True)
@@ -61,7 +63,12 @@ class WolfSiliconAgent(object):
             for filename in os.listdir(ref_model_path):
                 if filename.endswith('.v') or filename.endswith('.sv'):
                     shutil.copy(os.path.join(ref_model_path, filename), self.ref_model_path)
-            
+        if self.start_from == 'spec':
+            # 如果用户提供了 spec，写入 spec.md
+            spec_path = os.path.join(user_requirements_path, "spec.md")
+            with open(spec_path, "r") as f:
+                spec = f.read()
+                self.env.write_spec(spec, overwrite=True)    
         # else: # 用户未提供输入文件，提示用户输入需求
         #     user_requirements = input("\n 用户输入: ")
         #     self.env.write_user_requirements(user_requirements)
@@ -87,13 +94,15 @@ class WolfSiliconAgent(object):
         first_loop = True
         res = "design"
         if self.start_from != 'project':
-            if self.start_from not in ["project", "design", "verification", "iter"]:
+            if self.start_from not in ["project", "design", "verification", "iter", "spec"]:
                 raise ValueError("start_from must be one of 'project', 'design', 'verification', or 'iter'")
             self.env.manual_log("Admin", f"从{self.start_from} 状态断点复原")
         try:
             while True:
                 if not first_loop or self.start_from == "project":
                     res = self.project_manager_assistent.execute()
+                    first_loop = False
+                if self.start_from == "spec":
                     first_loop = False
                 if res == "design":
                     #self.cmodel_engineer_assistant.execute()
