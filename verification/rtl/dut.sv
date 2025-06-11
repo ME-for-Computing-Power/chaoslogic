@@ -252,23 +252,23 @@ always @(*) begin
 end
 
 always @(state) begin
-    $display("[%0t] DUT状态变更: %s", $time, 
-        state == IDLE ? "IDLE" :
-        state == HEADER1 ? "HEADER1" :
-        state == HEADER2 ? "HEADER2" :
-        state == CHANNEL ? "CHANNEL" :
-        state == DATA ? "DATA" :
-        state == CRC ? "CRC" :
-        state == TRAILER1 ? "TRAILER1" :
-        state == TRAILER2 ? "TRAILER2" :
-        state == VALID ? "VALID" :
-        // ... 其他状态
-        "UNKNOWN");
+    // $display("[%0t] DUT状态变更: %s", $time, 
+    //     state == IDLE ? "IDLE" :
+    //     state == HEADER1 ? "HEADER1" :
+    //     state == HEADER2 ? "HEADER2" :
+    //     state == CHANNEL ? "CHANNEL" :
+    //     state == DATA ? "DATA" :
+    //     state == CRC ? "CRC" :
+    //     state == TRAILER1 ? "TRAILER1" :
+    //     state == TRAILER2 ? "TRAILER2" :
+    //     state == VALID ? "VALID" :
+    //     // ... 其他状态
+    //     "UNKNOWN");
 end
 
 always @(posedge clk_in) begin
-        $display("[%0t] 输入检测: state=%d, data_in=%h", 
-                $time, state, data_in);
+        // $display("[%0t] 输入检测: state=%d, data_in=%h", 
+        //         $time, state, data_in);
         // $display("[%0t] 输出通道1检测: data_vld_ch1=%d, data_out_ch1=%h", 
         //         $time, data_vld_ch1, data_out_ch1);
 end

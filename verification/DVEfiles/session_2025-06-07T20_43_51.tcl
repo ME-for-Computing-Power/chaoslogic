@@ -1,6 +1,6 @@
 # Begin_DVE_Session_Save_Info
 # DVE full session
-# Saved on Tue Jun 10 14:25:04 2025
+# Saved on Sat Jun 7 20:43:51 2025
 # Designs open: 1
 # Toplevel windows open: 1
 # 	CovTopLevel.1
@@ -63,7 +63,7 @@ if {![gui_exist_window -window CovTopLevel.1]} {
 } else { 
     set CovTopLevel.1 CovTopLevel.1
 }
-gui_show_window -window ${CovTopLevel.1} -show_state normal -rect {{-259 342} {2287 1823}}
+gui_show_window -window ${CovTopLevel.1} -show_state maximized -rect {{6 27} {2553 1509}}
 
 # ToolBar settings
 gui_set_toolbar_attributes -toolbar {&File} -dock_state top
@@ -107,12 +107,12 @@ set CovHier.1 [gui_create_window -type CovHier -parent ${CovTopLevel.1} -dock_st
 gui_set_window_pref_key -window ${CovHier.1} -key dock_width -value_type integer -value 200
 gui_set_window_pref_key -window ${CovHier.1} -key dock_height -value_type integer -value 260
 gui_set_window_pref_key -window ${CovHier.1} -key dock_offset -value_type integer -value 0
-gui_update_layout -id ${CovHier.1} {{left 0} {top 0} {width 199} {height 1223} {dock_state left} {dock_on_new_line true} {child_covhier_colhier 140} {child_covhier_coltype 100} {child_covhier_col1 1} {child_covhier_col2 2}}
+gui_update_layout -id ${CovHier.1} {{left 0} {top 0} {width 199} {height 1224} {dock_state left} {dock_on_new_line true} {child_covhier_colhier 140} {child_covhier_coltype 100} {child_covhier_col1 1} {child_covhier_col2 2}}
 set Console.1 [gui_create_window -type Console -parent ${CovTopLevel.1} -dock_state bottom -dock_on_new_line true -dock_extent 180]
 gui_set_window_pref_key -window ${Console.1} -key dock_width -value_type integer -value 689
 gui_set_window_pref_key -window ${Console.1} -key dock_height -value_type integer -value 180
 gui_set_window_pref_key -window ${Console.1} -key dock_offset -value_type integer -value 0
-gui_update_layout -id ${Console.1} {{left 0} {top 0} {width 2546} {height 179} {dock_state bottom} {dock_on_new_line true}}
+gui_update_layout -id ${Console.1} {{left 0} {top 0} {width 2547} {height 179} {dock_state bottom} {dock_on_new_line true}}
 #### Start - Readjusting docked view's offset / size
 set dockAreaList { top left right bottom }
 foreach dockArea $dockAreaList {
