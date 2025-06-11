@@ -27,7 +27,7 @@ module async_fifo (
 3. **读操作**
    - 当`fifo_r_enable=1`且`fifo_empty=0`时，在`clk_out`上升沿从FIFO读出数据到`data_from_fifo`
    - 当`fifo_empty=1`时，`data_from_fifo`输出140'b0
-   - 注意：读操作在使能信号拉高的单周期内完成
+   - 当在`clk_out`上升沿时，如果`fifo_r_enable=1`，`data_from_fifo`应立即变换
 
 4. **状态标志**
    - `fifo_full`: 当FIFO写指针到达最后位置时拉高

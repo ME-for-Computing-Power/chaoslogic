@@ -103,6 +103,7 @@ class WolfSiliconAgent(object):
                     res = self.project_manager_assistent.execute()
                     first_loop = False
                 if self.start_from == "spec":
+                    self.project_manager_assistent.state = "review_verification_report"
                     first_loop = False
                 if res == "design":
                     #self.cmodel_engineer_assistant.execute()
