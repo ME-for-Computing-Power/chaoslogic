@@ -27,7 +27,7 @@ module ref_model(
     parameter DSIZE = 140; // Data size
     parameter ASIZE = 2;   // Address size
 
-    fifo #(DSIZE, ASIZE) fifo_inst (
+    FIFO #(DSIZE, ASIZE) fifo_inst (
         .rdata(data_from_fifo),
         .wfull(fifo_full),
         .rempty(fifo_empty),

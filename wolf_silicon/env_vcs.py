@@ -25,6 +25,7 @@ class WolfSiliconEnv(object):
         self._cmodel_binary_path = os.path.join(self._cmodel_path, "cmodel")
         self._design_code_path = os.path.join(self._design_path, "dut.v")
         self._design_filelist_path = os.path.join(self._design_path, "filelist.f")
+        self._filelist_path = os.path.join(self._workspace_path, "filelist.f")
         self._verification_code_path = os.path.join(self._verification_path, "tb.sv")
         self._verification_feedback_path = os.path.join(self._doc_path, "feedback.md")
         self._verification_binary_path = os.path.join(self._workspace_path, "simv")
@@ -196,7 +197,7 @@ class WolfSiliconEnv(object):
             if filename.endswith('.v') or filename.endswith('.sv'):
                 code_file.append(os.path.join(self._ref_model_path, filename))
         # 保存到 filelist 文件中
-        with open(self._design_filelist_path, "w") as f:
+        with open(self._filelist_path, "w") as f:
             for filepath in code_file:
                 f.write(filepath + "\n")
         current_path = os.getcwd()

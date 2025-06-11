@@ -43,5 +43,3 @@
 数据将在`fifo_w_enable`被拉高的时钟周期内被写入
 
 数据将在`fifo_r_enable`被拉高的时钟周期内被读出
-
-`fifo_empty`与`fifo_full`最多有三个时钟周期的延迟

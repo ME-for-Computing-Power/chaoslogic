@@ -8,4 +8,8 @@ testbench timescale 固定为 1ns/100ps
 
 代码仅可通过外部工具提交，不准生成 markdown 代码块
 
-参考模型已提供,模块名为ref_model，端口定义与dut一致，构建testbench时应当例化参考模型，报错时打印dut与参考模型的对比
+参考模型已提供,模块名为ref_model，端口定义与dut一致，构建testbench时应当例化参考模型
+
+不要对dut的任何输出进行直接检查，所有检查都应当将dut的输出与参考模型相比较，报错时打印dut与参考模型的对比
+
+ref是verilog的关键字

@@ -60,7 +60,7 @@ class WolfSiliconAgent(object):
             #找到所有以.v结尾的文件，复制到verification_path
             for filename in os.listdir(ref_model_path):
                 if filename.endswith('.v') or filename.endswith('.sv'):
-                    shutil.copy(os.path.join(user_requirements_path, filename), self.ref_model_path)
+                    shutil.copy(os.path.join(ref_model_path, filename), self.ref_model_path)
             
         # else: # 用户未提供输入文件，提示用户输入需求
         #     user_requirements = input("\n 用户输入: ")
