@@ -22,7 +22,7 @@
 
 设计一个160位REG，用于存储数据字段，在数据状态开始的时候每个周期将数据左移16位，并往低位存入16位输入数据，初始化全是0；当data_count非0的时候不再存储数据，截去高128位，作为信号data_to_crc输出，同时拉高crc16_valid。
 
-设计一个比较模块,在CRC校验使能信号crc16_ready有效的情况下，将CRC校验字段信号data_crc与输入信号data_from_crc作比较，最终输出CRC校验错误信号crc_err与CRC校验正确信号与crc_vld信号。
+设计一个比较模块,在CRC校验使能信号crc16_done有效的情况下，将CRC校验字段信号data_crc与输入信号data_from_crc作比较，最终输出CRC校验错误信号crc_err与CRC校验正确信号与crc_vld信号。
 
 140位data_to_fifo信号，直接连接128位数据位输出信号data-data+8位通道数据data_ch+4位数据长度表示位data_count。
 
@@ -40,7 +40,7 @@ fifo_w_enable信号就是CRC校验正确信号crc_vld信号。
 |fifo_w_enable|1|O|
 |data_to_crc|128|O|
 |data_from_crc|16|I|
-|crc16_ready|1|I|
+|crc16_done|1|I|
 |crc16_valid|1|O|
 
 ## 信号说明
@@ -53,5 +53,5 @@ fifo_w_enable信号就是CRC校验正确信号crc_vld信号。
 `fifo_w_enable`: fifo模块的写使能信号
 `data_to_crc`:输入到CRC校验模块的待校验数据
 `data_from_crc`:从CRC校验模块返回的数据校验值
-`crc16_ready`:从CRC校验模块返回的数据校验值有效信号，高电平有效
+`crc16_done`:从CRC校验模块返回的数据校验值有效信号，高电平有效
 `crc16_valid`:发送给CRC校验模块的使能信号，高电平有效
