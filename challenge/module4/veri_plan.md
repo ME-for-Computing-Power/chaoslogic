@@ -21,10 +21,10 @@
 
 验证输出时序与时钟、数据计数的关系
 
-- 验证data_vld_ch信号的持续时间等于data_count个16*clk_out周期
+- 验证data_vld_ch信号的持续时间等于data_count个clk_out16x周期
 - 测试不同data_count值下的输出持续时间
-- 验证16*clk_out时钟与串行输出数据的同步关系
-- 检查串行输出数据在16*clk_out的上升沿变化
+- 验证clk_out16x时钟与串行输出数据的同步关系
+- 检查串行输出数据在clk_out16x的上升沿变化
 
 ## 4. CRC校验信号测试
 
