@@ -20,9 +20,9 @@
 
 设计一个宽度16位深度位2的FIFO，用于识别CRC校验字段，在数据开始的时候每个周期存入16位输入数据，同时设计一个4位计数器，计算存入了多少个16位输入数据，溢出数据丢弃。当存入了一个帧尾信号`0E0E0E0E`，便可把上一周期存入16位的CRC校验字段输出，作为信号data_crc；同时输出（计数器数据-2）作为信号data_count，-2代表删去CRC校验字段和帧尾的次数，表示数据字段有多少个16位，例如1-8分别表示16 32 48 64 80 96 112 128，0表示数据还未准备好。
 
-设计一个160位REG，用于存储数据字段，在数据状态开始的时候每个周期将数据左移16位，并往低位存入16位输入数据，初始化全是0；当data_count非0的时候不再存储数据，截去高128位，作为信号data_to_crc输出。
+设计一个160位REG，用于存储数据字段，在数据状态开始的时候每个周期将数据左移16位，并往低位存入16位输入数据，初始化全是0；当data_count非0的时候不再存储数据，截去高128位，作为信号data_to_crc输出，同时拉高crc16_valid。
 
-设计一个比较模块,在CRC校验使能信号crc_en有效的情况下，将CRC校验字段信号data_crc与输入信号data_from_crc作比较，最终输出CRC校验错误信号crc_err与CRC校验正确信号与crc_vld信号。
+设计一个比较模块,在CRC校验使能信号crc16_ready有效的情况下，将CRC校验字段信号data_crc与输入信号data_from_crc作比较，最终输出CRC校验错误信号crc_err与CRC校验正确信号与crc_vld信号。
 
 140位data_to_fifo信号，直接连接128位数据位输出信号data-data+8位通道数据data_ch+4位数据长度表示位data_count。
 
@@ -40,7 +40,8 @@ fifo_w_enable信号就是CRC校验正确信号crc_vld信号。
 |fifo_w_enable|1|O|
 |data_to_crc|128|O|
 |data_from_crc|16|I|
-|crc_en|1|I|
+|crc16_ready|1|I|
+|crc16_valid|1|O|
 
 ## 信号说明
 
@@ -52,4 +53,5 @@ fifo_w_enable信号就是CRC校验正确信号crc_vld信号。
 `fifo_w_enable`: fifo模块的写使能信号
 `data_to_crc`:输入到CRC校验模块的待校验数据
 `data_from_crc`:从CRC校验模块返回的数据校验值
-`crc_en`:从CRC校验模块返回的数据校验值有效信号，高电平有效
+`crc16_ready`:从CRC校验模块返回的数据校验值有效信号，高电平有效
+`crc16_valid`:发送给CRC校验模块的使能信号，高电平有效
