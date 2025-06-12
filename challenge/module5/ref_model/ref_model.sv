@@ -46,6 +46,9 @@ module crc_cacul(
       if(crc16_valid) begin
         lfsr_q <= lfsr_c;         // 有效时更新CRC值
       end
+      else begin
+        lfsr_q <= 16'h0000;   //无效时清零
+      end
     end
   end
 
