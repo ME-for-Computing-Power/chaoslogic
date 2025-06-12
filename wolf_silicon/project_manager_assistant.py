@@ -93,8 +93,8 @@ class ProjectManagerAssistant(BaseAssistant):
         self.clear_short_term_memory()
         #self.call_llm("分析项目情况，给出你的观察和想法", tools_enable=False)
         while True:
-            llm_message, func_call_list = self.call_llm("使用工具提交Spec", tools_enable=True)
             if self.state == "wait_spec":
+                llm_message, func_call_list = self.call_llm("使用工具提交Spec", tools_enable=True)
                 for tool_call in func_call_list:
                     tool_id, name, args = self.decode_tool_call(tool_call)
                     if name == "submit_spec":
@@ -106,6 +106,7 @@ class ProjectManagerAssistant(BaseAssistant):
                     else:
                         raise Exception("未知的Function Call")
             elif self.state == "review_verification_report":
+                llm_message, func_call_list = self.call_llm("审阅验证报告", tools_enable=True)
                 for tool_call in func_call_list:
                     tool_id, name, args = self.decode_tool_call(tool_call)
                     if name == "accept_report":

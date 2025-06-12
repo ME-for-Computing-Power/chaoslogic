@@ -2,7 +2,7 @@
 
 命名：`async_fifo`
 
-整体说明: 传统的异步fifo，宽度为140位，深度为16，提供 fifo 空、fifo 满信号状态指示
+整体说明: 传统的异步fifo，宽度为140位，深度为2，提供 fifo 空、fifo 满信号状态指示
 
 ## 顶层IO
 
@@ -43,5 +43,3 @@
 数据将在`fifo_w_enable`被拉高的时钟周期内被写入
 
 数据将在`fifo_r_enable`被拉高的时钟周期内被读出
-
-`fifo_empty`与`fifo_full`最多有三个时钟周期的延迟

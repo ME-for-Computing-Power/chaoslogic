@@ -19,11 +19,13 @@ class VerificationEngineerAssistant(BaseAssistant):
         user_requirements_exist, user_requirements_mtime, user_requirements = self.env.get_user_requirements()
         spec_exist, spec_mtime, spec = self.env.get_spec()
         veri_plan_exist, veri_plan_mtime, veri_plan = self.env.get_veri_plan()
+        veri_code_exist, veri_code_mtime, veri_code = self.env.get_verification_code()
         #cmodel_code_exist, cmodel_code_mtime, cmodel_code = self.env.get_cmodel_code()
 
         md_content = md_content.replace('{user_requirements}', user_requirements)
         md_content = md_content.replace('{spec}', spec)
         md_content = md_content.replace('{veri_plan}', veri_plan)
+        md_content = md_content.replace('{veri_code}', veri_code)
         #md_content = md_content.replace('{cmodel_code}', cmodel_code)
 
         return md_content
