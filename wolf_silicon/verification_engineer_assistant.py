@@ -131,10 +131,11 @@ class VerificationEngineerAssistant(BaseAssistant):
                 if self.state == 'error_in_design':
                     sim_log = self.env.run_verification()
 
-                    # if sim_log is too long, truncate it
-                    if len(sim_log) > 200:
-                        sim_log = sim_log[:200] + "\n... (后略)"
-                        
+                    # if sim_log 超过200行，则截取前200行
+                    lines = sim_log.splitlines()
+                    if (len(lines) > 200):
+                        sim_log = "\n".join(lines[0:200]) + "\n... (后略)"
+                
                     # call llm to get feedback
                     llm_message, func_call_list = self.call_llm(f"""
 设计工程师已按照你的反馈修改了设计代码，仿真结果如下
@@ -186,5 +187,5 @@ Testbench 成功编译，仿真结果如下：
                     self.reflect_tool_call(tool_id, "success")
                     self.state = "verification_finished"
                     return 0
-                
+
 
