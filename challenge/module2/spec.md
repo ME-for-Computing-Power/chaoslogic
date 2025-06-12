@@ -18,7 +18,7 @@ module async_fifo (
 ## 功能描述
 1. **存储结构**
    - 数据宽度：140位
-   - 存储深度：4级
+   - 存储深度：8
 
 2. **写操作**
    - 当`fifo_w_enable=1`且`fifo_full=0`时，在`clk_in`上升沿将`data_to_fifo`写入FIFO
