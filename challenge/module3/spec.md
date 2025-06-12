@@ -41,7 +41,8 @@ module fifo_data_resolu (
   0010 (2) → 32  
   ...  
   1000 (8) → 128
-- 计算公式：data_count = {12'b0, data_from_fifo[3:0], 4'b0} 
+- 当长度指示位大于8时生成0
+- 计算公式：data_count = {8'b0, data_from_fifo[3:0], 4'b0} 
 
 ### 3. 数据格雷码转换（data_gray）
 - 处理步骤：
