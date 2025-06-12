@@ -32,5 +32,5 @@
 - `vld_ch`:通道选择数据，8位宽独热码
 - `data_count`:`data_gray`的具体数据长度
 - `crc_valid`:任一`data_vld_ch*`拉高时即拉高
-- `data_out_ch1~8`:数据串行输出通道
+- `data_out_ch1~8`:数据串行输出通道，输出时高位在前
 - `data_vld_ch1~8`:数据有效信号通道，仅在输出时拉高
