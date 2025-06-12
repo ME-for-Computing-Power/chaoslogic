@@ -93,8 +93,8 @@ class BaseAssistant(object):
             *self.get_short_term_memory()
         ]
         ##将 message 中的 \n 替换为真的换行符，改善log的可读性
-        message_for_logging = json.dumps(messages, ensure_ascii=False).replace('\\n', '\n')
-        self.env.manual_log(self.name, f"Messages: {message_for_logging}")
+        #message_for_logging = json.dumps(messages, ensure_ascii=False).replace('\\n', '\n')
+        self.env.manual_log(self.name, f"Messages: {messages}")
         response = self.agent.model_client.chat.completions.create(
             model=self.agent.MODEL_NAME,
             messages=messages,

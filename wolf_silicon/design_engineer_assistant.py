@@ -114,6 +114,10 @@ class DesignEngineerAssistant(BaseAssistant):
 设计仅在一个.v文件中存储，且符合verilog-2000标准。
 设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               
                     """, tools_enable=True)
+            elif self.state == "design_error":
+
+                    llm_message, func_call_list = self.call_llm('按照反馈修改代码', tools_enable=True)
+                    self.state = "design_finished"
             elif not self.is_lint_clean:
                 llm_message, func_call_list = self.call_llm(f"""
 刚才的代码中存在语法错误：
@@ -122,10 +126,6 @@ class DesignEngineerAssistant(BaseAssistant):
 ```
 修改错误，并用 submit_design 重新提交。
                     """, tools_enable=True)
-            elif self.state == "design_error":
-
-                    llm_message, func_call_list = self.call_llm('按照反馈修改代码', tools_enable=True)
-                    self.state = "design_finished"
             else:
                 self.state = "design_finished"
                 return 0
