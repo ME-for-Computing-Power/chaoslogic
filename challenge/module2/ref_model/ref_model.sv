@@ -9,10 +9,7 @@ module ref_model (
     output        fifo_empty,     // Empty flag
     output        fifo_full       // Full flag
 );
-    async_fifo1 #(
-        .DATA_WIDTH(140),
-        .ADDR_WIDTH(4)
-    ) u_async_fifo (
+    async_fifo1 u_async_fifo (
     //Write clock domain
         .wrclk(clk_in)   ,//写时钟
         .wrrst_n(rst_n) ,//写侧复位，异步复位，低有效

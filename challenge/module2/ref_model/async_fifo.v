@@ -1,6 +1,6 @@
 //---------<模块及端口声名>------------------------------------------------------
 module async_fifo1 #(parameter FIFO_WIDTH = 140  ,//FIFO输入数据位宽
-                              FIFO_DEPTH = 2 //FIFO深度
+                              FIFO_DEPTH = 4 //FIFO深度
 )(
     //Write clock domain
     wrclk   ,//写时钟
