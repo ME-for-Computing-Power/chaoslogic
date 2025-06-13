@@ -124,15 +124,25 @@ end
 always_ff @(posedge clk_in or negedge rst_n) begin
     if (!rst_n) begin
         crc_field_reg <= 0;
+        data_128 <= 0;
+        data_to_crc <= 0;
+        data_count <= 0;
+        crc_err <= 0;
         crc_cnt <= 0;
         crc16_valid <= 0;
+        fifo_w_enable <= 0;
     end else begin
         case (state)
             CRC_OUTPUT: begin
                 // 从帧尾前提取CRC字段
                 crc_field_reg <= tail_detec_reg[31:16];
-                data_count  <= data_counter - 2; // 数据长度位
                 data_128 <= full_data_reg[159:32]; // 提取128位数据
+                data_to_crc <= 0; // 清除CRC数据寄存器
+                data_count  <= data_counter - 2; // 数据长度位
+                crc_err <= 0;
+                crc_cnt <= 0;
+                crc16_valid <= 0;
+                fifo_w_enable <= 0;
             end
             
             WAIT_CRC:begin
@@ -160,9 +170,11 @@ always_ff @(posedge clk_in or negedge rst_n) begin
                     
                     // 检查CRC结果
                     if (data_from_crc == crc_field_reg) begin
-                        fifo_w_enable <= 1'b1; // CRC正确，写使能
+                        crc_err <= 1'b0; // 清除CRC错误标志
+                        fifo_w_enable <= 1'b1; // CRC正确，写使能             
                     end else begin
                         crc_err <= 1'b1; // CRC错误
+                        fifo_w_enable <= 1'b0; // 禁止写入FIFO
                     end
                 end
             end
