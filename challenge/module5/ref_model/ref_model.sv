@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // CRC module for data[15:0] ,   crc[15:0]=1+x^5+x^12+x^16, reset active low 0x0000
 //-----------------------------------------------------------------------------
-module crc_cacul(
+module ref_model(
   input [15:0] data_to_crc,   // 输入数据
   input crc16_valid,            // 输入数据有效标志
   output [15:0] data_from_crc,  // CRC计算结果
