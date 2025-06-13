@@ -14,19 +14,47 @@
     - 帧尾:
     `32` 位，取值为 `0E0E0E0E`
 
-解帧状态机可以很容易地识别帧头、通道选择、数据状态设计，但是数据状态向CRC校验字段状态的转换是一个问题。
-
-设计一个8位REG存储通道选择信号，存储通道选择数据data_ch。
-
-设计一个宽度16位深度位2的FIFO，用于识别CRC校验字段，在数据开始的时候每个周期存入16位输入数据，同时设计一个4位计数器，计算存入了多少个16位输入数据，溢出数据丢弃。当存入了一个帧尾信号`0E0E0E0E`，便可把上一周期存入16位的CRC校验字段输出，作为信号data_crc；同时输出（计数器数据-2）作为信号data_count，-2代表删去CRC校验字段和帧尾的次数，表示数据字段有多少个16位，例如1-8分别表示16 32 48 64 80 96 112 128，0表示数据还未准备好。
-
-设计一个160位REG，用于存储数据字段，在数据状态开始的时候每个周期将数据左移16位，并往低位存入16位输入数据，初始化全是0；当data_count非0的时候不再存储数据，截去高128位，作为信号data_to_crc输出，同时拉高crc16_valid。
-
-设计一个比较模块,在CRC校验使能信号crc16_done有效的情况下，将CRC校验字段信号data_crc与输入信号data_from_crc作比较，最终输出CRC校验错误信号crc_err与CRC校验正确信号与crc_vld信号。
-
-140位data_to_fifo信号，直接连接128位数据位输出信号data-data+8位通道数据data_ch+4位数据长度表示位data_count。
-
-fifo_w_enable信号就是CRC校验正确信号crc_vld信号。
+状态机状态定义：
+`1.​IDLE​（空闲状态）`
+    - 初始状态，等待帧头起始
+    - 行为：持续监测输入数据是否为帧头的第一部分 E0E0
+    - 转换条件：当 data_in == 16'hE0E0 时进入 HEAD_CHECK
+`2.HEAD_CHECK​（帧头校验状态）`
+    -验证完整的32位帧头
+    -行为：检查第二个16位数据是否为 E0E0
+    -转换条件：
+        若 data_in == 16'hE0E0 进入 CHANNEL
+        否则返回 IDLE
+`3.​CHANNEL​（通道选择状态）`
+    -读取通道选择字段
+    -行为：存储输入数据的低8位（高8位丢弃）到 data_ch 寄存器
+    -转换条件：无条件进入 DATA 状态（仅需1周期）
+`4.​DATA​（数据接收状态）`
+    -接收数据字段和后续字段
+    -行为：
+        启动4位计数器（data_counter）从0开始计数
+        每个周期将32位寄存器 tail_detec_reg（用于帧尾检测，初始化全0）左移16位，并存入输入数据data_in
+        每个周期将160位寄存器 full_data_reg（用于存储数据字段，初始化全0）左移16位，并存入输入数据data_in
+        计数器递增，溢出时丢弃数据
+    -转换条件：
+        当检测到帧尾 0E0E0E0E 时进入 CRC_OUTPUT，停止寄存器tail_detec_reg和full_data_reg的存储
+        若计数器溢出（≥15）返回 IDLE
+`5.​CRC_OUTPUT​（CRC提取状态）`
+    -提取CRC字段并计算数据长度
+    -行为：
+        从32位寄存器tail_detec_reg中获取CRC字段（帧尾前1周期的数据）
+        计算数据长度：data_count = data_counter - 3
+        截取 full_data_reg 的高128位作为 data_128,
+    -转换条件：无条件进入 WAIT_CRC（仅需1周期）
+`6.​WAIT_CRC​（CRC校验等待状态）`
+    -等待CRC校验结果
+    -行为：
+        拉高 crc16_valid 启动CRC校验模块，维持 crc16_valid 高电平，维持周期为data_count的值;crc16_valid拉高周期同时，每个周期从  data_128低位开始每16位作为data_to_crc发送给CRC校验模块
+    -转换条件：
+        当 crc16_done == 1 时：
+        若校验成功（data_from_crc == 保存的CRC字段），输出 fifo_w_enable=1 且 crc_err=0，输出140位data_to_fifo信号，直接连接128位数据位输出信号data_128+8位通道数据data_ch+4位数据长度表示位data_count。
+        否则输出 crc_err=1
+        返回 IDLE
 
 ## 顶层IO
 
@@ -38,7 +66,7 @@ fifo_w_enable信号就是CRC校验正确信号crc_vld信号。
 |crc_err|1|O|
 |data_to_fifo|140|O|
 |fifo_w_enable|1|O|
-|data_to_crc|128|O|
+|data_to_crc|16|O|
 |data_from_crc|16|I|
 |crc16_done|1|I|
 |crc16_valid|1|O|
