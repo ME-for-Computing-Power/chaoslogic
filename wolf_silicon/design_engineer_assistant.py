@@ -7,7 +7,7 @@ class DesignEngineerAssistant(BaseAssistant):
         self.name = "设计工程师"
         # State wait_design, design_finished
         self.state = "wait_design"
-        self.max_short_term_memory_len = 10
+        self.max_short_term_memory_len = self.agent.MAX_SHORT_TERM_MEMORY
         self.is_lint_clean = False
         #define the path to prompt
         self.prompt_path = os.path.join('prompt', 'design_engineer')
