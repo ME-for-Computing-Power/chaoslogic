@@ -16,4 +16,4 @@ testbench timescale 固定为 1ns/100ps
 
 不要在时钟的上升沿改变输入信号或检查输出信号
 
-SystemVerilog中，变量定义必须放在*开头处*
+SystemVerilog中，必须在Testbench*开头处*声明新变量
