@@ -43,7 +43,7 @@
     -提取CRC字段并计算数据长度
     -行为：
         从32位寄存器tail_detec_reg中获取CRC字段（帧尾前1周期的数据）
-        计算数据长度：data_count = data_counter - 3
+        计算数据长度：data_count = data_counter - 2
         截取 full_data_reg 的高128位作为 data_128,
     -转换条件：无条件进入 WAIT_CRC（仅需1周期）
 `6.​WAIT_CRC​（CRC校验等待状态）`
