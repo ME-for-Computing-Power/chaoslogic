@@ -17,45 +17,63 @@
 状态机状态定义：
 
 `1.​IDLE​（空闲状态）`
+
     - 初始状态，等待帧头起始
+    
     - 行为：持续监测输入数据是否为帧头的第一部分 E0E0
+    
     - 转换条件：当 data_in == 16'hE0E0 时进入 HEAD_CHECK
     
 `2.HEAD_CHECK​（帧头校验状态）`
+
     -验证完整的32位帧头
+    
     -行为：检查第二个16位数据是否为 E0E0
+    
     -转换条件：
         若 data_in == 16'hE0E0 进入 CHANNEL
         否则返回 IDLE
         
 `3.​CHANNEL​（通道选择状态）`
+
     -读取通道选择字段
+    
     -行为：存储输入数据的低8位（高8位丢弃）到 data_ch 寄存器
+    
     -转换条件：无条件进入 DATA 状态（仅需1周期）
     
 `4.​DATA​（数据接收状态）`
+
     -接收数据字段和后续字段
+    
     -行为：
         启动4位计数器（data_counter）从0开始计数
         每个周期将32位寄存器 tail_detec_reg（用于帧尾检测，初始化全0）左移16位，并存入输入数据data_in
         每个周期将160位寄存器 full_data_reg（用于存储数据字段，初始化全0）左移16位，并存入输入数据data_in
         计数器递增，溢出时丢弃数据
+        
     -转换条件：
         当检测到帧尾 0E0E0E0E 时进入 CRC_OUTPUT，停止寄存器tail_detec_reg和full_data_reg的存储
         若计数器溢出（≥15）返回 IDLE
         
 `5.​CRC_OUTPUT​（CRC提取状态）`
+
     -提取CRC字段并计算数据长度
+    
     -行为：
         从32位寄存器tail_detec_reg中获取CRC字段（帧尾前1周期的数据）
         计算数据长度：data_count = data_counter - 2
         截取 full_data_reg 的高128位作为 data_128,
+        
     -转换条件：无条件进入 WAIT_CRC（仅需1周期）
     
 `6.​WAIT_CRC​（CRC校验等待状态）`
+
     -等待CRC校验结果
+    
     -行为：
         拉高 crc16_valid 启动CRC校验模块，维持 crc16_valid 高电平，维持周期为data_count的值;crc16_valid拉高周期同时，每个周期从  data_128低位开始每16位作为data_to_crc发送给CRC校验模块
+        
     -转换条件：
         当 crc16_done == 1 时：
         若校验成功（data_from_crc == 保存的CRC字段），输出 fifo_w_enable=1 且 crc_err=0，输出140位data_to_fifo信号，直接连接128位数据位输出信号data_128+8位通道数据data_ch+4位数据长度表示位data_count。
