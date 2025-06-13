@@ -5,9 +5,14 @@ module ref_model (
     input         rst_n,         // 低电平复位
     input [15:0]  data_in,       // 输入数据（16位）
     
-    output logic [139:0] fifo_w_data,      // FIFO写入数据（140位）
+    output logic [139:0] data_to_fifo,      // FIFO写入数据（140位）
     output logic         fifo_w_enable,    // FIFO写入使能
-    output logic         crc_err           // CRC错误标志
+    output logic         crc_err,          // CRC错误标志
+
+    output logic [15:0]  data_to_crc,
+    input  logic         crc16_done,       // CRC计算完成标志
+    output logic         crc16_valid,      // CRC数据发送标志
+    input  logic [15:0]  data_from_crc     // 从CRC计算模块接收的16位数据
 );
 
 // 状态定义
@@ -24,14 +29,15 @@ state_t state, next_state;
 // 寄存器定义
 reg [7:0]  data_ch;         // 通道选择字段
 reg [3:0]  data_counter;     // 数据计数器
+reg [3:0]  data_count;       // 数据长度位，1表示16，以此类推
+
 reg [15:0] data_shift_reg;   // 数据移位寄存器 (简化设计)
 reg [159:0] full_data_reg;   // 完整数据寄存器 (160位)
 reg [31:0] tail_detec_reg;   // 帧尾检测寄存器 (32位)
 reg [15:0] crc_field_reg;    // 存储的CRC字段
-reg [15:0] crc_calculated;   // 计算的CRC值
-reg [2:0]  crc_cnt;          // CRC发送计数器
-reg        sending_crc;       // CRC发送状态标志
-reg        crc_start;         // CRC计算启动标志
+
+reg [127:0] data_128;      // 用于存到FIFO的128位数据寄存器
+reg [3:0]  crc_cnt;          // CRC发送计数器
 
 // 本地参数
 localparam HEADER = 32'hE0E0_E0E0;  // 帧头
@@ -67,8 +73,7 @@ always_comb begin
         CRC_OUTPUT: next_state = WAIT_CRC;
         
         WAIT_CRC: begin
-            if (crc_cnt == (data_counter - 1) && !sending_crc) 
-                next_state = IDLE;
+            if (crc16_done) next_state = IDLE;
         end
     endcase
 end
@@ -119,66 +124,49 @@ end
 always_ff @(posedge clk_in or negedge rst_n) begin
     if (!rst_n) begin
         crc_field_reg <= 0;
-        crc_start <= 0;
         crc_cnt <= 0;
-        sending_crc <= 0;
+        crc16_valid <= 0;
     end else begin
         case (state)
             CRC_OUTPUT: begin
                 // 从帧尾前提取CRC字段
                 crc_field_reg <= tail_detec_reg[31:16];
-                crc_start <= 1; // 启动CRC计算
+                data_count  <= data_counter - 2; // 数据长度位
+                data_128 <= full_data_reg[159:32]; // 提取128位数据
             end
             
-            WAIT_CRC: begin
-                if (crc_start) begin
-                    crc_cnt <= 0;
-                    sending_crc <= 1;
-                    crc_start <= 0;
+            WAIT_CRC:begin
+                // 启动CRC校验
+                if (crc_cnt < data_count) begin
+                    crc16_valid <= 1'b1;
+                    
+                    // 从低位开始发送数据（小端序）
+                    // data_128[15:0] 是第一个（最低位）
+                    // data_128[31:16] 是第二个，以此类推
+                    data_to_crc <= data_128[crc_cnt * 16 +: 16];
+                    
+                    // 递增发送计数器
+                    crc_cnt <= crc_cnt + 1;
+                end else begin
+                    // 所有数据已发送，等待结果
+                    crc16_valid <= 1'b0;
+                    crc_cnt <= 4'h0;
                 end
                 
-                if (sending_crc) begin
-                    if (crc_cnt < data_counter - 2) begin
-                        crc_cnt <= crc_cnt + 1;
+                // CRC计算完成
+                if (crc16_done) begin
+                    // 准备输出数据
+                    data_to_fifo <= {data_128, data_ch, data_count};
+                    
+                    // 检查CRC结果
+                    if (data_from_crc == crc_field_reg) begin
+                        fifo_w_enable <= 1'b1; // CRC正确，写使能
                     end else begin
-                        sending_crc <= 0;
+                        crc_err <= 1'b1; // CRC错误
                     end
                 end
             end
         endcase
-    end
-end
-
-
-// 输出逻辑
-always_ff @(posedge clk_in or negedge rst_n) begin
-    if (!rst_n) begin
-        fifo_w_data <= 0;
-        fifo_w_enable <= 0;
-        crc_err <= 0;
-    end else begin
-        fifo_w_enable <= 0;
-        crc_err <= 0;
-        
-        // CRC校验结果处理
-        if (state == WAIT_CRC && !sending_crc && (crc_cnt >= data_counter - 2)) begin
-            if (crc_calculated == crc_field_reg) begin
-                // CRC校验成功
-                fifo_w_enable <= 1;
-                // 构造140位输出数据:
-                // [139:132] = 数据长度(4位)
-                // [131:124] = 通道号(8位)
-                // [123:0]   = 有效数据(128位，高位在前)
-                fifo_w_data <= {
-                    {4'h0, data_counter - 2},  // 数据长度(4位) 
-                    data_ch,                    // 通道选择(8位)
-                    full_data_reg[159:32]       // 有效数据(128位)
-                };
-            end else begin
-                // CRC校验失败
-                crc_err <= 1;
-            end
-        end
     end
 end
 
