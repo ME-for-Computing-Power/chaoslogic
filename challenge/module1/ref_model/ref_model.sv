@@ -26,7 +26,6 @@ reg [7:0]  data_ch;         // 通道选择字段
 reg [3:0]  data_counter;     // 数据计数器
 reg [15:0] data_shift_reg;   // 数据移位寄存器 (简化设计)
 reg [159:0] full_data_reg;   // 完整数据寄存器 (160位)
-reg [15:0] prev_data;        // 前一周期数据
 reg [31:0] tail_detec_reg;   // 帧尾检测寄存器 (32位)
 reg [15:0] crc_field_reg;    // 存储的CRC字段
 reg [15:0] crc_calculated;   // 计算的CRC值
@@ -61,7 +60,7 @@ always_comb begin
         CHANNEL: next_state = DATA;
         
         DATA: begin
-            if (tail_detec_reg == TAIL) next_state = CRC_OUTPUT;
+            if (data_in == 16'h0E0E) next_state = CRC_OUTPUT;
             else if (data_counter >= 10) next_state = IDLE; // 最大数据长度
         end
         
@@ -79,7 +78,6 @@ always_ff @(posedge clk_in or negedge rst_n) begin
     if (!rst_n) begin
         data_counter <= 0;
         full_data_reg <= 0;
-        prev_data <= 0;
         tail_detec_reg <= 0;
     end else begin
         case (state)
@@ -92,27 +90,12 @@ always_ff @(posedge clk_in or negedge rst_n) begin
             DATA: begin
                 // 更新帧尾检测寄存器
                 tail_detec_reg <= {tail_detec_reg[15:0], data_in};
-                
-                // 存储当前数据
-                prev_data <= data_in;
+                // 存储完整数据 
+                full_data_reg <= {full_data_reg[143:0], data_in}; // 160位数据寄存器
                 
                 // 数据计数器递增
                 if (data_counter < 10) // 限制最大计数器
-                    data_counter <= data_counter + 1;
-                
-                // 存储完整数据 (简化版本)
-                case(data_counter)
-                    0: full_data_reg[159:144] <= data_in;
-                    1: full_data_reg[143:128] <= data_in;
-                    2: full_data_reg[127:112] <= data_in;
-                    3: full_data_reg[111:96] <= data_in;
-                    4: full_data_reg[95:80] <= data_in;
-                    5: full_data_reg[79:64] <= data_in;
-                    6: full_data_reg[63:48] <= data_in;
-                    7: full_data_reg[47:32] <= data_in;
-                    8: full_data_reg[31:16] <= data_in;
-                    9: full_data_reg[15:0] <= data_in;
-                endcase
+                    data_counter <= data_counter + 1;         
             end
             
             default: begin
@@ -143,7 +126,7 @@ always_ff @(posedge clk_in or negedge rst_n) begin
         case (state)
             CRC_OUTPUT: begin
                 // 从帧尾前提取CRC字段
-                crc_field_reg <= prev_data;
+                crc_field_reg <= tail_detec_reg[31:16];
                 crc_start <= 1; // 启动CRC计算
             end
             
@@ -166,12 +149,6 @@ always_ff @(posedge clk_in or negedge rst_n) begin
     end
 end
 
-// CRC计算（简化版）
-always_comb begin
-    // 在实际实现中使用完整CRC16算法
-    // 这里使用简单的位反转作为示例
-    crc_calculated = ~crc_field_reg;
-end
 
 // 输出逻辑
 always_ff @(posedge clk_in or negedge rst_n) begin
