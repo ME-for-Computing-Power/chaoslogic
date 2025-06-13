@@ -53,7 +53,7 @@
         计数器递增，溢出时丢弃数据
         
     -转换条件：
-        当检测到帧尾 0E0E0E0E 时进入 CRC_OUTPUT，停止寄存器tail_detec_reg和full_data_reg的存储
+        当检测到data_in为 0E0E0 时进入 CRC_OUTPUT，停止寄存器tail_detec_reg和full_data_reg的存储
         若计数器溢出（≥15）返回 IDLE
         
 `5.​CRC_OUTPUT​（CRC提取状态）`
@@ -65,21 +65,26 @@
         计算数据长度：data_count = data_counter - 2
         截取 full_data_reg 的高128位作为 data_128,
         
-    -转换条件：无条件进入 WAIT_CRC（仅需1周期）
-    
-`6.​WAIT_CRC​（CRC校验等待状态）`
+    -转换条件：
+        当检测到data_in为 0E0E0 时进入 ENABLE_CRC（确保帧尾正确）否则数据错误，返回 IDLE
 
-    -等待CRC校验结果
+    
+`6.​ENABLE_CRC​（CRC校验使能状态）`
+
+    -使能CRC校验模块
     
     -行为：
-        拉高 crc16_valid 启动CRC校验模块，维持 crc16_valid 高电平，维持周期为data_count的值;crc16_valid拉高周期同时，每个周期从  data_128低位开始每16位作为data_to_crc发送给CRC校验模块
+        拉高 start_crc信号，启动CRC校验模块，
         
     -转换条件：
-        当 crc16_done == 1 时：
-        若校验成功（data_from_crc == 保存的CRC字段），输出 fifo_w_enable=1 且 crc_err=0，输出140位data_to_fifo信号，直接连接128位数据位输出信号data_128+8位通道数据data_ch+4位数据长度表示位data_count。
-        否则输出 crc_err=1
-        返回 IDLE
+        无条件返回 IDLE
 
+单独为与CRC交互编写一个always块，确保后续数据的输入在CRC校验期间不会被丢弃：
+
+    -行为：
+        接收到start_crc信号后，拉低start_crc信号，crc_cnt开始计数。当crc_cnt小于data_count的值的时候，维持 crc16_valid 高电平，同时每个周期从data_128低位开始每16位作为data_to_crc发送给CRC校验模块。所有数据已发送后清零crc16_valid和crc_cnt。
+
+        接收到crc16_done信号后，检查CRC结果data_from_crc和crc_field_reg是否相等。相等时候拉高fifo_w_enable，拉低crc_err，data_to_fifo 赋值为{data_128, data_ch, data_count}写入fifo。不相等时拉低fifo_w_enable，拉高crc_err。
 ## 顶层IO
 
 |信号|位宽|I/O|

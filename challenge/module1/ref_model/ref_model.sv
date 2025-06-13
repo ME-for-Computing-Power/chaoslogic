@@ -22,7 +22,7 @@ typedef enum {
     CHANNEL,
     DATA,
     CRC_OUTPUT,
-    WAIT_CRC
+    ENABLE_CRC
 } state_t;
 state_t state, next_state;
 
@@ -39,6 +39,7 @@ reg [15:0] crc_field_reg;    // 存储的CRC字段
 reg [127:0] data_128;      // 用于存到FIFO的128位数据寄存器
 reg [3:0]  crc_cnt;          // CRC发送计数器
 
+reg start_crc;          // 启动CRC计算标志
 // 本地参数
 localparam HEADER = 32'hE0E0_E0E0;  // 帧头
 localparam TAIL   = 32'h0E0E_0E0E;  // 帧尾
@@ -70,10 +71,13 @@ always_comb begin
             else if (data_counter >= 10) next_state = IDLE; // 最大数据长度
         end
         
-        CRC_OUTPUT: next_state = WAIT_CRC;
-        
-        WAIT_CRC: begin
-            if (crc16_done) next_state = IDLE;
+        CRC_OUTPUT: begin
+            if (data_in == 16'h0E0E) next_state = ENABLE_CRC; //确保帧尾正确
+            else next_state = IDLE;
+        end
+
+        ENABLE_CRC: begin
+            next_state = IDLE;
         end
     endcase
 end
@@ -120,34 +124,40 @@ always_ff @(posedge clk_in or negedge rst_n) begin
     end
 end
 
-// CRC字段提取和处理
+// CRC字段提取
 always_ff @(posedge clk_in or negedge rst_n) begin
     if (!rst_n) begin
         crc_field_reg <= 0;
         data_128 <= 0;
-        data_to_crc <= 0;
         data_count <= 0;
-        crc_err <= 0;
-        crc_cnt <= 0;
-        crc16_valid <= 0;
-        fifo_w_enable <= 0;
     end else begin
         case (state)
             CRC_OUTPUT: begin
                 // 从帧尾前提取CRC字段
-                crc_field_reg <= tail_detec_reg[31:16];
-                data_128 <= full_data_reg[159:32]; // 提取128位数据
-                data_to_crc <= 0; // 清除CRC数据寄存器
-                data_count  <= data_counter - 2; // 数据长度位
-                crc_err <= 0;
-                crc_cnt <= 0;
-                crc16_valid <= 0;
-                fifo_w_enable <= 0;
-            end
-            
-            WAIT_CRC:begin
+                crc_field_reg   <= tail_detec_reg[31:16];
+                data_128        <= full_data_reg[159:32]; // 提取128位数据
+                data_count      <= data_counter - 2; // 数据长度位
+            end     
+            ENABLE_CRC:begin
                 // 启动CRC校验
-                if (crc_cnt < data_count) begin
+                start_crc <= 1'b1; // 启动CRC计算       
+            end
+        endcase
+    end
+end
+
+// CRC字段数据处理
+always_ff @(posedge clk_in or negedge rst_n) begin
+    if (!rst_n) begin
+        data_to_crc <= 0;
+        crc_err <= 0;
+        crc_cnt <= 0;
+        crc16_valid <= 0;
+        fifo_w_enable <= 0;
+    end else if (start_crc == 1'b1) begin
+            start_crc <= 1'b0; // 清除启动标志 
+                // 检查CRC发送计数器
+            if (crc_cnt < data_count) begin
                     crc16_valid <= 1'b1;
                     
                     // 从低位开始发送数据（小端序）
@@ -165,21 +175,16 @@ always_ff @(posedge clk_in or negedge rst_n) begin
                 
                 // CRC计算完成
                 if (crc16_done) begin
-                    // 准备输出数据
-                    data_to_fifo <= {data_128, data_ch, data_count};
-                    
                     // 检查CRC结果
                     if (data_from_crc == crc_field_reg) begin
                         crc_err <= 1'b0; // 清除CRC错误标志
-                        fifo_w_enable <= 1'b1; // CRC正确，写使能             
+                        fifo_w_enable <= 1'b1; // CRC正确，写使能  
+                        data_to_fifo <= {data_128, data_ch, data_count}; // 将数据写入FIFO           
                     end else begin
                         crc_err <= 1'b1; // CRC错误
                         fifo_w_enable <= 1'b0; // 禁止写入FIFO
                     end
                 end
-            end
-        endcase
-    end
+    end    
 end
-
 endmodule
