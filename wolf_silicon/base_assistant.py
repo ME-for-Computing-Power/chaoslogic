@@ -14,6 +14,7 @@ class BaseAssistant(object):
         self.short_term_memory.append(msg)
         if len(self.short_term_memory) > self.max_short_term_memory_len:
             self.short_term_memory.pop(0)
+            self.env.manual_log(self.name, "短期记忆已满"+str(self.max_short_term_memory_len)+"条，删除最早的消息")
         while self.short_term_memory and self.short_term_memory[0]["role"] != "user":
             self.short_term_memory.pop(0)
 
