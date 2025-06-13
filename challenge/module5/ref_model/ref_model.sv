@@ -23,9 +23,9 @@ module crc_cacul(
     lfsr_c[3] = lfsr_q[3] ^ lfsr_q[7] ^ lfsr_q[11] ^ lfsr_q[14] ^ lfsr_q[15] ^ data_to_crc[3] ^ data_to_crc[7] ^ data_to_crc[11] ^ data_to_crc[14] ^ data_to_crc[15];
     lfsr_c[4] = lfsr_q[4] ^ lfsr_q[8] ^ lfsr_q[12] ^ lfsr_q[15] ^ data_to_crc[4] ^ data_to_crc[8] ^ data_to_crc[12] ^ data_to_crc[15];
     lfsr_c[5] = lfsr_q[0] ^ lfsr_q[4] ^ lfsr_q[5] ^ lfsr_q[8] ^ lfsr_q[9] ^ lfsr_q[11] ^ lfsr_q[12] ^ lfsr_q[13] ^ data_to_crc[0] ^ data_to_crc[4] ^ data_to_crc[5] ^ data_to_crc[8] ^ data_to_crc[9] ^ data_to_crc[11] ^ data_to_crc[12] ^ data_to_crc[13];
-    lfsr_c[6] = lfsr_q[1] ^ lfsr_q[5] ^ lfsr_q[6] ^ lfsr_q[9] ^ lfsr_q[10] ^ lfsr_q[12] ^ lfsr_q[13] ^ lfsr_q[14] ^ data_to_crc[1] ^ data极c[5] ^ data_to_crc[6] ^ data_to_crc[9] ^ data_to_crc[10] ^ data_to_crc[12] ^ data_to_crc[13] ^ data_to_crc[14];
+    lfsr_c[6] = lfsr_q[1] ^ lfsr_q[5] ^ lfsr_q[6] ^ lfsr_q[9] ^ lfsr_q[10] ^ lfsr_q[12] ^ lfsr_q[13] ^ lfsr_q[14] ^ data_to_crc[1] ^ data_to_crc[5] ^ data_to_crc[6] ^ data_to_crc[9] ^ data_to_crc[10] ^ data_to_crc[12] ^ data_to_crc[13] ^ data_to_crc[14];
     lfsr_c[7] = lfsr_q[2] ^ lfsr_q[6] ^ lfsr_q[7] ^ lfsr_q[10] ^ lfsr_q[11] ^ lfsr_q[13] ^ lfsr_q[14] ^ lfsr_q[15] ^ data_to_crc[2] ^ data_to_crc[6] ^ data_to_crc[7] ^ data_to_crc[10] ^ data_to_crc[11] ^ data_to_crc[13] ^ data_to_crc[14] ^ data_to_crc[15];
-    lfsr_c[8] = lfsr_q[3] ^ lfsr_q[7] ^ lfsr_q[8] ^ lfsr_q[11] ^ lfsr_q[12] ^ lfsr_q[14] ^ lfsr_q[极5] ^ data_to_crc[3] ^ data_to_crc[7] ^ data_to_crc[8] ^ data_to_crc[11] ^ data_to_crc[12] ^ data_to_crc[14] ^ data_to_crc[15];
+    lfsr_c[8] = lfsr_q[3] ^ lfsr_q[7] ^ lfsr_q[8] ^ lfsr_q[11] ^ lfsr_q[12] ^ lfsr_q[14] ^ lfsr_q[15] ^ data_to_crc[3] ^ data_to_crc[7] ^ data_to_crc[8] ^ data_to_crc[11] ^ data_to_crc[12] ^ data_to_crc[14] ^ data_to_crc[15];
     lfsr_c[9] = lfsr_q[4] ^ lfsr_q[8] ^ lfsr_q[9] ^ lfsr_q[12] ^ lfsr_q[13] ^ lfsr_q[15] ^ data_to_crc[4] ^ data_to_crc[8] ^ data_to_crc[9] ^ data_to_crc[12] ^ data_to_crc[13] ^ data_to_crc[15];
     lfsr_c[10] = lfsr_q[5] ^ lfsr_q[9] ^ lfsr_q[10] ^ lfsr_q[13] ^ lfsr_q[14] ^ data_to_crc[5] ^ data_to_crc[9] ^ data_to_crc[10] ^ data_to_crc[13] ^ data_to_crc[14];
     lfsr_c[11] = lfsr_q[6] ^ lfsr_q[10] ^ lfsr_q[11] ^ lfsr_q[14] ^ lfsr_q[15] ^ data_to_crc[6] ^ data_to_crc[10] ^ data_to_crc[11] ^ data_to_crc[14] ^ data_to_crc[15];
