@@ -51,7 +51,7 @@ frame_detector dut (
     .data_vld_ch8(data_vld_ch8),
     .fifo_empty(fifo_empty),
     .fifo_full(fifo_full),
-    .crc_valid(crc_valid),
+    .crc_valid_o(crc_valid),
     .crc_err(crc_err)
 );
 
@@ -234,7 +234,7 @@ task test_single_frame;
     send_frame(channel, data, data_len, crc_value);
     
     // 等待CRC验证
-    //wait(crc_valid === 1'b1);
+    wait(crc_valid === 1'b1);
     $display("[%0t] CRC验证通过", $time);
     
     // 检查输出

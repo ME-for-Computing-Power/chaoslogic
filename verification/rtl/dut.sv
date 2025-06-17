@@ -19,7 +19,7 @@ module frame_detector (
     output        fifo_empty,    // FIFO空标志
     
     // 串行输出接口
-    output        crc_valid,     // CRC有效标志
+    output        crc_valid_o,     // CRC有效标志
     output        data_out_ch1,  // 通道1串行数据
     output        data_out_ch2,  // 通道2串行数据
     output        data_out_ch3,  // 通道3串行数据
@@ -59,6 +59,17 @@ wire fifo_r_enable = 1'b1; // FIFO读使能信号，暂时设为高电平
     wire [7:0]   vld_ch;
     wire [15:0]  data_count;
 
+reg crc_err_reg;
+
+always @(posedge clk_in or negedge rst_n) begin
+    if (!rst_n) begin
+        crc_err_reg <= 1'b0; // 复位时清除CRC错误标志
+    end else  begin
+        crc_err_reg <= crc_err; // 将CRC错误标志寄存
+    end
+end
+
+assign crc_valid_o = crc16_done ? (!crc_err_reg) : 1'b0; // 将CRC有效信号输出
     // ================= 模块实例化 =================
     // 1. 帧解析与CRC校验模块
     frame_parser u_frame_parser (
@@ -85,12 +96,16 @@ wire fifo_r_enable = 1'b1; // FIFO读使能信号，暂时设为高电平
     );
 
     always@ (posedge clk_in or negedge rst_n) begin
-        $display("[%0t] data_to_crc: %h", $time, data_to_crc);
-        if (crc16_done) begin
-        $display("[%0t] dut计算CRC: %h", $time, data_from_crc);           
-        end
+        if (crc16_valid) begin
+           $display("[%0t] data_to_crc: %h", $time, data_to_crc);
+        end     
     end
-   
+
+    always@ (posedge clk_in or negedge rst_n) begin    
+        if (crc16_done) begin
+            $display("[%0t] dut计算CRC: %h", $time, data_from_crc);           
+        end
+    end  
 
     // 3. 异步FIFO模块
     fifo_wrapper u_fifo_wrapper (
