@@ -86,7 +86,9 @@ wire fifo_r_enable = 1'b1; // FIFO读使能信号，暂时设为高电平
 
     always@ (posedge clk_in or negedge rst_n) begin
         $display("[%0t] data_to_crc: %h", $time, data_to_crc);
-        $display("[%0t] dut计算CRC: %h", $time, data_from_crc);
+        if (crc16_done) begin
+        $display("[%0t] dut计算CRC: %h", $time, data_from_crc);           
+        end
     end
    
 

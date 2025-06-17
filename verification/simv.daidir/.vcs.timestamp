@@ -113,12 +113,12 @@ AUTOJUMP_ERROR_PATH=/home/zhanyue/.local/share/autojump/errors.log
 AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 0
 9
-1750147807 ./tb.sv
+1750150678 ./tb.sv
 1750145996 ./rtl/serial_output.sv
 1750145979 ./rtl/gray_conv.sv
 1750146388 ./rtl/frame_parser.sv
 1750145945 ./rtl/fifo_wrapper.sv
-1750147647 ./rtl/dut.sv
+1750150450 ./rtl/dut.sv
 1750145923 ./rtl/crc_module.sv
 1750145963 ./rtl/async_fifo.sv
 1551421444 /eda/vcs/include/cm_vcsd.tab
@@ -127,5 +127,5 @@ AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 1551421792 /eda/vcs/linux64/lib/liberrorinf.so
 1551421768 /eda/vcs/linux64/lib/libsnpsmalloc.so
 1551421789 /eda/vcs/linux64/lib/libvfs.so
-1750147818 simv.daidir
+1750150692 simv.daidir
 -1 partitionlib
