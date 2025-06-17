@@ -97,6 +97,9 @@ class BaseAssistant(object):
         #message_for_logging = json.dumps(messages, ensure_ascii=False).replace('\\n', '\n')
         self.env.manual_log(self.name, f"Messages: {messages}")
         response = self.agent.model_client.chat.completions.create(
+            temperature=0.1,
+            presence_penalty=-0.1,
+            frequency_penalty=-0.1,
             model=self.agent.MODEL_NAME,
             messages=messages,
             max_tokens=self.agent.MAX_TOKENS,
