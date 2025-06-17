@@ -184,3 +184,5 @@ svg-inkscape/
 *.fls
 *.synctex.gz
 *.fdb_latexmk
+
+.dvt/
