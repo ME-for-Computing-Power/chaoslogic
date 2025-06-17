@@ -1,5 +1,5 @@
 0 
-34
+40
 +v2k
 -Mamsrun=
 -Masflags=
@@ -28,29 +28,37 @@
 -timescale=1ns/1ps
 -top
 ./covdir.vdb
+./rtl/async_fifo.sv
+./rtl/crc_module.sv
 ./rtl/dut.sv
+./rtl/fifo_wrapper.sv
+./rtl/frame_parser.sv
+./rtl/gray_conv.sv
+./rtl/serial_output.sv
 ./tb.sv
 /eda/vcs/linux64/bin/vcs1
 line+cond+fsm+branch+tgl
 tb_frame_detector
 tb_frame_detector_cov
-64
+70
 sysc_uni_pwd=/mnt/d/project/chaoslogic/verification
+no_proxy=192.168.*,172.31.*,172.30.*,172.29.*,172.28.*,172.27.*,172.26.*,172.25.*,172.24.*,172.23.*,172.22.*,172.21.*,172.20.*,172.19.*,172.18.*,172.17.*,172.16.*,10.*,127.*,localhost,<local>
+https_proxy=http://127.0.0.1:7890
+http_proxy=http://127.0.0.1:7890
 ZSH=/home/zhanyue/.oh-my-zsh
-ZDOTDIR=/home/zhanyue
 YOSYS_HOME=/home/zhanyue/ysyx/yosys-sta
 XDG_RUNTIME_DIR=/run/user/1000/
-WSL_INTEROP=/run/WSL/496_interop
+WSL_INTEROP=/run/WSL/444_interop
 WSL_DISTRO_NAME=Ubuntu
 WSLENV=VSCODE_WSL_EXT_LOCATION/up
 WSL2_GUI_APPS_ENABLED=1
 WAYLAND_DISPLAY=wayland-0
-VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-baa82d15-eab6-483c-b223-20a6807e17e7.sock
-VSCODE_INJECTION=1
+VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-dc88620e-9128-4cf8-8f22-28553f015ea4.sock
 VSCODE_GIT_IPC_HANDLE=/run/user/1000/vscode-git-c2d6884bb7.sock
 VSCODE_GIT_ASKPASS_NODE=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/node
 VSCODE_GIT_ASKPASS_MAIN=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/extensions/git/dist/askpass-main.js
 VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+VSCODE_DEBUGPY_ADAPTER_ENDPOINTS=/home/zhanyue/.vscode-server/extensions/ms-python.debugpy-2025.8.0/.noConfigDebugAdapterEndpoints/endpoint-3165d9fe085b5b25.txt
 VMR_MODE_FLAG=64
 VERDI_HOME=/eda/verdi
 VCS_TARGET_ARCH=linux64
@@ -61,7 +69,6 @@ VCS_ARG_ADDED_FOR_TMP=1
 VCS_ARCH_OVERRIDE=linux
 VCS_ARCH=linux64
 UVM_HOME=/home/zhanyue/uvm/uvm-1.1a
-USER_ZDOTDIR=/home/zhanyue
 UNAME=/bin/uname
 TOOL_HOME=/eda/vcs/linux64
 TERM_PROGRAM_VERSION=1.99.3
@@ -71,11 +78,13 @@ SNPS_VCS_INTERNAL_UBUNTU_PRE_LDFLAGS= -no-pie
 SCRNAME=vcs
 SCRIPT_NAME=vcs
 RISCV=/home/zhanyue/riscv64
+PYDEVD_DISABLE_FILE_VALIDATION=1
 PULSE_SERVER=unix:/mnt/wslg/PulseServer
 PT_HOME=/eda/pts
 OVA_UUM=0
 NVBOARD_HOME=/home/zhanyue/ysyx/nvboard
 NPC_HOME=/home/zhanyue/ysyx/ysyx-workbench/npc
+NO_PROXY=192.168.*,172.31.*,172.30.*,172.29.*,172.28.*,172.27.*,172.26.*,172.25.*,172.24.*,172.23.*,172.22.*,172.21.*,172.20.*,172.19.*,172.18.*,172.17.*,172.16.*,10.*,127.*,localhost,<local>
 NOVAS_HOME=/eda/verdi
 NEMU_HOME=/home/zhanyue/ysyx/ysyx-workbench/nemu
 NAME=LG-GRAM16
@@ -83,31 +92,40 @@ MTASIM_HOME=/home/zhanyue/map_whole/MTASim
 MPTLS_HOME=/home/zhanyue/map_whole/maptools/maptools
 MFLAGS=
 MANPAGER=sh -c "col -b | code --wait --reuse-window -"
-MAKE_TERMOUT=/dev/pts/4
-MAKE_TERMERR=/dev/pts/4
+MAKE_TERMOUT=/dev/pts/7
+MAKE_TERMERR=/dev/pts/7
 MAKELEVEL=1
 MAKEFLAGS=
 LSCOLORS=Gxfxcxdxbxegedabagacad
 LESS=-R
 LC_ALL=C
+HTTP_PROXY=http://127.0.0.1:7890
+HTTPS_PROXY=http://127.0.0.1:7890
 HOSTTYPE=x86_64
 GIT_ASKPASS=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/extensions/git/dist/askpass.sh
 DC_HOME=/eda/syn
 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 CUDA_HOME=/usr/local/cuda-12.9
 COLORTERM=truecolor
+BUNDLED_DEBUGPY_PATH=/home/zhanyue/.vscode-server/extensions/ms-python.debugpy-2025.8.0/bundled/libs/debugpy
 AUTOJUMP_SOURCED=1
 AUTOJUMP_ERROR_PATH=/home/zhanyue/.local/share/autojump/errors.log
 AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 0
-3
-1749530335 ./tb.sv
-1749536792 ./rtl/dut.sv
+9
+1750147807 ./tb.sv
+1750145996 ./rtl/serial_output.sv
+1750145979 ./rtl/gray_conv.sv
+1750146388 ./rtl/frame_parser.sv
+1750145945 ./rtl/fifo_wrapper.sv
+1750147647 ./rtl/dut.sv
+1750145923 ./rtl/crc_module.sv
+1750145963 ./rtl/async_fifo.sv
 1551421444 /eda/vcs/include/cm_vcsd.tab
 4
 1551422344 /eda/vcs/linux64/lib/libvirsim.so
 1551421792 /eda/vcs/linux64/lib/liberrorinf.so
 1551421768 /eda/vcs/linux64/lib/libsnpsmalloc.so
 1551421789 /eda/vcs/linux64/lib/libvfs.so
-1749536802 simv.daidir
+1750147818 simv.daidir
 -1 partitionlib

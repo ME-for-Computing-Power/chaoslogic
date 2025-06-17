@@ -202,14 +202,33 @@ initial begin
     $finish;
 end
 
+task automatic crc16_ccitt(
+    input  logic [127:0] data,
+    output logic [15:0] crc_value
+);
+    // 初始化 CRC 寄存器
+    crc_value = 16'h0000;
+
+    // 逐位处理 128 位输入数据
+    for (int i = 127; i >= 0; i--) begin
+        logic temp = data[i] ^ crc_value[15];  // 计算反馈位
+        crc_value = crc_value << 1;            // 左移一位
+        if (temp) begin
+            crc_value = crc_value ^ 16'h1021;   // 多项式异或（当反馈位为 1 时）
+        end
+    end
+endtask
+
 // 测试单个帧的任务
 task test_single_frame;
     input [7:0]  channel;
     input [127:0] data;
     input [15:0] data_len;
     
-    logic [15:0] crc_value = 16'h2E88; // 此处应替换为实际CRC计算
-    
+    logic [15:0] crc_value = 16'hfcf6;
+
+    //crc16_ccitt(data,crc_value); // 计算CRC值
+    $display("[%0t] tb计算CRC: %h", $time, crc_value);
     // 发送帧
     $display("[%0t] 发送帧: 通道=%b, 长度=%0d", $time, channel, data_len);
     send_frame(channel, data, data_len, crc_value);
@@ -233,7 +252,7 @@ always @(posedge clk_in) begin
 end
 
 initial begin
-    #1000; 
+    #500; 
     $error("仿真超时");
     $finish;
 end

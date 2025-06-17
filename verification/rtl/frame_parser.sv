@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module ref_model (
+module frame_parser (
     input         clk_in,        // 系统时钟
     input         rst_n,         // 低电平复位
     input [15:0]  data_in,       // 输入数据（16位）
@@ -130,7 +130,7 @@ always_ff @(posedge clk_in or negedge rst_n) begin
         crc_field_reg <= 0;
         data_128 <= 0;
         data_count <= 0;
-        start_crc <= 1'b0; // 清除启动标志
+        start_crc <= 0;
     end else begin
         case (state)
             CRC_OUTPUT: begin

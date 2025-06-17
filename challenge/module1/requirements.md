@@ -85,6 +85,7 @@
         接收到start_crc信号后，拉低start_crc信号，crc_cnt开始计数。当crc_cnt小于data_count的值的时候，维持 crc16_valid 高电平，同时每个周期从data_128低位开始每16位作为data_to_crc发送给CRC校验模块。所有数据已发送后清零crc16_valid和crc_cnt。
 
         接收到crc16_done信号后，检查CRC结果data_from_crc和crc_field_reg是否相等。相等时候拉高fifo_w_enable，拉低crc_err，data_to_fifo 赋值为{data_128, data_ch, data_count}写入fifo。不相等时拉低fifo_w_enable，拉高crc_err。
+        
 ## 顶层IO
 
 |信号|位宽|I/O|

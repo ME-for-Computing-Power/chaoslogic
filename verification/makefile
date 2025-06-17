@@ -50,10 +50,10 @@ SIM_OPTS    += -cm line+cond+fsm+branch+tgl
 
 
 # Default Target
-all: compile run
+all: sim run
 
 # Compilation Target
-compile:
+sim:
 	$(VCS) $(VCS_OPTS) \
 		-top $(TOP_MODULE) \
 		-$(TIMESCALE) \
@@ -79,7 +79,7 @@ clean:
 # Help Information
 help:
 	@echo "----------------------- Help ------------------------"
-	@echo "make compile      - Compile design"
+	@echo "make sim      - Compile design"
 	@echo "make run          - Run simulation"
 	@echo "make wave         - Open waveform in DVE"
 	@echo "make verdi        - Open waveform in Verdi"

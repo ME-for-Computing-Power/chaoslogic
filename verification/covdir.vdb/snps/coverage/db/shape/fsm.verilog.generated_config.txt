@@ -1,6 +1,6 @@
 // Synopsys, Inc.
 // User: zhanyue
-// Date: Tue Jun 10 14:26:36 2025
+// Date: Tue Jun 17 16:10:10 2025
 
 // ==================================================================================================
 // This config file prototype is produced from the last run using the complete list of extracted fsms.
@@ -74,20 +74,17 @@
 //SEQ_NUMBER_MAX=10000
 //SEQ_LENGTH_MAX=32
 
-MODULE=frame_detector
+MODULE=frame_parser
 CURRENT=state
-NEXT=state
-STATES=CHANNEL,CRC,DATA,HEADER1,IDLE,TRAILER1,TRAILER2,VALID
+NEXT=next_state
+STATES=CHANNEL,CRC_OUTPUT,DATA,ENABLE_CRC,HEAD_CHECK,IDLE
 TRANSITIONS=CHANNEL->DATA,
 CHANNEL->IDLE,
-CRC->IDLE,
-CRC->TRAILER1,
-DATA->CRC,
+CRC_OUTPUT->ENABLE_CRC,
+CRC_OUTPUT->IDLE,
+DATA->CRC_OUTPUT,
 DATA->IDLE,
-HEADER1->CHANNEL,
-HEADER1->IDLE,
-IDLE->HEADER1,
-TRAILER1->IDLE,
-TRAILER1->TRAILER2,
-TRAILER2->IDLE,
-VALID->IDLE
+ENABLE_CRC->IDLE,
+HEAD_CHECK->CHANNEL,
+HEAD_CHECK->IDLE,
+IDLE->HEAD_CHECK
