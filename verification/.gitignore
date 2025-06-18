@@ -9,3 +9,4 @@ simv.log
 *.fsdb
 *.vcd
 ucli.key
+.vaper.json

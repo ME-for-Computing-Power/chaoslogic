@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/100ps
 
 module tb_frame_detector();
 
@@ -22,9 +22,9 @@ logic crc_valid, crc_err;
 // 测试参数
 localparam HEADER = 32'hE0E0E0E0;
 localparam TRAILER = 32'h0E0E0E0E;
-localparam CLK_PERIOD_IN = 16;   // 100MHz
-localparam CLK_PERIOD_OUT = 16;  // 100MHz
-localparam CLK_PERIOD_S = 1; // 1600MHz (16×clk_out)
+localparam CLK_PERIOD_IN = 32;   // 100MHz
+localparam CLK_PERIOD_OUT = 32;  // 100MHz
+localparam CLK_PERIOD_S = 2; // 1600MHz (16×clk_out)
 
 // 实例化被测模块
 frame_detector dut (
@@ -138,7 +138,7 @@ task automatic check_serial_output;
     endcase
     
     // 等待有效信号
-    // wait(data_vld === 1'b1);
+    //wait(data_vld === 1'b1);
     $display("[%0t] CH%d 数据输出开始", $time, channel);
     
     // 收集串行数据 (修复循环变量冲突)
@@ -170,6 +170,7 @@ endtask
 // 主测试流程
 initial begin
     // 初始化
+    $display("\n===== init =====");
     data_in = 0;
     rst_n = 0;
     #100;
@@ -252,9 +253,22 @@ always @(posedge clk_in) begin
 end
 
 initial begin
-    #500; 
+    #1000; 
     $error("仿真超时");
     $finish;
 end
 
+
+//fsdb dump 
+initial begin
+    $fsdbDumpfile("wave.fsdb");
+    $fsdbDumpvars(0, tb_frame_detector, "+all");
+    $fsdbDumpMDA();
+end
+
+//vcd dump
+initial begin
+    $dumpfile("wave.vcd");
+    $dumpvars(0, tb_frame_detector);
+end
 endmodule
