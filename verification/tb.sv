@@ -22,9 +22,9 @@ logic crc_valid, crc_err;
 // 测试参数
 localparam HEADER = 32'hE0E0E0E0;
 localparam TRAILER = 32'h0E0E0E0E;
-localparam CLK_PERIOD_IN = 10;   // 100MHz
-localparam CLK_PERIOD_OUT = 10;  // 100MHz
-localparam CLK_PERIOD_S = 0.625; // 1600MHz (16×clk_out)
+localparam CLK_PERIOD_IN = 16;   // 100MHz
+localparam CLK_PERIOD_OUT = 16;  // 100MHz
+localparam CLK_PERIOD_S = 1; // 1600MHz (16×clk_out)
 
 // 实例化被测模块
 frame_detector dut (
@@ -62,13 +62,13 @@ initial begin
 end
 
 initial begin
-    #3;
+    #8;
     clk_out = 0;
     forever #(CLK_PERIOD_OUT/2) clk_out = ~clk_out;
 end
 
 initial begin
-    #3;
+    #8;
     clk_out_s = 0;
     forever #(CLK_PERIOD_S/2) clk_out_s = ~clk_out_s;
 end
