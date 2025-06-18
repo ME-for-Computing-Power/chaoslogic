@@ -2,7 +2,7 @@ csrc/
 simv.daidir/
 *.log
 verdiLog/
-filelist.f/
+filelist.f
 novas.*
 simv
 simv.log
