@@ -186,3 +186,4 @@ svg-inkscape/
 *.fdb_latexmk
 
 .dvt/
+_minted-main/

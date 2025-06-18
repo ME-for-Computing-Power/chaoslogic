@@ -8,6 +8,8 @@
 
 \usepackage{graphicx}
 \usepackage{svg}
+
+\usepackage{minted}
 %\usepackage{hyperref}
 % \hypersetup{
 %     colorlinks=true,
@@ -30,10 +32,10 @@
     {\Huge \bfseries 华为杯\\[1em]
     第八届中国研究生创“芯”大赛\\[3em]}
     
-    {\LARGE 技术文档\\[5em]}
+    {\LARGE 验证自动化流程设计说明\\[5em]}
     
     {\Large
-    作品名称：混沌逻辑-大模型多智能体自动数字IC前端\hspace{6cm} \\[2em]
+    作品名称：混沌逻辑-大模型多智能体自动数字IC前端设计器\hspace{6cm} \\[2em]
     团队名称：混沌逻辑\hspace{6cm} \\[2em]
     参赛队员：孙林涵，诸人豪，张煜\hspace{6cm} \\[5em]
     }
@@ -42,37 +44,210 @@
     {\large \today}
 \end{titlepage}
 
+\tableofcontents
+
 \begin{abstract}
 本软件通过设置项目管理、设计工程师和验证工程师三个Agent，模仿一般的IC设计流程，使通用大语言模型（LLM）生成可靠的RTL代码。本文档将详细介绍软件各个Agent的设计，以及软件的运行流程。
 \end{abstract}
 
-\tableofcontents
 \newpage
 
 \section{介绍}
 %简要介绍文档背景和目的。
-近年来，随着LLM技术逐渐进入应用场景，越来越多的领域开始尝试使用LLM来辅助工作。IC设计作为一个复杂的工程领域，也开始探索如何利用LLM来提高设计效率和准确性。然而，大模型的幻觉与错误的输出严重降低了其在IC设计领域的实用性。
+近年来，随着大语言模型（Large Language Model, LLM）技术逐渐进入应用场景，越来越多的领域开始尝试使用LLM来辅助工作。
+数字前端设计作为一个复杂的工程领域，也开始探索如何利用LLM来提高设计效率和准确性。
+然而，与其他领域相比，本领域的RTL代码开源少、且开源代码缺乏高质量设计；HDL语言与LLM大量学习的软件语言看似相似，实则在基础思路上存在着巨大差距。
+此外，和LLM已取得广泛应用的软件工程相比，IC设计的容错率极低，对代码正确率要求高。
+因此，直接调用已有的通用LLM到数字前端设计中是极不合理的。
 
-为了解决这一问题，本项目设计了一套由大语言模型（Large Language Model, LLM）驱动的RTL代码的生成与验证自动化软件，旨在提高IC设计的效率和准确性。
+为了解决这些问题，本项目设计了一套由通用LLM驱动的RTL代码的生成与验证自动化软件，旨在提高IC设计的效率和准确性。
 
-\section{Agent设计}
-软件通过设置项目管理、设计工程师和验证工程师三个Agent，模仿一般的IC设计流程，使通用LLM
-生成可靠的RTL代码。下面，介绍各个Agent的设计。
+\section{自动化系统设计}
 
-\subsection{项目工程师Agent}
-项目工程师解读用户的需求，生成项目的技术规范（下文简称Spec），并将其存储在文件中。
+本项目的设计目标是，在使用市场上现有的通用LLM的同时，最大化地减少LLM的幻觉，按照用户预期快速、自动地完成初版设计。
+为此，我们仿照现有的IC设计流程设计了多个智能体（Agent），逐步展开用户的需求；并在LLM运行的各个阶段尽可能地使用Synopsys工具链对大模型的结果提出反馈，避免设计错误在工作流中传导。
+
+\subsection{Agent设计}
+考虑到前面提到的问题，期望LLM在单轮对话中直接给出正确的RTL设计是不现实的。
+要确保大模型的输出正确且符合用户需求，则需要为LLM提供反馈，在多轮迭代后取得期望的输出。
+但是，LLM的输出较慢（如本项目使用的Deepseek API仅能达到40~Token/s），若依赖人类产生反馈信息，则将占用用户大量时间，背离了自动化的设计初衷。
+因此，本项目模仿一般的IC设计流程，设置了项目管理、设计工程师和验证工程师三个Agent，每个Agent均具有单独的短期记忆、长期记忆，并根据其职责设计了对应的工具供其使用。
+LLM在使用工具时，间接调用了Synopsys的VCS等工具进行语法检查、仿真等，输出的结果将自动地反馈给大模型，实现了一定程度的自动化。
+下面详细介绍各个Agent的设计。
+
+\subsubsection{项目工程师Agent}
+项目工程师解读用户输入的需求，生成项目的技术规范（下文简称Spec），并将其存储在文件中。
 当设计完成时，项目工程师还会根据验证工程师的验证报告，检查设计是否满足规范要求。
 
+\textbf{系统提示词：}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{../../prompt/proj_manager/system_prompt.md}
 
-\subsection{设计工程师Agent}
+\textbf{用户提示词，根据用户输入生成完整spec时：}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{../../prompt/proj_manager/create_spec.md}
+
+\textbf{用户提示词，验收项目时：}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{../../prompt/proj_manager/review_veri.md}
+
+\textbf{工具：}
+\begin{minted}[fontsize=\small, frame=lines, bgcolor=gray!10, breaklines=true]{python}
+submit_spec = {
+    "type": "function",
+    "function": {
+        "name": "submit_spec",
+        "description": "提交SPEC文档。",
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "spec": {"type": "string", "description": "SPEC文档内容"},
+                "overwrite": {"type": "boolean", "description": "true表示覆盖现有的SPEC，false表示将其追加到现有SPEC中"}
+            },
+            "required": ["spec", "overwrite"],
+            "additionalProperties": False
+        }
+    }
+}
+        
+accept_report = {
+    "type": "function",
+    "function": {
+        "name": "accept_report",
+        "description": "批准当前报告。",
+        "strict": True
+    }
+}
+
+\end{minted}
+
+\subsubsection{设计工程师Agent}
 设计工程师根据项目工程师提供的Spec，生成RTL代码。设计工程师会将生成的代码存储在文件中，并在必要时进行修改。为避免LLM生成的代码存在语法错误，每次设计工程师提交代码时，都会使用VCS的vlogan工具进行语法检查。若检查出语法错误，设计工程师会根据错误信息进行修改，直到消除所有报错为止。
 
 另外，设计工程师还会根据验证工程师的反馈，修改RTL代码以满足验证需求。
 
-\subsection{验证工程师Agent}
+\textbf{系统提示词：}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{../../prompt/design_engineer/system_prompt.md}
+
+\textbf{用户提示词，生成RTL代码时：}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{../../prompt/design_engineer/create_design.md}
+
+\textbf{工具：}
+\begin{minted}[fontsize=\small, frame=lines, bgcolor=gray!10, breaklines=true]{python}
+submit_design = {
+    "type": "function",
+    "function": {
+        "name": "submit_design",
+        "description": "提交你的 Verilog 设计代码。设计代码将保存在一个 .v 文件中。你的设计代码在提交后会自动进行语法检查。",
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "code": {"type": "string", "description": "Verilog设计代码"}
+            },
+            "required": ["code"],
+            "additionalProperties": False
+        }
+    }
+}
+\end{minted}
+
+
+
+\subsubsection{验证工程师Agent}
 验证工程师根据项目工程师提供的Spec与用户提供的验证方案，生成验证计划，并编写测试用例。验证工程师会使用VCS编译仿真程序，并运行测试用例，生成验证报告。同样，当编译仿真程序时，若出现编译错误，验证工程师也会根据错误信息进行修改，直至成功编译得到simv仿真程序为止。
 接下来，验证工程师会检查simv仿真程序的输出，判断RTL代码是否存在问题。当RTL代码存在问题时，验证工程师会将问题反馈给设计工程师，并要求其修改RTL代码。当验证工程师认为RTL代码满足验证需求时，会将验证报告提交给项目工程师。
 
+\textbf{系统提示词：}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{../../prompt/veri_engineer/system_prompt.md}
+
+\textbf{用户提示词，生成testbench时：}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{../../prompt/veri_engineer/create_tb.md}
+
+\textbf{工具：}
+\begin{minted}[fontsize=\small, frame=lines, bgcolor=gray!10, breaklines=true]{python}
+submit_testbench = {
+    "type": "function",
+    "function": {
+        "name": "submit_testbench",
+        "description": "提交你的 Testbench 代码。Testbench 将保存在一个 tb.v 文件中",
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "code": {"type": "string", "description": "Testbench代码"}
+            },
+            "required": ["code"],
+            "additionalProperties": False
+        }
+    }
+}
+write_feedback = {
+    "type": "function",
+    "function": {
+        "name": "write_feedback",
+        "description": "撰写验证反馈。",
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "text": {"type": "string", "description": "验证反馈"}
+            },
+            "required": ["text"],
+            "additionalProperties": False
+        }
+    }
+}
+write_verification_report = {
+    "type": "function",
+    "function": {
+        "name": "write_verification_report",
+        "description": "撰写验证报告。",
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "report": {"type": "string", "description": "验证报告"}
+            },
+            "required": ["report"],
+            "additionalProperties": False
+        }
+    }
+}
+\end{minted}
 
 \section{运行流程}
 接下来，介绍本软件是如何调用各个Agent以完成RTL代码的生成与验证的。
