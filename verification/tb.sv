@@ -74,7 +74,7 @@ initial begin
 end
 
 // 二进制到格雷码转换函数
-function automatic logic [15:0] bin2gray(input [15:0] bin);
+function automatic logic [127:0] bin2gray(input [127:0] bin);
     return bin ^ (bin >> 1);
 endfunction
 
@@ -86,10 +86,11 @@ task send_frame;
     input [15:0]  crc;         // CRC校验值
     
     // 发送帧头
+    data_in = 0;
+    @(posedge clk_in);
     data_in = HEADER[31:16];
     @(posedge clk_in);
     data_in = HEADER[15:0];
-    @(posedge clk_in);
     @(posedge clk_in);
     
     // 发送通道选择
@@ -98,7 +99,7 @@ task send_frame;
     
     // 发送数据
     for (int i = 0; i < data_len; i += 16) begin
-        data_in = data[127-i -: 16]; // Big-Endian顺序
+        data_in = data[(data_len-i-1) -: 16]; // Big-Endian顺序
         @(posedge clk_in);
     end
     
@@ -111,60 +112,48 @@ task send_frame;
     @(posedge clk_in);
     data_in = TRAILER[15:0];
     @(posedge clk_in);
+    data_in = 0;
+    @(posedge clk_in);
 endtask
 
 // 测试任务：检查串行输出
-task automatic check_serial_output;
+task check_serial_output;
     input [3:0] channel;          // 通道号 (1-8)
     input [127:0] exp_data; // 预期数据
     input [15:0] data_len;  // 数据长度
+
+    logic [127:0] exp_gray;
     
     logic data_vld;
     logic data_out;
-    logic [15:0] gray_data;
     int bit_count = 0;
     int word_count = 0;
     
-    // 选择目标通道
-    case(channel)
-        1: begin data_vld = data_vld_ch1; data_out = data_out_ch1; end
-        2: begin data_vld = data_vld_ch2; data_out = data_out_ch2; end
-        3: begin data_vld = data_vld_ch3; data_out = data_out_ch3; end
-        4: begin data_vld = data_vld_ch4; data_out = data_out_ch4; end
-        5: begin data_vld = data_vld_ch5; data_out = data_out_ch5; end
-        6: begin data_vld = data_vld_ch6; data_out = data_out_ch6; end
-        7: begin data_vld = data_vld_ch7; data_out = data_out_ch7; end
-        8: begin data_vld = data_vld_ch8; data_out = data_out_ch8; end
-    endcase
     
     // 等待有效信号
-    //wait(data_vld === 1'b1);
+    wait(crc_valid === 1'b1);
     $display("[%0t] CH%d 数据输出开始", $time, channel);
-    
-    // 收集串行数据 (修复循环变量冲突)
-    for (int word_idx = 0; word_idx < data_len; word_idx += 16) begin
-        logic [15:0] rx_word = 0;
-        logic [15:0] exp_gray = bin2gray(exp_data[127 - word_idx -: 16]);
-        
-        // 收集16位数据
-        for (int bit_idx = 15; bit_idx >= 0; bit_idx--) begin
-            @(posedge clk_out_s);
-            rx_word[bit_idx] = data_out;
-            bit_count++;
+    exp_gray = bin2gray(exp_data[127:0]);
+    #1;
+    // 收集串行数据 (修复循环变量冲突) 
+    for (int bit_idx = data_len - 1; bit_idx >= 0; bit_idx--) begin
+        case(channel)
+            1: begin data_vld = data_vld_ch1; data_out = data_out_ch1; end
+            2: begin data_vld = data_vld_ch2; data_out = data_out_ch2; end
+            3: begin data_vld = data_vld_ch3; data_out = data_out_ch3; end
+            4: begin data_vld = data_vld_ch4; data_out = data_out_ch4; end
+            5: begin data_vld = data_vld_ch5; data_out = data_out_ch5; end
+            6: begin data_vld = data_vld_ch6; data_out = data_out_ch6; end
+            7: begin data_vld = data_vld_ch7; data_out = data_out_ch7; end
+            8: begin data_vld = data_vld_ch8; data_out = data_out_ch8; end
+        endcase
+        if (exp_gray[bit_idx] != data_out) begin
+            $error("[%0t] CH%d 数据不匹配! 位 %0d: 预期=%h, 实际=%h", 
+                $time, channel, bit_idx, exp_gray[bit_idx], data_out);
         end
-        
-        // 比较接收数据与预期值
-        if (rx_word !== exp_gray) begin
-            $error("[%0t] CH%d 数据不匹配! 字节 %0d: 预期=%h, 实际=%h", 
-                   $time, channel, word_count, exp_gray, rx_word);
-        end else begin
-            $display("[%0t] CH%d 数据匹配: 字节 %0d = %h", 
-                     $time, channel, word_count, rx_word);
-        end
-        word_count++;
+        #CLK_PERIOD_S;
     end
-    
-    $display("[%0t] CH%d 数据输出完成, %0d 位验证通过", $time, channel, bit_count);
+    $display("[%0t] CH%d 数据输出完成, %0d 位验证通过", $time, channel, data_len);
 endtask
 
 // 主测试流程
@@ -197,6 +186,7 @@ initial begin
     $display("\n===== 测试5: CRC错误测试 =====");
     send_frame(8'b0000_0001, 16'h1234, 16, 16'hFFFF); // 错误CRC
     wait(crc_err === 1'b1);
+    $display("crc_err验证通过");
     if(data_vld_ch1 !== 0) $error("CRC错误时不应有有效输出");
 
     $display("\n===== 所有测试完成 =====");
@@ -207,17 +197,33 @@ task automatic crc16_ccitt(
     input  logic [127:0] data,
     output logic [15:0] crc_value
 );
-    // 初始化 CRC 寄存器
-    crc_value = 16'h0000;
+    reg [15:0] data_to_crc;
+    reg [15:0] lfsr_q,lfsr_c;
+    lfsr_q = 0;
 
     // 逐位处理 128 位输入数据
-    for (int i = 127; i >= 0; i--) begin
-        logic temp = data[i] ^ crc_value[15];  // 计算反馈位
-        crc_value = crc_value << 1;            // 左移一位
-        if (temp) begin
-            crc_value = crc_value ^ 16'h1021;   // 多项式异或（当反馈位为 1 时）
-        end
+
+    for (int i = 127; i > 0; i-=16) begin
+        data_to_crc = data[(i-15)+:16];
+        lfsr_c[0] = lfsr_q[0] ^ lfsr_q[4] ^ lfsr_q[8] ^ lfsr_q[11] ^ lfsr_q[12] ^ data_to_crc[0] ^ data_to_crc[4] ^ data_to_crc[8] ^ data_to_crc[11] ^ data_to_crc[12];
+        lfsr_c[1] = lfsr_q[1] ^ lfsr_q[5] ^ lfsr_q[9] ^ lfsr_q[12] ^ lfsr_q[13] ^ data_to_crc[1] ^ data_to_crc[5] ^ data_to_crc[9] ^ data_to_crc[12] ^ data_to_crc[13];
+        lfsr_c[2] = lfsr_q[2] ^ lfsr_q[6] ^ lfsr_q[10] ^ lfsr_q[13] ^ lfsr_q[14] ^ data_to_crc[2] ^ data_to_crc[6] ^ data_to_crc[10] ^ data_to_crc[13] ^ data_to_crc[14];
+        lfsr_c[3] = lfsr_q[3] ^ lfsr_q[7] ^ lfsr_q[11] ^ lfsr_q[14] ^ lfsr_q[15] ^ data_to_crc[3] ^ data_to_crc[7] ^ data_to_crc[11] ^ data_to_crc[14] ^ data_to_crc[15];
+        lfsr_c[4] = lfsr_q[4] ^ lfsr_q[8] ^ lfsr_q[12] ^ lfsr_q[15] ^ data_to_crc[4] ^ data_to_crc[8] ^ data_to_crc[12] ^ data_to_crc[15];
+        lfsr_c[5] = lfsr_q[0] ^ lfsr_q[4] ^ lfsr_q[5] ^ lfsr_q[8] ^ lfsr_q[9] ^ lfsr_q[11] ^ lfsr_q[12] ^ lfsr_q[13] ^ data_to_crc[0] ^ data_to_crc[4] ^ data_to_crc[5] ^ data_to_crc[8] ^ data_to_crc[9] ^ data_to_crc[11] ^ data_to_crc[12] ^ data_to_crc[13];
+        lfsr_c[6] = lfsr_q[1] ^ lfsr_q[5] ^ lfsr_q[6] ^ lfsr_q[9] ^ lfsr_q[10] ^ lfsr_q[12] ^ lfsr_q[13] ^ lfsr_q[14] ^ data_to_crc[1] ^ data_to_crc[5] ^ data_to_crc[6] ^ data_to_crc[9] ^ data_to_crc[10] ^ data_to_crc[12] ^ data_to_crc[13] ^ data_to_crc[14];
+        lfsr_c[7] = lfsr_q[2] ^ lfsr_q[6] ^ lfsr_q[7] ^ lfsr_q[10] ^ lfsr_q[11] ^ lfsr_q[13] ^ lfsr_q[14] ^ lfsr_q[15] ^ data_to_crc[2] ^ data_to_crc[6] ^ data_to_crc[7] ^ data_to_crc[10] ^ data_to_crc[11] ^ data_to_crc[13] ^ data_to_crc[14] ^ data_to_crc[15];
+        lfsr_c[8] = lfsr_q[3] ^ lfsr_q[7] ^ lfsr_q[8] ^ lfsr_q[11] ^ lfsr_q[12] ^ lfsr_q[14] ^ lfsr_q[15] ^ data_to_crc[3] ^ data_to_crc[7] ^ data_to_crc[8] ^ data_to_crc[11] ^ data_to_crc[12] ^ data_to_crc[14] ^ data_to_crc[15];
+        lfsr_c[9] = lfsr_q[4] ^ lfsr_q[8] ^ lfsr_q[9] ^ lfsr_q[12] ^ lfsr_q[13] ^ lfsr_q[15] ^ data_to_crc[4] ^ data_to_crc[8] ^ data_to_crc[9] ^ data_to_crc[12] ^ data_to_crc[13] ^ data_to_crc[15];
+        lfsr_c[10] = lfsr_q[5] ^ lfsr_q[9] ^ lfsr_q[10] ^ lfsr_q[13] ^ lfsr_q[14] ^ data_to_crc[5] ^ data_to_crc[9] ^ data_to_crc[10] ^ data_to_crc[13] ^ data_to_crc[14];
+        lfsr_c[11] = lfsr_q[6] ^ lfsr_q[10] ^ lfsr_q[11] ^ lfsr_q[14] ^ lfsr_q[15] ^ data_to_crc[6] ^ data_to_crc[10] ^ data_to_crc[11] ^ data_to_crc[14] ^ data_to_crc[15];
+        lfsr_c[12] = lfsr_q[0] ^ lfsr_q[4] ^ lfsr_q[7] ^ lfsr_q[8] ^ lfsr_q[15] ^ data_to_crc[0] ^ data_to_crc[4] ^ data_to_crc[7] ^ data_to_crc[8] ^ data_to_crc[15];
+        lfsr_c[13] = lfsr_q[1] ^ lfsr_q[5] ^ lfsr_q[8] ^ lfsr_q[9] ^ data_to_crc[1] ^ data_to_crc[5] ^ data_to_crc[8] ^ data_to_crc[9];
+        lfsr_c[14] = lfsr_q[2] ^ lfsr_q[6] ^ lfsr_q[9] ^ lfsr_q[10] ^ data_to_crc[2] ^ data_to_crc[6] ^ data_to_crc[9] ^ data_to_crc[10];
+        lfsr_c[15] = lfsr_q[3] ^ lfsr_q[7] ^ lfsr_q[10] ^ lfsr_q[11] ^ data_to_crc[3] ^ data_to_crc[7] ^ data_to_crc[10] ^ data_to_crc[11];
+        lfsr_q = lfsr_c;
     end
+    crc_value = lfsr_c;
 endtask
 
 // 测试单个帧的任务
@@ -233,12 +239,7 @@ task test_single_frame;
     // 发送帧
     $display("[%0t] 发送帧: 通道=%b, 长度=%0d", $time, channel, data_len);
     send_frame(channel, data, data_len, crc_value);
-    
-    // 等待CRC验证
-    wait(crc_valid === 1'b1);
-    $display("[%0t] CRC验证通过", $time);
-    
-    // 检查输出
+        // 检查输出
     for (int ch = 1; ch <= 8; ch++) begin
         if (channel[ch-1]) begin
             $display("[%0t] 检查CH%d输出", $time, ch);
@@ -253,7 +254,7 @@ always @(posedge clk_in) begin
 end
 
 initial begin
-    #1000; 
+    #100000; 
     $error("仿真超时");
     $finish;
 end

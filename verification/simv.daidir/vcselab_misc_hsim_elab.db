@@ -1,6 +1,6 @@
 psSimBaseName                      	simv
 psLogFileName                      	NULL
-pDaiDir                            	/mnt/d/project/chaoslogic/verification/simv.daidir
+pDaiDir                            	/home/ciwomuli/chaoslogic/verification/simv.daidir
 destPath                           	csrc/
 fSharedMaster                      	0
 fHsimPCSharedLibSpecified          	0
@@ -32,7 +32,7 @@ fHsimTaskFuncXmrsDbg               	0
 fHsimAllTaskFuncXmrs               	0
 fHsimDoXmrProcessing               	1
 fNoMergeDelays                     	0
-uGlblTimeUnit                      	4
+uGlblTimeUnit                      	6
 fHsimAllMtm                        	0
 fSimprofileNew                     	0
 fHsimVhVlOpt                       	0
@@ -262,7 +262,7 @@ fHsimEvcdDbgFlags                  	0
 fHsimNewEvcdMultiDrvFmt            	1
 fHsimDumpElabData                  	1
 fHsimNoDeposit                     	0
-fHsimDumpOffsetData                	0
+fHsimDumpOffsetData                	1
 fNoOfsOpt                          	0
 fFlopGlitchDetect                  	0
 fHsimClkGlitch                     	0
@@ -337,7 +337,7 @@ fFsdbGateOnepassTraverse           	0
 fHsimAllowVecGateInVpd             	1
 fHsimAllowAllVecGateInVpd          	0
 fHsimAllowUdpInVpd                 	1
-fHsimAllowAlwaysCombInVpd          	0
+fHsimAllowAlwaysCombInVpd          	1
 fHsimAllowAlwaysCombCmpDvcSimv     	0
 fHsimAllowAlwaysCombDbg            	0
 fHsimMakeAllP2SPrimary             	0
@@ -359,7 +359,7 @@ fVpdAllowCellReconstruction        	0
 fVpdRtlForSharedLib                	0
 fRaptorProf                        	0
 fHsimVpdOptGateMustDisable         	0
-fHsimVpdOptGate                    	0
+fHsimVpdOptGate                    	1
 fHsimVpdOptDelay                   	0
 fHsimVpdOptMPDelay                 	0
 fHsimVpdOptDiag                    	0
@@ -570,7 +570,7 @@ fHsimMdbPartInputLimit             	1
 fHsimSdfData                       	0
 fHsimDesignHasSdfAnnotation        	0
 fHsimDesignUsesParallelVcs         	0
-fHsimCMEnabled                     	1
+fHsimCMEnabled                     	0
 fGblMSah                           	0
 fGblMSTe                           	0
 fGblIntPe                          	0
@@ -865,7 +865,7 @@ fHsimDumpMdbPruneVpdGates          	0
 fHsimGates1209                     	0
 fHsimCgRtlNoShareSmd               	0
 fHsimGenForErSum                   	0
-fVpdOpt                            	0
+fVpdOpt                            	1
 fHsimMdbCell                       	0
 fHsimCellDebug                     	0
 fHsimMdbCellComplexity             	1.500000
@@ -891,9 +891,9 @@ fHsimVpdGateOnlyFlag               	1
 fHsimMxConnFrc                     	0
 fHsimNewForceCbkVec                	0
 fHsimNewForceCbkVecDiag            	0
-fHsimMdbReplaceVpdHighConn         	0
+fHsimMdbReplaceVpdHighConn         	1
 fHsimVpdHighConnReplaced           	0
-fHsimVpdOptSVTypes                 	0
+fHsimVpdOptSVTypes                 	1
 fHsimDlyInitFrc                    	0
 fHsimCompactVpdFn                  	1
 fHsimPIP                           	0
@@ -933,7 +933,7 @@ fHsimVpdOptAlways                  	1
 fHsimVpdOptMdbCell                 	0
 fHsimVpdOptPartialMdb              	1
 fHsimVpdOptPartitionGate           	1
-fHsimVpdOptXmr                     	0
+fHsimVpdOptXmr                     	1
 fHsimVpdOptConst                   	1
 fHsimVpdOptMoreLevels              	1
 fHsimVpdHilRtl                     	0
@@ -1022,7 +1022,7 @@ fHsimClkLayout                     	0
 fHsimIslandLayout                  	0
 fHsimConfigSched0                  	0
 fHsimSelectFuseAfterDfuse          	0
-vcsNettypeDbgOpt                   	0
+vcsNettypeDbgOpt                   	4
 fHsimFoldedCell                    	0
 fHsimSimon2Mdb                     	0
 fHsimSWaveEmul                     	0
@@ -1205,13 +1205,13 @@ fHsCgOptNewSelCheck                	1
 fFgpReportUnsafeFuncs              	0
 fHsCgOptUncPrlThreshold            	4
 fHsimCosimGatesProp                	0
-fHsSVNettypePerfOpt                	1
+fHsSVNettypePerfOpt                	0
 fHsCgOptHashFixMap                 	1
 fHsimLowPowerRetAnalysisInChild    	0
 fRetainWithDelayedSig              	0
 fHsimChargeDecay                   	0
 fHsimCongruencyConfigFile          	0
 fHsimCongruencyLogFile             	0
-fHsimCoverageEnabled               	1
-fHsimCoverageOptions               	279
-fHsimCoverageDir                   	./covdir.vdb
+fHsimCoverageEnabled               	0
+fHsimCoverageOptions               	0
+fHsimCoverageDir                   	NULL

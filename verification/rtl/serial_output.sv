@@ -28,6 +28,7 @@ module serial_output (
     logic [15:0]  bit_cnt;       // 已发送位计数
     logic         active;        // 输出进行中标志
     logic  [7:0]  vld_latched;   // 触发时刻锁存的通道独热码
+    logic [15:0] data_count_reg;
 
     // 1. 异步复位及状态机
     always_ff @(posedge clk_out16x or negedge rst_n) begin
@@ -36,6 +37,7 @@ module serial_output (
             bit_cnt      <= 16'd0;
             shift_reg    <= 128'd0;
             vld_latched  <= 8'd0;
+            data_count_reg <= 16'd0;
         end else begin
             if (!active) begin
                 // 空闲状态：检测到 vld_ch 上的独热码后加载数据
@@ -44,13 +46,14 @@ module serial_output (
                     bit_cnt     <= 16'd0;
                     shift_reg   <= data_gray;
                     vld_latched <= vld_ch;
+                    data_count_reg <= data_count;
                 end
             end else begin
                 // 发送中：移位并计数
                 shift_reg <= {shift_reg[126:0], 1'b0};
                 bit_cnt   <= bit_cnt + 16'd1;
                 // 发送完成后回到空闲
-                if (bit_cnt + 16'd1 == data_count) begin
+                if (bit_cnt + 16'd1 == data_count_reg) begin
                     active <= 1'b0;
                 end
             end

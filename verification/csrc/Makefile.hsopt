@@ -33,9 +33,9 @@ TMPSPECENV=$(VCSTMPSPECENV)
 CC=$(TMPSPECENV) $(VCS_CC) $(TMPSPECARG)
 
 # C flags for compilation
-CFLAGS=-w  -pipe -fPIC -O -I/eda/vcs/include    
+CFLAGS=-w  -pipe -fPIC -O -I/eda/vcs18/vcs/O-2018.09-SP2/include    
 
-CFLAGS_CG=-w  -pipe -fPIC -I/eda/vcs/include -O  -fno-strict-aliasing   
+CFLAGS_CG=-w  -pipe -fPIC -I/eda/vcs18/vcs/O-2018.09-SP2/include -O  -fno-strict-aliasing   
 
 ASFLAGS=
 LIBS=

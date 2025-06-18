@@ -47,8 +47,6 @@ wire fifo_r_enable = 1'b1; // FIFO读使能信号，暂时设为高电平
     
     // CRC模块接口
     wire [15:0]  data_to_crc;
-    wire         crc16_done;
-    wire         crc16_valid;
     wire [15:0]  data_from_crc;
     
     // FIFO接口
@@ -58,18 +56,11 @@ wire fifo_r_enable = 1'b1; // FIFO读使能信号，暂时设为高电平
     wire [127:0] data_gray;
     wire [7:0]   vld_ch;
     wire [15:0]  data_count;
-
+    wire [15:0]  crc;
 reg crc_err_reg;
+wire crc_valid;
 
-always @(posedge clk_in or negedge rst_n) begin
-    if (!rst_n) begin
-        crc_err_reg <= 1'b0; // 复位时清除CRC错误标志
-    end else  begin
-        crc_err_reg <= crc_err; // 将CRC错误标志寄存
-    end
-end
-
-assign crc_valid_o = crc16_done ? (!crc_err_reg) : 1'b0; // 将CRC有效信号输出
+assign crc_valid_o = crc_valid; // 将CRC有效信号输出
     // ================= 模块实例化 =================
     // 1. 帧解析与CRC校验模块
     frame_parser u_frame_parser (
@@ -80,32 +71,16 @@ assign crc_valid_o = crc16_done ? (!crc_err_reg) : 1'b0; // 将CRC有效信号�
         .fifo_w_enable(fifo_w_enable),
         .crc_err      (crc_err),
         .data_to_crc  (data_to_crc),
-        .crc16_done   (crc16_done),
-        .crc16_valid  (crc16_valid),
+        .crc          (crc),
         .data_from_crc(data_from_crc)
     );
     
     // 2. CRC计算模块
     crc_module u_crc_module (
         .data_to_crc  (data_to_crc),
-        .crc16_valid  (crc16_valid),
-        .data_from_crc(data_from_crc),
-        .crc16_done   (crc16_done),
-        .rst_n        (rst_n),
-        .clk_in       (clk_in)
+        .crc          (crc),
+        .data_from_crc(data_from_crc)
     );
-
-    always@ (posedge clk_in or negedge rst_n) begin
-        if (crc16_valid) begin
-           $display("[%0t] data_to_crc: %h", $time, data_to_crc);
-        end     
-    end
-
-    always@ (posedge clk_in or negedge rst_n) begin    
-        if (crc16_done) begin
-            $display("[%0t] dut计算CRC: %h", $time, data_from_crc);           
-        end
-    end  
 
     // 3. 异步FIFO模块
     fifo_wrapper u_fifo_wrapper (

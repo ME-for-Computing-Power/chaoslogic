@@ -1,8 +1,0 @@
-/mnt/d/project/chaoslogic/verification/rtl/async_fifo.sv
-/mnt/d/project/chaoslogic/verification/rtl/crc_module.sv
-/mnt/d/project/chaoslogic/verification/rtl/dut.sv
-/mnt/d/project/chaoslogic/verification/rtl/fifo_wrapper.sv
-/mnt/d/project/chaoslogic/verification/rtl/frame_parser.sv
-/mnt/d/project/chaoslogic/verification/rtl/gray_conv.sv
-/mnt/d/project/chaoslogic/verification/rtl/serial_output.sv
-/mnt/d/project/chaoslogic/verification/tb.sv
