@@ -1,0 +1,31 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "VCS Compile simv",
+            "type": "shell",
+            "command": "make run | ${DVT_SIMLOG_PROCESSOR}",
+            "problemMatcher": [
+                "$dvt-vcs-open-file-error",
+                "$dvt-vcs-redefined-macro-warning",
+                "$dvt-vcs-fatal",
+                "$dvt-vcs-error",
+                "$dvt-vcs-warning",
+                "$dvt-vcs-lint",
+                "$dvt-vcs-assertion",
+                "$dvt-uvm-error",
+                "$dvt-uvm-fatal",
+                "$dvt-uvm-info",
+                "$dvt-uvm-warning"
+            ]
+        },
+        {
+            "label": "VCS Run simv",
+            "type": "shell",
+            "command": "make sim | ${DVT_SIMLOG_PROCESSOR}",
+            "problemMatcher": []
+        }
+    ]
+}
