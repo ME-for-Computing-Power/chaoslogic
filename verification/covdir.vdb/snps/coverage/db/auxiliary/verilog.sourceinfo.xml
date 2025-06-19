@@ -7,6 +7,6 @@
       <fileinfo name="dut/fifo_data_resolu.v"  id="2"  />
       <fileinfo name="dut/input_stage.sv"  id="3"  />
       <fileinfo name="dut/output_stage.sv"  id="4"  />
-      <fileinfo name="dut/tb.sv"  id="5"  />
-      <fileinfo name="dut/top.v"  id="6"  />
+      <fileinfo name="dut/top.v"  id="5"  />
+      <fileinfo name="tb.sv"  id="6"  />
     </srcinfo>

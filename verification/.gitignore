@@ -10,3 +10,5 @@ simv.log
 *.vcd
 ucli.key
 .vaper.json
+covdir.vdb
+DVEfiles

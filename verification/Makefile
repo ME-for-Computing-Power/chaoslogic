@@ -22,6 +22,7 @@ filelist: $(shell find ./dut -name "*.sv" -or -name "*.v")
 	@echo "Generating filelist.f"
 	@rm -f filelist.f
 	@for file in $^; do echo $$file >> filelist.f; done
+	@echo "tb.sv" >> filelist.f
 	@echo "Filelist generated: filelist.f"
 run: filelist
 	$(COMPILER) -sverilog -f filelist.f  \

@@ -50,13 +50,13 @@ http_proxy=http://127.0.0.1:7890
 ZSH=/home/zhanyue/.oh-my-zsh
 YOSYS_HOME=/home/zhanyue/ysyx/yosys-sta
 XDG_RUNTIME_DIR=/run/user/1000/
-WSL_INTEROP=/run/WSL/474_interop
+WSL_INTEROP=/run/WSL/452_interop
 WSL_DISTRO_NAME=Ubuntu
 WSLENV=VSCODE_WSL_EXT_LOCATION/up
 WSL2_GUI_APPS_ENABLED=1
 WAYLAND_DISPLAY=wayland-0
-VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-dd1f168a-3f72-45ca-9b52-de05a7888c05.sock
-VSCODE_GIT_IPC_HANDLE=/run/user/1000/vscode-git-9813dfc62d.sock
+VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-3efb39d6-0c86-4f3d-8bd4-91b2571c9a02.sock
+VSCODE_GIT_IPC_HANDLE=/run/user/1000/vscode-git-c2d6884bb7.sock
 VSCODE_GIT_ASKPASS_NODE=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/node
 VSCODE_GIT_ASKPASS_MAIN=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/extensions/git/dist/askpass-main.js
 VSCODE_GIT_ASKPASS_EXTRA_ARGS=
@@ -94,8 +94,8 @@ MTASIM_HOME=/home/zhanyue/map_whole/MTASim
 MPTLS_HOME=/home/zhanyue/map_whole/maptools/maptools
 MFLAGS=
 MANPAGER=sh -c "col -b | code --wait --reuse-window -"
-MAKE_TERMOUT=/dev/pts/8
-MAKE_TERMERR=/dev/pts/8
+MAKE_TERMOUT=/dev/pts/7
+MAKE_TERMERR=/dev/pts/7
 MAKELEVEL=1
 MAKEFLAGS=
 LSCOLORS=Gxfxcxdxbxegedabagacad
@@ -115,15 +115,15 @@ AUTOJUMP_ERROR_PATH=/home/zhanyue/.local/share/autojump/errors.log
 AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 0
 12
+1750314332 tb.sv
 1750311441 dut/top.v
-1750312280 dut/tb.sv
 1750312205 dut/output_stage.sv
 1750311730 dut/input_stage.sv
 1750306040 dut/fifo_data_resolu.v
 1750306040 dut/crc_module.v
 1750306040 dut/async_fifo.v
 1551421444 /eda/vcs/include/cm_vcsd.tab
-1750312284 filelist.f
+1750314366 filelist.f
 1551421246 /eda/vcs/linux64/lib/vcsdp_lite.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUXAMD64/novas.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUX64/verdi.tab
@@ -133,5 +133,5 @@ AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 1551421768 /eda/vcs/linux64/lib/libsnpsmalloc.so
 1551421789 /eda/vcs/linux64/lib/libvfs.so
 1550752033 /eda/verdi/share/PLI/VCS/LINUXAMD64/pli.a
-1750312288 simv.daidir
+1750314372 simv.daidir
 -1 partitionlib

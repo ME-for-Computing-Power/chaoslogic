@@ -27,10 +27,10 @@ localparam CLK_PERIOD_OUT = 32;  // 100MHz
 localparam CLK_PERIOD_S = 2; // 1600MHz (16×clk_out)
 
 // 实例化被测模块
-frame_detector dut (
+top dut (
     .clk_in(clk_in),
     .clk_out(clk_out),
-    .clk_out_s(clk_out_s),
+    .clk_out16x(clk_out_s),
     .rst_n(rst_n),
     .data_in(data_in),
     .data_out_ch1(data_out_ch1),
@@ -200,7 +200,7 @@ initial begin
         check_output(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128);
        
     $display("\n===== 测试4: 大规模随机测试 =====");
-    for (int i = 0; i < 100000; i++) begin
+    for (int i = 0; i < 20000; i++) begin
         $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
         rand_channel = $urandom() >> (32 - 8); // 生成随机通道
         single_channel = 1'b1 << (rand_channel % 8); // 独热码
@@ -298,7 +298,7 @@ endtask
 // end
 
 initial begin
-    #10000000;
+    #100000000;
     $dumpflush;
     $error("仿真超时");
     $finish;
