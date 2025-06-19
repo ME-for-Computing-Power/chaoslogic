@@ -285,16 +285,15 @@ task check_output ;
 
 endtask
 
-// 监控错误信号
-always @(posedge clk_in) begin
-    if (crc_err) $warning("[%0t] CRC错误检测", $time);
-end
+// // 监控错误信号
+// always @(posedge clk_in) begin
+//     if (crc_err) $warning("[%0t] CRC错误检测", $time);
+// end
 
 initial begin
     #10000000;
+    $dumpflush;
     $error("仿真超时");
-    $dumpoff();
-    $dumpflush();
     $finish;
 end
 
