@@ -208,7 +208,8 @@ initial begin
             test_single_frame(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128); // 最大长度
         join
         check_output(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128);
-       
+
+    // 大规模随机测试
     $display("\n===== 测试4: 大规模随机测试 =====");
     $display("[%0t ps] 进行第 1 次随机测试", $time);
     test_rand_frame(single_channel, sent_data, rand_len);
@@ -228,11 +229,49 @@ initial begin
     $display("crc_err验证通过");
     if(data_vld_ch1 !== 0) $error("CRC错误时不应有有效输出");
 
-    // 大规模随机测试
     
+    //超长数据测试
+    send_oversize_frame(8'b0010_0000,{128{2'b10}}, 16'h1145);
     $display("\n===== 所有测试结束 =====");
     $finish;
 end
+// 测试任务：发送超长帧
+task send_oversize_frame;
+    input [7:0]  channel;     // 通道选择 (独热码)
+    input [255:0] data;        // 数据负载 (最大128位)
+    input [15:0]  crc;         // CRC校验值
+    
+    automatic logic [31:0] data_len = 32'd256;
+    // 发送帧头
+    //data_in = 0;  //fix me
+    @(posedge clk_in);
+    data_in = HEADER[31:16];
+    @(posedge clk_in);
+    data_in = HEADER[15:0];
+    @(posedge clk_in);
+    
+    // 发送通道选择
+    data_in = {8'b0, channel};
+    @(posedge clk_in);
+    
+    // 发送数据
+    for (int i = 0; i < data_len; i += 16) begin
+        data_in = data[(data_len-i-1) -: 16]; // Big-Endian顺序
+        @(posedge clk_in);
+    end
+    
+    // 发送CRC
+    data_in = crc;
+    @(posedge clk_in);
+    
+    // 发送帧尾
+    data_in = TRAILER[31:16];
+    @(posedge clk_in);
+    data_in = TRAILER[15:0];
+    @(posedge clk_in);
+    //data_in = 0;  //fix me
+    //@(posedge clk_in);
+endtask
 
 task automatic test_rand_frame(ref logic [7:0] single_channel, ref logic [127:0] sent_data, ref logic [15:0] rand_len);
     logic [7:0] rand_channel;
