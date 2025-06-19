@@ -128,7 +128,7 @@ initial begin
 end
 ```
 
-#### 5. 回归测试自动化
+#### 5. 仿真自动化设计
 
 ##### Makefile示例
 ```makefile
