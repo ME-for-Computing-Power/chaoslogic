@@ -268,10 +268,10 @@ write_verification_report = {
 
 
 
-\section{运行结果展示与分析}
+\section{运行过程展示与分析}
 在本章中，我们展示本系统是如何协助我们完成赛题要求的设计的。
-根据赛题要求，我们经过讨论，将其拆分成多个模块，其结构如图~\ref{fig:hardsch}所示。
-经我们考虑，此步骤过于复杂，不可能交由LLM实现。
+根据赛题要求，我们首先将需求的设计拆分成多个模块，其结构如图~\ref{fig:hardsch}所示。
+经我们考虑，此步骤过于复杂，不可能交由LLM实现，因此此部分由人工进行。
 
 %框图
 \begin{figure}[H]
@@ -315,6 +315,15 @@ veri\_plan.md 中简要提出了用户对验证的要求，如下所示。
 ]{verilog}{../../challenge/module3/ref_model/ref_model.sv}
 
 
+项目管理员首先根据输入生成了完整的Spec:
+
+\textbf{fifo\_data\_resolu/spec.md}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{./spec.md}
 
 
 \section{总结}
