@@ -57,7 +57,6 @@ wire fifo_r_enable = 1'b1; // FIFO读使能信号，暂时设为高电平
     wire [7:0]   vld_ch;
     wire [15:0]  data_count;
     wire [15:0]  crc;
-reg crc_err_reg;
 wire crc_valid;
 
 assign crc_valid_o = crc_valid; // 将CRC有效信号输出
