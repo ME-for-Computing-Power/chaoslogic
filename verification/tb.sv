@@ -86,7 +86,7 @@ task send_frame;
     input [15:0]  crc;         // CRC校验值
     
     // 发送帧头
-    data_in = 0;  //fix me
+    //data_in = 0;  //fix me
     @(posedge clk_in);
     data_in = HEADER[31:16];
     @(posedge clk_in);
@@ -112,8 +112,8 @@ task send_frame;
     @(posedge clk_in);
     data_in = TRAILER[15:0];
     @(posedge clk_in);
-    data_in = 0;  //fix me
-    @(posedge clk_in);
+    //data_in = 0;  //fix me
+    //@(posedge clk_in);
 endtask
 
 // 测试任务：检查串行输出
@@ -134,7 +134,7 @@ task check_serial_output;
         #128;
     join_any
     if (crc_valid === 1'b1)begin
-        $display("[%0t] CH%d 数据输出开始", $time, channel);
+        $display("[%0t ps] CH%d 数据输出开始", $time, channel);
         exp_gray = bin2gray(exp_data[127:0]);
         #1;
         // 收集串行数据 (修复循环变量冲突) 
@@ -150,19 +150,19 @@ task check_serial_output;
                 4'd8: begin data_vld = data_vld_ch8; data_out = data_out_ch8; end
             endcase
             if (exp_gray[bit_idx] != data_out) begin
-                $error("[%0t] CH%d 数据不匹配! 位 %0d: 预期=%h, 实际=%h", 
+                $error("[%0t ps] CH%d 数据不匹配! 位 %0d: 预期=%h, 实际=%h", 
                     $time, channel, bit_idx, exp_gray[bit_idx], data_out);
                 error_flag = 1;
             end
             #CLK_PERIOD_S;
         end
         if (~error_flag) begin
-            $display("[%0t] CH%d 数据验证通过, %0d 位数据正确", $time, channel, data_len);
+            $display("[%0t ps] CH%d 数据验证通过, %0d 位数据正确", $time, channel, data_len);
         end else begin
-            $error("[%0t] CH%d 数据验证失败, %0d 位数据错误", $time, channel, data_len);
+            $error("[%0t ps] CH%d 数据验证失败, %0d 位数据错误", $time, channel, data_len);
         end
     end else begin
-        $error("[%0t] CH%d CRC错误, 无法验证数据", $time, channel);
+        $error("[%0t ps] CH%d CRC错误, 无法验证数据", $time, channel);
     end
 endtask
 
@@ -183,34 +183,42 @@ initial begin
     
     $display("\n===== 测试1: 基本功能测试 (16、32、48位数据) =====");
         test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
-        check_output(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
+        fork 
+            check_output(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
+            test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_1111_A55A, 32);
+        join
 
-        test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_1111_A55A, 32);
-        check_output(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_1111_A55A, 32);
+        fork
+            check_output(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_1111_A55A, 32);
  
-    $display("\n===== 测试2: 最大长度测试 (128位数据) =====");
-        test_single_frame(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
-        check_output(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
+            $display("\n===== 测试2: 最大长度测试 (128位数据) =====");
+            test_single_frame(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
+        join
 
-    $display("\n===== 测试3: 边界长度测试 =====");
-        test_single_frame(8'b0000_0100, 128'h1234, 16);  // 最小长度
-        check_output(8'b0000_0100, 128'h1234, 16);
+        fork
+            check_output(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
 
-        test_single_frame(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128); // 最大长度
+            $display("\n===== 测试3: 边界长度测试 =====");
+            test_single_frame(8'b0000_0100, 128'h1234, 16);  // 最小长度
+        join
+
+        fork
+            check_output(8'b0000_0100, 128'h1234, 16);
+
+            test_single_frame(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128); // 最大长度
+        join
         check_output(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128);
        
     $display("\n===== 测试4: 大规模随机测试 =====");
-    for (int i = 0; i < 20000; i++) begin
-        $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
-        rand_channel = $urandom() >> (32 - 8); // 生成随机通道
-        single_channel = 1'b1 << (rand_channel % 8); // 独热码
-        rand_data = {$urandom(), $urandom(), $urandom(), $urandom()}; // 生成随机数据
-        rand_len = ($urandom()>> (32-3)) * 16; // 随机长度 (16-128位,16的倍数)
-        if (rand_len < 16) rand_len = 16; // 确保最小长度为16位
-        if (rand_len > 128) rand_len = 128; // 确保最大长度为128位
-        sent_data = rand_data >> (128 - rand_len); // 截断数据到指定长度
-            test_single_frame(single_channel, sent_data, rand_len);
+    $display("[%0t ps] 进行第 1 次随机测试", $time);
+    test_rand_frame(single_channel, sent_data, rand_len);
+    
+    for (int i = 1; i < 20000; i++) begin
+        fork
             check_output(single_channel, sent_data, rand_len);
+            $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
+            test_rand_frame(single_channel, sent_data, rand_len);
+        join
     end 
 
     // 添加错误测试
@@ -225,6 +233,20 @@ initial begin
     $display("\n===== 所有测试结束 =====");
     $finish;
 end
+
+task automatic test_rand_frame(ref logic [7:0] single_channel, ref logic [127:0] sent_data, ref logic [15:0] rand_len);
+    logic [7:0] rand_channel;
+    logic [127:0] rand_data;
+    rand_channel = $urandom() >> (32 - 8); // 生成随机通道
+    single_channel = 1'b1 << (rand_channel % 8); // 独热码
+    rand_data = {$urandom(), $urandom(), $urandom(), $urandom()}; // 生成随机数据
+    rand_len = ($urandom()>> (32-3)) * 16; // 随机长度 (16-128位,16的倍数)
+    if (rand_len < 16) rand_len = 16; // 确保最小长度为16位
+    if (rand_len > 128) rand_len = 128; // 确保最大长度为128位
+    sent_data = rand_data >> (128 - rand_len); // 截断数据到指定长度
+    test_single_frame(single_channel, sent_data, rand_len);
+endtask : test_rand_frame
+
 
 task automatic crc16_ccitt(
     input  logic [127:0] data,
@@ -268,11 +290,11 @@ task test_single_frame;
     automatic logic [15:0] crc_value = 16'h0000;
 
     crc16_ccitt(data,crc_value); // 计算CRC值
-    $display("[%0t] tb计算CRC: %h", $time, crc_value);
+    $display("[%0t ps] tb计算CRC: %h", $time, crc_value);
     // 发送帧
-    $display("[%0t] 发送帧: 通道=%b, 长度=%0d", $time, channel, data_len);
-    $display("[%0t] 发送数据: %h", $time, data);
-    $display("[%0t] 发送CRC: %h", $time, crc_value);
+    $display("[%0t ps] 发送帧: 通道=%b, 长度=%0d", $time, channel, data_len);
+    $display("[%0t ps] 发送数据: %h", $time, data);
+    $display("[%0t ps] 发送CRC: %h", $time, crc_value);
     // 发送帧
     send_frame(channel, data, data_len, crc_value);
 endtask
@@ -285,17 +307,17 @@ task check_output ;
 // 检查输出
     for (int ch = 1; ch <= 8; ch++) begin
         if (channel[ch-1]) begin
-            $display("[%0t] 检查CH%d输出", $time, ch);
+            $display("[%0t ps] 检查CH%d输出", $time, ch);
             check_serial_output(ch, data, data_len);
         end
     end
 
 endtask
 
-// // 监控错误信号
-// always @(posedge clk_in) begin
-//     if (crc_err) $warning("[%0t] CRC错误检测", $time);
-// end
+// 监控错误信号
+always @(posedge clk_in) begin
+    if (crc_err) $warning("[%0t ps] CRC错误检测", $time);
+end
 
 initial begin
     #100000000;
