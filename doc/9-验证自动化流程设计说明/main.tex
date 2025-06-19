@@ -249,7 +249,7 @@ write_verification_report = {
 }
 \end{minted}
 
-\section{运行流程}
+\subsection{运行流程设计}
 接下来，介绍本软件是如何调用各个Agent以完成RTL代码的生成与验证的。
 
 图\ref{fig:flowchart}展示了本软件的运行流程。首先，项目工程师Agent会解读用户需求，生成Spec并存储在文件中。接着，设计工程师Agent会根据Spec生成RTL代码，并进行语法检查。若存在语法错误，设计工程师会进行修改。然后，验证工程师Agent会根据Spec与验证方案生成验证计划，并编写测试用例。验证工程师会编译仿真程序并运行测试用例，生成验证报告。当RTL代码存在问题时，验证工程师会将问题反馈给设计工程师，设计工程师会修改RTL代码并重新提交。最终，当验证工程师认为RTL代码满足验证需求时，会将验证报告提交给项目工程师。项目工程师确认RTL代码满足规范要求后，整个流程结束。
@@ -264,6 +264,55 @@ write_verification_report = {
     \caption{程序流程图}
     \label{fig:flowchart}
 \end{figure}
+
+
+
+
+\section{运行结果展示与分析}
+在本章中，我们展示本系统是如何协助我们完成赛题要求的设计的。
+根据赛题要求，我们经过讨论，将其拆分成多个模块，其结构如图~\ref{fig:hardsch}所示。
+经我们考虑，此步骤过于复杂，不可能交由LLM实现。
+
+%框图
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.99\textwidth]{../1-完整设计规范说明书/schematic.svg}
+    \caption{硬件框图}
+    \label{fig:hardsch}
+\end{figure}
+
+在拆分子模块后，我们将使用自然语言描述各个模块的IO信号、功能等，并设计验证时的参考模型。
+下面以fifo\_data\_resolu为例子，介绍本系统的运行情况。
+
+requirements.md 中描述了用户对该模块的需求，如下所示。
+
+\textbf{challenge/module3/requirements.md}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{../../challenge/module3/requirements.md}
+
+veri\_plan.md 中简要提出了用户对验证的要求，如下所示。
+
+\textbf{challenge/module3/veri\_plan.md}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{markdown}{../../challenge/module3/veri_plan.md}
+
+为了确保设计符合预期，我们还为系统提供了参考模型，如下所示。
+
+\textbf{challenge/module3/ref\_model/ref\_model.sv}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{verilog}{../../challenge/module3/ref_model/ref_model.sv}
 
 
 
