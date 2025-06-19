@@ -1,6 +1,6 @@
-<session version="1.1" release="O-2018.09-SP2" timestp="2025-06-19 12:13:56 GMT">
+<session version="1.1" release="O-2018.09-SP2" timestp="2025-06-19 15:17:14 GMT">
   <info>
-    <attr name="datetime" value="Thu Jun 19 20:14:01 2025
+    <attr name="datetime" value="Thu Jun 19 23:17:38 2025
 "/>
     <attr name="command" value="urg -dir ./covdir.vdb -report urg_report"/>
     <attr name="top_instance" value="tb_frame_detector"/>
@@ -16,10 +16,10 @@
   </hvp>
   <old_coverage>
   <scope type="top" name="top">
-    <metric name="Line" value="104/105" />
-    <metric name="Cond" value="25/29" />
-    <metric name="Toggle" value="4456/4712" />
-    <metric name="FSM" value="5/8" />
+    <metric name="Line" value="108/109" />
+    <metric name="Cond" value="28/32" />
+    <metric name="Toggle" value="4464/4680" />
+    <metric name="FSM" value="6/8" />
     <metric name="Branch" value="56/60" />
   </scope>
   <scope type="instance" name="top">

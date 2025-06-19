@@ -4,30 +4,30 @@
     <ucapi_version  major_ver="13"  minor_ver="1"  patch_str="O-2018.09-SP2"  />
       <fsmdef file="3"  name="input_stage"  lib=""  chksum="838037468"  >
         <fsmshape >
-          <fsmfsm name="state"  id="0"  width="32"  line="33"  chksum="901157059"  >
+          <fsmfsm name="state"  id="0"  width="32"  line="32"  chksum="901157059"  >
             <state name="CHANNEL"  value="1"  id="0"  flag="L"  line="57"  />
             <state name="DATA"  value="2"  id="1"  flag="L"  line="70"  />
-            <state name="IDLE"  value="0"  id="2"  flag="L"  line="33"  />
+            <state name="IDLE"  value="0"  id="2"  flag="L"  line="32"  />
 
             <transition fromid="0"  toid="1"  flag="L"  line="70"  />
-            <transition fromid="0"  toid="2"  flag="L"  line="33"  />
+            <transition fromid="0"  toid="2"  flag="L"  line="32"  />
             
-            <transition fromid="1"  toid="2"  flag="L"  line="33"  />
+            <transition fromid="1"  toid="2"  flag="L"  line="32"  />
             
             <transition fromid="2"  toid="0"  flag="L"  line="57"  />
             
           </fsmfsm>
-        <fsmfsm name="wait_count"  id="1"  width="2"  line="38"  chksum="3719539111"  >
-          <state name="&apos;h0"  value="0"  id="0"  flag="L"  line="38"  />
-          <state name="&apos;h1"  value="1"  id="1"  flag="L"  line="49"  />
+        <fsmfsm name="wait_count"  id="1"  width="2"  line="37"  chksum="3719539111"  >
+          <state name="&apos;h0"  value="0"  id="0"  flag="L"  line="37"  />
+          <state name="&apos;h1"  value="1"  id="1"  flag="L"  line="48"  />
           <state name="&apos;h2"  value="2"  id="2"  flag="L"  line="53"  />
 
-          <transition fromid="0"  toid="1"  flag="L"  line="49"  />
+          <transition fromid="0"  toid="1"  flag="L"  line="48"  />
           
-          <transition fromid="1"  toid="0"  flag="L"  line="38"  />
+          <transition fromid="1"  toid="0"  flag="L"  line="37"  />
           <transition fromid="1"  toid="2"  flag="L"  line="53"  />
           
-          <transition fromid="2"  toid="0"  flag="L"  line="38"  />
+          <transition fromid="2"  toid="0"  flag="L"  line="37"  />
           
         </fsmfsm>
       </fsmshape>

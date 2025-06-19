@@ -39,7 +39,7 @@
 /eda/vcs/linux64/bin/vcs1
 /eda/verdi/share/PLI/VCS/LINUX64/verdi.tab
 /eda/verdi/share/PLI/VCS/LINUXAMD64/novas.tab
-line+cond+fsm+branch+tgl
+line+cond+branch+tgl+fsm
 tb_frame_detector
 tb_frame_detector_cov
 94
@@ -51,12 +51,12 @@ ZSH=/home/zhanyue/.oh-my-zsh
 ZDOTDIR=/home/zhanyue
 YOSYS_HOME=/home/zhanyue/ysyx/yosys-sta
 XDG_RUNTIME_DIR=/run/user/1000/
-WSL_INTEROP=/run/WSL/472_interop
+WSL_INTEROP=/run/WSL/548_interop
 WSL_DISTRO_NAME=Ubuntu
 WSLENV=VSCODE_WSL_EXT_LOCATION/up
 WSL2_GUI_APPS_ENABLED=1
 WAYLAND_DISPLAY=wayland-0
-VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-989a5d90-343b-4b88-99d5-c72836bb55ac.sock
+VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-12795b25-bd35-4d6d-98b4-18b6838ca1f8.sock
 VSCODE_INJECTION=1
 VSCODE_GIT_IPC_HANDLE=/run/user/1000/vscode-git-c2d6884bb7.sock
 VSCODE_GIT_ASKPASS_NODE=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/node
@@ -139,15 +139,15 @@ AUTOJUMP_ERROR_PATH=/home/zhanyue/.local/share/autojump/errors.log
 AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 0
 12
-1750336996 tb.sv
-1750311441 dut/top.v
+1750346161 tb.sv
+1750340885 dut/top.v
 1750312205 dut/output_stage.sv
-1750337109 dut/input_stage.sv
+1750345489 dut/input_stage.sv
 1750306040 dut/fifo_data_resolu.v
 1750306040 dut/crc_module.v
 1750306040 dut/async_fifo.v
 1551421444 /eda/vcs/include/cm_vcsd.tab
-1750337127 filelist.f
+1750346223 filelist.f
 1551421246 /eda/vcs/linux64/lib/vcsdp_lite.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUXAMD64/novas.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUX64/verdi.tab
@@ -157,5 +157,5 @@ AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 1551421768 /eda/vcs/linux64/lib/libsnpsmalloc.so
 1551421789 /eda/vcs/linux64/lib/libvfs.so
 1550752033 /eda/verdi/share/PLI/VCS/LINUXAMD64/pli.a
-1750337132 simv.daidir
+1750346229 simv.daidir
 -1 partitionlib

@@ -67,7 +67,6 @@ assign crc_valid_o = crc_valid; // 将CRC有效信号输出
         .data_to_fifo  (data_to_fifo),
         .fifo_w_enable (fifo_w_enable),
         .crc_err       (crc_err),
-        .crc_done      (crc_done),
         .data_to_crc   (data_to_crc),
         .crc           (crc_state),
         .data_from_crc (data_from_crc)

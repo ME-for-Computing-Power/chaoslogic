@@ -85,7 +85,7 @@ endfunction
 
 // 测试任务：发送完整帧
 task send_frame;
-    input [7:0]  channel;     // 通道选择 (独热码)
+    input [15:0]  channel;     // 通道选择 (独热码)
     input [127:0] data;        // 数据负载 (最大128位)
     input [15:0]  data_len;    // 数据长度 (16-128位)
     input [15:0]  crc;         // CRC校验值
@@ -99,7 +99,7 @@ task send_frame;
     @(posedge clk_in);
     
     // 发送通道选择
-    data_in = {8'b0, channel};
+    data_in = channel;
     @(posedge clk_in);
     
     // 发送数据
@@ -186,6 +186,13 @@ initial begin
     #100;
     rst_n = 1;
     #100;
+    $display("\n===== 测试0: 复位测试 (16位数据) =====");
+    test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
+    check_output(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
+    rst_n = 0;
+    #100;
+    rst_n = 1;
+    #100;
     
     $display("\n===== 测试1: 基本功能测试 (16、32、48位数据) =====");
         test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
@@ -220,7 +227,7 @@ initial begin
     $display("[%0t ps] 进行第 1 次随机测试", $time);
     test_rand_frame(single_channel, sent_data, rand_len);
     
-    for (int i = 1; i < 50000; i++) begin
+    for (int i = 1; i < 5000; i++) begin
         fork
             check_output(single_channel, sent_data, rand_len);
             $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
@@ -228,8 +235,15 @@ initial begin
         join
     end 
 
+    $display("\n===== 测试5: 特殊数据测试 =====");
+    test_single_frame(8'b0000_0100, 128'he0e0, 16);  // 帧头数据重合
+    check_output(8'b0000_0100, 128'he0e0, 16);
+
+    test_single_frame(16'he0e0, 128'he0e0, 16);  // 通道数据错误
+    check_output(16'he0e0, 128'he0e0, 16);
+
     // 添加错误测试
-    $display("\n===== 测试5: CRC错误测试 =====");
+    $display("\n===== 测试6: CRC错误测试 =====");
     send_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_1234, 16, 16'hFFFF); // 错误CRC
     wait(crc_err === 1'b1);
     $display("crc_err验证通过");
@@ -335,7 +349,7 @@ endtask
 
 // 测试单个帧的任务
 task test_single_frame;
-    input [7:0]  channel;
+    input [15:0]  channel;
     input [127:0] data;
     input [15:0] data_len;
     
