@@ -129,33 +129,40 @@ task check_serial_output;
 
     automatic logic error_flag = 0;
     // 等待有效信号
-    wait(crc_valid === 1'b1);
-    $display("[%0t] CH%d 数据输出开始", $time, channel);
-    exp_gray = bin2gray(exp_data[127:0]);
-    #1;
-    // 收集串行数据 (修复循环变量冲突) 
-    for (int bit_idx = data_len - 1; bit_idx >= 0; bit_idx--) begin
-        case(channel)
-            4'd1: begin data_vld = data_vld_ch1; data_out = data_out_ch1; end
-            4'd2: begin data_vld = data_vld_ch2; data_out = data_out_ch2; end
-            4'd3: begin data_vld = data_vld_ch3; data_out = data_out_ch3; end
-            4'd4: begin data_vld = data_vld_ch4; data_out = data_out_ch4; end
-            4'd5: begin data_vld = data_vld_ch5; data_out = data_out_ch5; end
-            4'd6: begin data_vld = data_vld_ch6; data_out = data_out_ch6; end
-            4'd7: begin data_vld = data_vld_ch7; data_out = data_out_ch7; end
-            4'd8: begin data_vld = data_vld_ch8; data_out = data_out_ch8; end
-        endcase
-        if (exp_gray[bit_idx] != data_out) begin
-            $error("[%0t] CH%d 数据不匹配! 位 %0d: 预期=%h, 实际=%h", 
-                $time, channel, bit_idx, exp_gray[bit_idx], data_out);
-            error_flag = 1;
+    fork
+        wait(crc_valid === 1'b1);
+        #128;
+    join_any
+    if (crc_valid === 1'b1)begin
+        $display("[%0t] CH%d 数据输出开始", $time, channel);
+        exp_gray = bin2gray(exp_data[127:0]);
+        #1;
+        // 收集串行数据 (修复循环变量冲突) 
+        for (int bit_idx = data_len - 1; bit_idx >= 0; bit_idx--) begin
+            case(channel)
+                4'd1: begin data_vld = data_vld_ch1; data_out = data_out_ch1; end
+                4'd2: begin data_vld = data_vld_ch2; data_out = data_out_ch2; end
+                4'd3: begin data_vld = data_vld_ch3; data_out = data_out_ch3; end
+                4'd4: begin data_vld = data_vld_ch4; data_out = data_out_ch4; end
+                4'd5: begin data_vld = data_vld_ch5; data_out = data_out_ch5; end
+                4'd6: begin data_vld = data_vld_ch6; data_out = data_out_ch6; end
+                4'd7: begin data_vld = data_vld_ch7; data_out = data_out_ch7; end
+                4'd8: begin data_vld = data_vld_ch8; data_out = data_out_ch8; end
+            endcase
+            if (exp_gray[bit_idx] != data_out) begin
+                $error("[%0t] CH%d 数据不匹配! 位 %0d: 预期=%h, 实际=%h", 
+                    $time, channel, bit_idx, exp_gray[bit_idx], data_out);
+                error_flag = 1;
+            end
+            #CLK_PERIOD_S;
         end
-        #CLK_PERIOD_S;
-    end
-    if (~error_flag) begin
-        $display("[%0t] CH%d 数据验证通过, %0d 位数据正确", $time, channel, data_len);
+        if (~error_flag) begin
+            $display("[%0t] CH%d 数据验证通过, %0d 位数据正确", $time, channel, data_len);
+        end else begin
+            $error("[%0t] CH%d 数据验证失败, %0d 位数据错误", $time, channel, data_len);
+        end
     end else begin
-        $error("[%0t] CH%d 数据验证失败, %0d 位数据错误", $time, channel, data_len);
+        $error("[%0t] CH%d CRC错误, 无法验证数据", $time, channel);
     end
 endtask
 
