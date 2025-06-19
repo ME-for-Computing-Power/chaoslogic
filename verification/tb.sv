@@ -180,7 +180,7 @@ initial begin
 
         test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_1111_A55A, 32);
         check_output(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_1111_A55A, 32);
-/* 
+ 
     $display("\n===== 测试2: 最大长度测试 (128位数据) =====");
         test_single_frame(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
         check_output(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
@@ -192,8 +192,8 @@ initial begin
         test_single_frame(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128); // 最大长度
         check_output(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128);
        
-    $display("\n===== 测试5: 大规模随机测试 =====");
-    for (int i = 0; i < 10; i++) begin
+    $display("\n===== 测试4: 大规模随机测试 =====");
+    for (int i = 0; i < 100000; i++) begin
         $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
         rand_channel = $urandom() >> (32 - 8); // 生成随机通道
         single_channel = 1'b1 << (rand_channel % 8); // 独热码
@@ -204,10 +204,10 @@ initial begin
         sent_data = rand_data >> (128 - rand_len); // 截断数据到指定长度
             test_single_frame(single_channel, sent_data, rand_len);
             check_output(single_channel, sent_data, rand_len);
-    end */
+    end 
 
     // 添加错误测试
-    $display("\n===== 测试4: CRC错误测试 =====");
+    $display("\n===== 测试5: CRC错误测试 =====");
     send_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_1234, 16, 16'hFFFF); // 错误CRC
     wait(crc_err === 1'b1);
     $display("crc_err验证通过");
@@ -293,6 +293,8 @@ end
 initial begin
     #10000000;
     $error("仿真超时");
+    $dumpoff();
+    $dumpflush();
     $finish;
 end
 
