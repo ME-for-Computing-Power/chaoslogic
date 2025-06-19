@@ -12,6 +12,4 @@
 | TOP-05     | CRC错误处理                           | 发送故意错误的CRC值<br>                              | 1. crc_err置位<br>2. 数据不写入FIFO，无输出                              | send_frame(错误CRC)   |
 | TOP-06     | 大规模随机数据测试                    | 1. 随机生成通道/数据/长度<br>2. 连续发送20,000个测试帧                   | 所有帧通过校验，输出数据正确                                             | test_single_frame（rand数据）       |
 | TOP-07     | 连续帧处理能力                        | 背靠背发送帧(无间隔)                         | 所有帧正确处理，无数据覆盖                                               | fork/join测试结构     |
-| TOP-08     | 超时保护机制                          | 1. 仿真超时设置(100ms)<br>2. 卡死状态检测                                | 超时自动终止仿真并报错                                                   | 超时检测always块     |
-| TOP-09     | 输出信号时序验证                      | 1. 检查data_vld与data_out的相位关系<br>2. 验证crc_valid信号              | 1. data_vld超前data_out至少1个周期<br>2. crc_valid与data_vld同步         | check_serial_output   |
 
