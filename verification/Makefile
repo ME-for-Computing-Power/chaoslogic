@@ -2,7 +2,7 @@
 COMPILER = vcs -full64 -cc gcc -cpp g++ -LDFLAGS -Wl,-no-as-needed
 TOP_MODULE = -top tb_frame_detector
 
-COMPILER += -cm line+cond+fsm+branch+tgl
+COMPILER += -cm line+cond+branch+tgl
 COMPILER    += -cm_name tb_frame_detector_cov
 COMPILER    += -cm_dir ./covdir.vdb
 
@@ -34,7 +34,7 @@ run: filelist
 
 sim : run
 	@echo "Simulation started..."
-	./simv -l simv.log -cm line+cond+fsm+branch+tgl
+	./simv -l simv.log -cm line+cond+branch+tgl
 	@echo "Simulation finished."
 	
 verdi:
