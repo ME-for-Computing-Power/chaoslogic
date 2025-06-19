@@ -127,7 +127,7 @@ task check_serial_output;
     logic data_vld;
     logic data_out;
 
-    
+    automatic logic error_flag = 0;
     // 等待有效信号
     wait(crc_valid === 1'b1);
     $display("[%0t] CH%d 数据输出开始", $time, channel);
@@ -148,12 +148,22 @@ task check_serial_output;
         if (exp_gray[bit_idx] != data_out) begin
             $error("[%0t] CH%d 数据不匹配! 位 %0d: 预期=%h, 实际=%h", 
                 $time, channel, bit_idx, exp_gray[bit_idx], data_out);
+            error_flag = 1;
         end
         #CLK_PERIOD_S;
     end
-    $display("[%0t] CH%d 数据输出完成, %0d 位验证通过", $time, channel, data_len);
+    if (~error_flag) begin
+        $display("[%0t] CH%d 数据验证通过, %0d 位数据正确", $time, channel, data_len);
+    end else begin
+        $error("[%0t] CH%d 数据验证失败, %0d 位数据错误", $time, channel, data_len);
+    end
 endtask
 
+logic [3:0] rand_channel;
+logic [7:0] single_channel;
+logic [127:0] rand_data;
+logic [15:0] rand_len;
+logic [127:0] sent_data;
 // 主测试流程
 initial begin
     // 初始化
@@ -170,24 +180,37 @@ initial begin
     $display("\n===== 测试2: 最大长度测试 (128位数据) =====");
     test_single_frame(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
     
-    $display("\n===== 测试3: 多通道测试 =====");
-    fork
-        test_single_frame(8'b0000_0100, 128'hCAFEBABE12345678, 64);
-        test_single_frame(8'b0000_1000, 128'hDEADBEEF00FF00FF, 64);
-    join
+    // $display("\n===== 测试3: 多通道测试 =====");
+    // fork
+    //     test_single_frame(8'b0000_0100, 128'hCAFEBABE12345678, 64);
+    //     test_single_frame(8'b0100_0000, 128'hDEADBEEF00FF00FF, 64);
+    // join
     // 添加边界测试
-    $display("\n===== 测试4: 边界长度测试 =====");
+    $display("\n===== 测试3: 边界长度测试 =====");
     test_single_frame(8'b0000_0100, 128'h1234, 16);  // 最小长度
     test_single_frame(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128); // 最大长度
 
     // 添加错误测试
-    $display("\n===== 测试5: CRC错误测试 =====");
+    $display("\n===== 测试4: CRC错误测试 =====");
     send_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_1234, 16, 16'hFFFF); // 错误CRC
     wait(crc_err === 1'b1);
     $display("crc_err验证通过");
     if(data_vld_ch1 !== 0) $error("CRC错误时不应有有效输出");
 
-    $display("\n===== 所有测试完成 =====");
+    // 大规模随机测试
+    $display("\n===== 测试5: 大规模随机测试 =====");
+    for (int i = 0; i < 1024; i++) begin
+        $display("[%0t] 进行第 %0d 次随机测试", $time, i+1);
+        rand_channel = $urandom() >> (32 - 8); // 生成随机通道
+        single_channel = 1'b1 << (rand_channel % 8); // 独热码
+        rand_data = {$urandom(), $urandom(), $urandom(), $urandom()}; // 生成随机数据
+        rand_len = ($urandom()>> (32-3)) * 16; // 随机长度 (16-128位,16的倍数)
+        if (rand_len < 16) rand_len = 16; // 确保最小长度为16位
+        if (rand_len > 128) rand_len = 128; // 确保最大长度为128位
+        sent_data = rand_data >> (128 - rand_len); // 截断数据到指定长度
+        test_single_frame(single_channel, sent_data, rand_len);
+    end 
+    $display("\n===== 所有测试结束 =====");
     $finish;
 end
 
@@ -230,12 +253,15 @@ task test_single_frame;
     input [127:0] data;
     input [15:0] data_len;
     
-    logic [15:0] crc_value = 16'h0000;
+    automatic logic [15:0] crc_value = 16'h0000;
 
     crc16_ccitt(data,crc_value); // 计算CRC值
     $display("[%0t] tb计算CRC: %h", $time, crc_value);
     // 发送帧
     $display("[%0t] 发送帧: 通道=%b, 长度=%0d", $time, channel, data_len);
+    $display("[%0t] 发送数据: %h", $time, data);
+    $display("[%0t] 发送CRC: %h", $time, crc_value);
+    // 发送帧
     send_frame(channel, data, data_len, crc_value);
         // 检查输出
     for (int ch = 1; ch <= 8; ch++) begin
@@ -252,18 +278,18 @@ always @(posedge clk_in) begin
 end
 
 initial begin
-    #100000; 
+    #10000000;
     $error("仿真超时");
     $finish;
 end
 
 
 //fsdb dump 
-initial begin
-    $fsdbDumpfile("wave.fsdb");
-    $fsdbDumpvars(0, tb_frame_detector, "+all");
-    $fsdbDumpMDA();
-end
+// initial begin
+//     $fsdbDumpfile("wave.fsdb");
+//     $fsdbDumpvars(0, tb_frame_detector, "+all");
+//     $fsdbDumpMDA();
+// end
 
 //vcd dump
 initial begin

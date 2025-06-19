@@ -24,8 +24,19 @@
         {
             "label": "VCS Run simv",
             "type": "shell",
-            "command": "make sim | ${DVT_SIMLOG_PROCESSOR}",
+            "command": "timeout 60s ./simv -l sim.log",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build and then Run sim",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "VCS Compile simv",
+                "VCS Run simv",
+            ],
             "problemMatcher": []
         }
     ]
+    
 }
