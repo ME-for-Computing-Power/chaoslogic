@@ -4,6 +4,18 @@
 
 整体说明:本模块根据前面模块提供的信息，将数据发送到对应的通道并转为串行信号输出。根据`vld_ch`所输入的独热码，将输入的`data_gray`发送到对应的数据串行输出通道 (`data_out_ch1~8`)，同时拉高对应通道的数据有效信号  (`data_vld_ch1~8`)。根据`data_count`，具体决定输出`data_vld_ch`的持续周期数，即`data_vld_ch`仅在输出时拉高。
 
+定义俩个状态，空闲状态和发射状态
+
+空闲状态：
+    检测到 vld_ch 上的独热码后进入发射状态
+    将data_count存入data_count_reg，将data_gray存入shift_reg，将vld_ch存入vld_latched
+
+发射状态：
+    将shift_reg左1移位并计数，当计数的bit_cnt + 16'd1等于data_count_reg后返回空闲状态
+
+输出逻辑：
+    在发射状态，根据vld_latched选择通道，输出shift_reg[127]
+    CRC 有效信号：任一通道有效则高
 
 ## 顶层IO
 
