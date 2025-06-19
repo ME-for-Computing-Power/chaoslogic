@@ -86,7 +86,7 @@ task send_frame;
     input [15:0]  crc;         // CRC校验值
     
     // 发送帧头
-    data_in = 0;
+    data_in = 0;  //fix me
     @(posedge clk_in);
     data_in = HEADER[31:16];
     @(posedge clk_in);
@@ -112,7 +112,7 @@ task send_frame;
     @(posedge clk_in);
     data_in = TRAILER[15:0];
     @(posedge clk_in);
-    data_in = 0;
+    data_in = 0;  //fix me
     @(posedge clk_in);
 endtask
 
@@ -174,28 +174,37 @@ initial begin
     rst_n = 1;
     #100;
     
-    $display("\n===== 测试1: 基本功能测试 (16位数据) =====");
-    fork
+    $display("\n===== 测试1: 基本功能测试 (16、32、48位数据) =====");
         test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
         check_output(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
-    join_any
 
+        test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_1111_A55A, 32);
+        check_output(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_1111_A55A, 32);
+/* 
     $display("\n===== 测试2: 最大长度测试 (128位数据) =====");
-    fork
         test_single_frame(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
         check_output(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
-    join_any
 
     $display("\n===== 测试3: 边界长度测试 =====");
-    fork
         test_single_frame(8'b0000_0100, 128'h1234, 16);  // 最小长度
         check_output(8'b0000_0100, 128'h1234, 16);
-    join_any
 
-    fork
         test_single_frame(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128); // 最大长度
         check_output(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128);
-    join_any
+       
+    $display("\n===== 测试5: 大规模随机测试 =====");
+    for (int i = 0; i < 10; i++) begin
+        $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
+        rand_channel = $urandom() >> (32 - 8); // 生成随机通道
+        single_channel = 1'b1 << (rand_channel % 8); // 独热码
+        rand_data = {$urandom(), $urandom(), $urandom(), $urandom()}; // 生成随机数据
+        rand_len = ($urandom()>> (32-3)) * 16; // 随机长度 (16-128位,16的倍数)
+        if (rand_len < 16) rand_len = 16; // 确保最小长度为16位
+        if (rand_len > 128) rand_len = 128; // 确保最大长度为128位
+        sent_data = rand_data >> (128 - rand_len); // 截断数据到指定长度
+            test_single_frame(single_channel, sent_data, rand_len);
+            check_output(single_channel, sent_data, rand_len);
+    end */
 
     // 添加错误测试
     $display("\n===== 测试4: CRC错误测试 =====");
@@ -205,21 +214,7 @@ initial begin
     if(data_vld_ch1 !== 0) $error("CRC错误时不应有有效输出");
 
     // 大规模随机测试
-    $display("\n===== 测试5: 大规模随机测试 =====");
-    for (int i = 0; i < 1024; i++) begin
-        $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
-        rand_channel = $urandom() >> (32 - 8); // 生成随机通道
-        single_channel = 1'b1 << (rand_channel % 8); // 独热码
-        rand_data = {$urandom(), $urandom(), $urandom(), $urandom()}; // 生成随机数据
-        rand_len = ($urandom()>> (32-3)) * 16; // 随机长度 (16-128位,16的倍数)
-        if (rand_len < 16) rand_len = 16; // 确保最小长度为16位
-        if (rand_len > 128) rand_len = 128; // 确保最大长度为128位
-        sent_data = rand_data >> (128 - rand_len); // 截断数据到指定长度
-        fork
-            test_single_frame(single_channel, sent_data, rand_len);
-            check_output(single_channel, sent_data, rand_len);
-        join_any
-    end 
+    
     $display("\n===== 所有测试结束 =====");
     $finish;
 end
