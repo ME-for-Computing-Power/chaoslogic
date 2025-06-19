@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="Author" content="<username>"> <meta name="GENERATOR" content="urg/version [en] (platform name) [urg]">
+<title>Unified Coverage Report :: Module :: input_stage</title>
+<link type="text/css" rel="stylesheet" href="css/.urg.css">
+<link type="text/css" rel="stylesheet" href="css/.layout.css">
+<link type="text/css" rel="stylesheet" href="css/.breadcrumb.css">
+<script type="text/javascript" src="js/.jquery.js"></script>
+<script type="text/javascript" src="js/.jquery-ui.js"></script>
+<script type="text/javascript" src="js/.sortable.js"></script>
+<script type="text/javascript" src="js/.layout.js"></script>
+<script type="text/javascript" src="js/.breadcrumb.js"></script>
+<script type="text/javascript">
+var layout, westLayout, centerLayout;
+$(document).ready(function () {
+  if ($("#north-bread-crumb")) {
+    $("#north-bread-crumb").jBreadCrumb({easing:'swing'})
+  }
+  layout = $("body").layout({ 
+    resizable: true,
+    spacing_open: 4,
+    spacing_closed: 4,
+    north: {
+      size: 76
+    },
+    south: {
+      size: 45,
+      initClosed: true
+    },
+    west: {
+      size: 500,
+      resizable: true,
+      initClosed: false
+    }
+  });
+  centerLayout = $('div.ui-layout-center').layout({
+    north__paneSelector: ".ui-layout-center-inner-north",
+    center__paneSelector: ".ui-layout-center-inner-center", 
+    north__size: 50,
+    spacing_open: 4,
+    spacing_closed: 4
+  });
+});
+</script>
+</head>
+<body onLoad="initPage();"><div class="ui-layout-north">
+<div class="logo"></div>
+<center class="pagetitle">Module Definition</center>
+<div align="center"><a href="dashboard.html" ><b>dashboard</b></a> | <a href="hierarchy.html" ><b>hierarchy</b></a> | <a href="modlist.html" ><b>modlist</b></a> | groups | <a href="tests.html" ><b>tests</b></a> | asserts</div>
+
+</div>
+<div class="ui-layout-west">
+<div name='tag_input_stage'>
+<div class=modhdr>
+<br clear=all>
+<span class=titlename>Module : <a href="#"  onclick="showContent('tag_input_stage')">input_stage</a></span>
+<br clear=all>
+<table align=left>
+<tr class="sortablehead">
+<td>SCORE</td><td>LINE</td><td>COND</td><td>TOGGLE</td><td>BRANCH</td></tr><tr>
+<td class="s8 cl rt"> 87.45</td>
+<td class="s10 cl rt"><a href="mod3.html#Line" >100.00</a></td>
+<td class="s6 cl rt"><a href="mod3.html#Cond" > 66.67</a></td>
+<td class="s9 cl rt"><a href="mod3.html#Toggle" > 93.65</a></td>
+<td class="s8 cl rt"><a href="mod3.html#Branch" > 89.47</a></td>
+</tr></table><br clear=all>
+<span class=repname>Source File(s) : </span>
+<br clear=all>
+<a href="javascript:void(0);"  onclick="openSrcFile('/home/ray/git/chaoslogic/verification/dut/input_stage.sv')">/home/ray/git/chaoslogic/verification/dut/input_stage.sv</a><br clear=all>
+<br clear=all>
+<span class=repname>Module self-instances :</span>
+<br clear=all>
+<table align=left>
+<tr class="sortablehead">
+<td class="alfsrt">NAME</td><td>SCORE</td><td>LINE</td><td>COND</td><td>TOGGLE</td><td>BRANCH</td></tr><tr>
+<td class="wht cl wordwrap"><a href="mod3.html#inst_tag_3"  onclick="showContent('inst_tag_3')">tb_frame_detector.dut.u_input_stage</a></td>
+<td class="s8 cl rt"> 87.45</td>
+<td class="s10 cl rt"><a href="mod3.html#Line" >100.00</a></td>
+<td class="s6 cl rt"><a href="mod3.html#Cond" > 66.67</a></td>
+<td class="s9 cl rt"><a href="mod3.html#Toggle" > 93.65</a></td>
+<td class="s8 cl rt"><a href="mod3.html#Branch" > 89.47</a></td>
+</tr></table></div>
+</div>
+<br clear=all>
+<div name='tag_input_stage'>
+<hr>
+<a name="inst_tag_3"></a>
+<div class=modhdr>
+<br clear=all>
+<span class=titlename>Module Instance : <a href="hierarchy.html#tag_urg_inst_3" >tb_frame_detector.dut.u_input_stage</a></span>
+<br clear=all>
+<br clear=all>
+<span class=repname>Instance :</span>
+<br clear=all>
+<table align=left>
+<tr class="sortablehead">
+<td>SCORE</td><td>LINE</td><td>COND</td><td>TOGGLE</td><td>BRANCH</td></tr><tr>
+<td class="s8 cl rt"> 87.45</td>
+<td class="s10 cl rt"><a href="mod3.html#Line" >100.00</a></td>
+<td class="s6 cl rt"><a href="mod3.html#Cond" > 66.67</a></td>
+<td class="s9 cl rt"><a href="mod3.html#Toggle" > 93.65</a></td>
+<td class="s8 cl rt"><a href="mod3.html#Branch" > 89.47</a></td>
+</tr></table><br clear=all>
+<br clear=all>
+<span class=repname>Instance's subtree :</span>
+<br clear=all>
+<table align=left>
+<tr class="sortablehead">
+<td>SCORE</td><td>LINE</td><td>COND</td><td>TOGGLE</td><td>BRANCH</td></tr><tr>
+<td class="s8 cl rt"> 87.45</td>
+<td class="s10 cl rt">100.00</td>
+<td class="s6 cl rt"> 66.67</td>
+<td class="s9 cl rt"> 93.65</td>
+<td class="s8 cl rt"> 89.47</td>
+</tr></table><br clear=all>
+<br clear=all>
+<span class=repname>Parent : </span>
+<br clear=all>
+<table align=left>
+<tr class="sortablehead">
+<td>SCORE</td><td>LINE</td><td>COND</td><td>TOGGLE</td><td>BRANCH</td><td class="alfsrt">NAME</td></tr><tr>
+<td class="s9 cl rt"> 94.75</td>
+<td class="wht cl rt"></td>
+<td class="wht cl rt"></td>
+<td class="s9 cl rt"> 94.75</td>
+<td class="wht cl rt"></td>
+<td><a href="mod6.html#inst_tag_6" >dut</a></td>
+</tr></table><br clear=all>
+<br clear=all>
+<span class=repname>Subtrees :</span>
+<br clear=all>
+<table align=left>
+<tr class="sortablehead">
+<td class="alfsrt">NAME</td><td>SCORE</td><td>LINE</td><td>COND</td><td>TOGGLE</td><td>BRANCH</td></tr><tr>
+<td colspan=6>no children</td>
+</tr></table><br clear=all>
+</div>
+</div>
+<hr>
+Since this is the module's only instance, the coverage report is the same as for the module.</div>
+<div class="ui-layout-center">
+<div class="ui-layout-center-inner-center">
+<div name='tag_input_stage'>
+<a name="Line"></a>
+Line Coverage for Module : <a href="mod3.html" >input_stage</a><br clear=all>
+<table class="noborder">
+<col width="122">
+<col span="4" width="82">
+<tr><th></th><th>Line No.</th><th>Total</th><th>Covered</th><th>Percent</th></tr>
+<tr class="s10"><td class="lf">TOTAL</td><td></td><td>43</td><td>43</td><td>100.00</td></tr>
+<tr class="s10"><td class="lf">ALWAYS</td><td>35</td><td>43</td><td>43</td><td>100.00</td></tr>
+</table>
+<pre class="code"><br clear=all>
+34                          always_ff @( posedge clk_in or negedge rst_n ) begin
+35         1/1                  if(!rst_n)
+36                              begin
+37         1/1                      state &lt;= IDLE;
+38         1/1                      fifo_w_enable &lt;= 0;
+39         1/1                      crc_err &lt;= 0;
+40         1/1                      data &lt;= 128'b0;
+41         1/1                      data_to_fifo &lt;= 140'b0;
+42                              end
+43                              else 
+44                              begin
+45         1/1                      data_buffer &lt;= {data_buffer[31:0],data_in};
+46         1/1                      case(state)
+47                                      IDLE:
+48                                      begin
+49         1/1                              if(data_buffer[31:0] == 32'he0e0e0e0)
+50         1/1                                  state &lt;= WAIT_1;
+51         1/1                              else state &lt;= state;
+52         1/1                              crc &lt;= 16'h0000;
+53         1/1                              data_count &lt;= 16'h0000;
+54         1/1                              crc_err &lt;= 0;
+55         1/1                              fifo_w_enable &lt;= 0;
+56         1/1                              data_to_crc &lt;= 16'h0000;
+57                                      end
+58                                      WAIT_1:
+59         1/1                              state &lt;= WAIT_2;
+60                                      WAIT_2:
+61         1/1                              state &lt;= CHANNEL;
+62                                      CHANNEL:
+63                                      begin
+64         1/1                              ch_sel &lt;= data_buffer[47:32];
+65         1/1                              state &lt;= DATA;
+66                                      end
+67                                      DATA:
+68                                      begin
+69         1/1                              if(data_buffer[31:0] == 32'h0e0e0e0e)
+70                                          begin
+71         1/1                                  state &lt;= IDLE;
+72         1/1                                  if(data_count &gt; 0 &amp;&amp; data_from_crc == data_buffer[47:32])
+73                                              begin
+74         1/1                                      crc_err &lt;= 0;
+75         1/1                                      case(data_count)
+76                                                      16'd16:
+77         1/1                                              data_to_fifo &lt;= {data[15:0],112'd0,ch_sel[7:0],data_count[7:4]};
+78                                                      16'd32:
+79         1/1                                              data_to_fifo &lt;= {data[31:0],96'd0,ch_sel[7:0],data_count[7:4]};
+80                                                      16'd48:
+81         1/1                                              data_to_fifo &lt;= {data[47:0],80'd0,ch_sel[7:0],data_count[7:4]};
+82                                                      16'd64:
+83         1/1                                              data_to_fifo &lt;= {data[63:0],64'd0,ch_sel[7:0],data_count[7:4]};
+84                                                      16'd80:
+85         1/1                                              data_to_fifo &lt;= {data[79:0],48'd0,ch_sel[7:0],data_count[7:4]};
+86                                                      16'd96:
+87         1/1                                              data_to_fifo &lt;= {data[95:0],32'd0,ch_sel[7:0],data_count[7:4]};
+88                                                      16'd112:
+89         1/1                                              data_to_fifo &lt;= {data[111:0],16'd0,ch_sel[7:0],data_count[7:4]};
+90                                                      16'd128:
+91         1/1                                              data_to_fifo &lt;= {data[127:0],ch_sel[7:0],data_count[7:4]};
+                   <font color = "red">==>  MISSING_DEFAULT</font>
+92                                                  endcase
+93         1/1                                      fifo_w_enable &lt;= 1;
+94                                              end
+95                                              else
+96                                              begin
+97         1/1                                      crc_err &lt;= 1;
+98         1/1                                      fifo_w_enable &lt;= 0;
+99                                              end
+100                                         end
+101                                         else 
+102                                         begin
+103        1/1                                  data_count &lt;= data_count + 16'd16;
+104        1/1                                  if(data_count &gt; 16'd122)
+105        1/1                                      state &lt;= IDLE;
+106                                             else 
+107        1/1                                      state &lt;= DATA;
+108        1/1                                  data_to_crc &lt;= data_buffer[47:32];
+109        1/1                                  crc &lt;= data_from_crc;
+110        1/1                                  data &lt;= {data[111:0],data_buffer[47:32]};
+111                                         end
+112                                     end
+                   <font color = "red">==>  MISSING_DEFAULT</font>
+</pre>
+<hr>
+<a name="Cond"></a>
+Cond Coverage for Module : <a href="mod3.html" >input_stage</a><br clear=all>
+<table class="noborder">
+<col width="122">
+<col span="3" width="82">
+<tr><th></th><th>Total</th><th>Covered</th><th>Percent</th></tr>
+<tr class="s6"><td class="lf">Conditions</td><td>3</td><td>2</td><td>66.67</td></tr>
+<tr class="s6"><td class="lf">Logical</td><td>3</td><td>2</td><td>66.67</td></tr>
+<tr class="wht"><td class="lf">Non-Logical</td><td>0</td><td>0</td><td></td></tr>
+<tr class="wht"><td class="lf">Event</td><td>0</td><td>0</td><td></td></tr>
+</table>
+<br clear=all>
+<pre class="code"> LINE       72
+ EXPRESSION ((data_count &gt; 16'b0) &amp;&amp; (data_from_crc == data_buffer[47:32]))
+             ----------1---------    ------------------2------------------
+</pre>
+<table class="noborder">
+<col span="2" width="40">
+<tr><th>-1-</th><th>-2-</th><th>Status</th></tr>
+<tr class="uRed"><td>0</td><td>1</td><td class="lf">Not Covered</td></tr>
+<tr class="uGreen"><td>1</td><td>0</td><td class="lf">Covered</td></tr>
+<tr class="uGreen"><td>1</td><td>1</td><td class="lf">Covered</td></tr>
+</table>
+<hr>
+<a name="Toggle"></a>
+Toggle Coverage for Module : <a href="mod3.html" >input_stage</a><br clear=all>
+<table align=left class="noborder">
+<tr>
+<th nowrap width=120></th><th nowrap width=80>Total</th><th nowrap width=80>Covered</th><th nowrap width=80>Percent</th></tr><tr class="s6">
+<td>Totals</td>
+<td class="rt">14</td>
+<td class="rt">9</td>
+<td class="rt">64.29 </td>
+</tr><tr class="s9">
+<td>Total Bits</td>
+<td class="rt">834</td>
+<td class="rt">781</td>
+<td class="rt">93.65 </td>
+</tr><tr class="s9">
+<td nowrap>Total Bits 0->1</td>
+<td class="rt">417</td>
+<td class="rt">391</td>
+<td class="rt">93.76 </td>
+</tr><tr class="s9">
+<td nowrap>Total Bits 1->0</td>
+<td class="rt">417</td>
+<td class="rt">390</td>
+<td class="rt">93.53 </td>
+</tr></table><br clear=all>
+<table align=left class="noborder">
+<tr>
+<th nowrap width=120></th><th nowrap width=80></th><th nowrap width=80></th><th nowrap width=80></th></tr><tr class="s7">
+<td>Ports</td>
+<td class="rt">10</td>
+<td class="rt">7</td>
+<td class="rt">70.00 </td>
+</tr><tr class="s9">
+<td>Port Bits</td>
+<td class="rt">418</td>
+<td class="rt">405</td>
+<td class="rt">96.89 </td>
+</tr><tr class="s9">
+<td nowrap>Port Bits 0->1</td>
+<td class="rt">209</td>
+<td class="rt">203</td>
+<td class="rt">97.13 </td>
+</tr><tr class="s9">
+<td nowrap>Port Bits 1->0</td>
+<td class="rt">209</td>
+<td class="rt">202</td>
+<td class="rt">96.65 </td>
+</tr></table><br clear=all>
+<table align=left class="noborder">
+<tr>
+<th nowrap width=120></th><th nowrap width=80></th><th nowrap width=80></th><th nowrap width=80></th></tr><tr class="s5">
+<td>Signals</td>
+<td class="rt">4</td>
+<td class="rt">2</td>
+<td class="rt">50.00 </td>
+</tr><tr class="s9">
+<td>Signal Bits</td>
+<td class="rt">416</td>
+<td class="rt">376</td>
+<td class="rt">90.38 </td>
+</tr><tr class="s9">
+<td nowrap>Signal Bits 0->1</td>
+<td class="rt">208</td>
+<td class="rt">188</td>
+<td class="rt">90.38 </td>
+</tr><tr class="s9">
+<td nowrap>Signal Bits 1->0</td>
+<td class="rt">208</td>
+<td class="rt">188</td>
+<td class="rt">90.38 </td>
+</tr></table><br clear=all>
+<table align=left class="sortable noborder">
+<caption><b>Port Details</b></caption>
+<tr class="sortablehead">
+<td class="alfsrt">Name</td><td class="alfsrt">Toggle</td><td class="alfsrt">Toggle 1->0</td><td class="alfsrt">Toggle 0->1</td><td class="alfsrt">Direction</td></tr><tr>
+<td>clk_in</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>INPUT</td>
+</tr><tr>
+<td>rst_n</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s9 cl">Yes</td>
+<td>INPUT</td>
+</tr><tr>
+<td>data_in[15:0]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>INPUT</td>
+</tr><tr>
+<td>data_to_fifo[12:0]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[13]</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[14]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[15]</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[17:16]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[18]</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[22:19]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[23]</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[25:24]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[26]</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_fifo[139:27]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>fifo_w_enable</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>crc_err</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>crc_done</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_to_crc[15:0]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>crc[15:0]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>OUTPUT</td>
+</tr><tr>
+<td>data_from_crc[15:0]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td>INPUT</td>
+</tr></table><br clear=all>
+<table align=left class="sortable noborder">
+<caption><b>Signal Details</b></caption>
+<tr class="sortablehead">
+<td class="alfsrt">Name</td><td class="alfsrt">Toggle</td><td class="alfsrt">Toggle 1->0</td><td class="alfsrt">Toggle 0->1</td></tr><tr>
+<td>ch_sel[7:0]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+</tr><tr>
+<td>ch_sel[15:8]</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+</tr><tr>
+<td>data_buffer[47:0]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+</tr><tr>
+<td>data[127:0]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+</tr><tr>
+<td>data_count[3:0]</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+</tr><tr>
+<td>data_count[7:4]</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+<td class="s9 cl">Yes</td>
+</tr><tr>
+<td>data_count[15:8]</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+<td class="s3 cl">No</td>
+</tr></table><br clear=all>
+<hr>
+<a name="Branch"></a>
+Branch Coverage for Module : <a href="mod3.html" >input_stage</a><br clear=all>
+<table align=left class="noborder">
+<tr>
+<th nowrap width=120></th><th nowrap width=80>Line No.</th><th nowrap width=80>Total</th><th nowrap width=80>Covered</th><th nowrap width=80>Percent</th></tr><tr class="s8">
+<td>Branches</td>
+<td></td>
+<td class="rt">19</td>
+<td class="rt">17</td>
+<td class="rt">89.47 </td>
+</tr><tr class="s8">
+<td>IF</td>
+<td class="rt">35</td>
+<td class="rt">19</td>
+<td class="rt">17</td>
+<td class="rt">89.47 </td>
+</tr></table><br clear=all>
+<pre class="code"><br clear=all>
+35                 if(!rst_n)
+                   <font color = "green">-1-</font>  
+36                 begin
+37                     state <= IDLE;
+           <font color = "green">            ==></font>
+38                     fifo_w_enable <= 0;
+39                     crc_err <= 0;
+40                     data <= 128'b0;
+41                     data_to_fifo <= 140'b0;
+42                 end
+43                 else 
+44                 begin
+45                     data_buffer <= {data_buffer[31:0],data_in};
+46                     case(state)
+                       <font color = "red">-2-</font>  
+47                         IDLE:
+48                         begin
+49                             if(data_buffer[31:0] == 32'he0e0e0e0)
+                               <font color = "green">-3-</font>  
+50                                 state <= WAIT_1;
+           <font color = "green">                        ==></font>
+51                             else state <= state;
+           <font color = "green">                    ==></font>
+52                             crc <= 16'h0000;
+53                             data_count <= 16'h0000;
+54                             crc_err <= 0;
+55                             fifo_w_enable <= 0;
+56                             data_to_crc <= 16'h0000;
+57                         end
+58                         WAIT_1:
+59                             state <= WAIT_2;
+           <font color = "green">                    ==></font>
+60                         WAIT_2:
+61                             state <= CHANNEL;
+           <font color = "green">                    ==></font>
+62                         CHANNEL:
+63                         begin
+64                             ch_sel <= data_buffer[47:32];
+           <font color = "green">                    ==></font>
+65                             state <= DATA;
+66                         end
+67                         DATA:
+68                         begin
+69                             if(data_buffer[31:0] == 32'h0e0e0e0e)
+                               <font color = "green">-4-</font>  
+70                             begin
+71                                 state <= IDLE;
+72                                 if(data_count > 0 && data_from_crc == data_buffer[47:32])
+                                   <font color = "green">-5-</font>  
+73                                 begin
+74                                     crc_err <= 0;
+75                                     case(data_count)
+                                       <font color = "red">-6-</font>  
+76                                         16'd16:
+77                                             data_to_fifo <= {data[15:0],112'd0,ch_sel[7:0],data_count[7:4]};
+           <font color = "green">                                    ==></font>
+78                                         16'd32:
+79                                             data_to_fifo <= {data[31:0],96'd0,ch_sel[7:0],data_count[7:4]};
+           <font color = "green">                                    ==></font>
+80                                         16'd48:
+81                                             data_to_fifo <= {data[47:0],80'd0,ch_sel[7:0],data_count[7:4]};
+           <font color = "green">                                    ==></font>
+82                                         16'd64:
+83                                             data_to_fifo <= {data[63:0],64'd0,ch_sel[7:0],data_count[7:4]};
+           <font color = "green">                                    ==></font>
+84                                         16'd80:
+85                                             data_to_fifo <= {data[79:0],48'd0,ch_sel[7:0],data_count[7:4]};
+           <font color = "green">                                    ==></font>
+86                                         16'd96:
+87                                             data_to_fifo <= {data[95:0],32'd0,ch_sel[7:0],data_count[7:4]};
+           <font color = "green">                                    ==></font>
+88                                         16'd112:
+89                                             data_to_fifo <= {data[111:0],16'd0,ch_sel[7:0],data_count[7:4]};
+           <font color = "green">                                    ==></font>
+90                                         16'd128:
+91                                             data_to_fifo <= {data[127:0],ch_sel[7:0],data_count[7:4]};
+           <font color = "green">                                    ==></font>
+                                               MISSING_DEFAULT
+           <font color = "red">                                    ==></font>
+92                                     endcase
+93                                     fifo_w_enable <= 1;
+94                                 end
+95                                 else
+96                                 begin
+97                                     crc_err <= 1;
+           <font color = "green">                            ==></font>
+98                                     fifo_w_enable <= 0;
+99                                 end
+100                            end
+101                            else 
+102                            begin
+103                                data_count <= data_count + 16'd16;
+104                                if(data_count > 16'd122)
+                                   <font color = "green">-7-</font>  
+105                                    state <= IDLE;
+           <font color = "green">                            ==></font>
+106                                else 
+107                                    state <= DATA;
+           <font color = "green">                            ==></font>
+108                                data_to_crc <= data_buffer[47:32];
+109                                crc <= data_from_crc;
+110                                data <= {data[111:0],data_buffer[47:32]};
+111                            end
+112                        end
+                           MISSING_DEFAULT
+           <font color = "red">                ==></font>
+</pre>
+<br clear=all>
+<span class=repname>Branches:</span>
+<br clear=all>
+<table align=left class="noborder">
+<tr>
+<th nowrap width=80>-1-</th><th nowrap width=80>-2-</th><th nowrap width=80>-3-</th><th nowrap width=80>-4-</th><th nowrap width=80>-5-</th><th nowrap width=80>-6-</th><th nowrap width=80>-7-</th><th nowrap width=80>Status</th></tr><tr class="uGreen">
+<td align=center>1</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>IDLE </td>
+<td align=center>1</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>IDLE </td>
+<td align=center>0</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>WAIT_1 </td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>WAIT_2 </td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>CHANNEL </td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>1</td>
+<td align=center>16'd16 </td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>1</td>
+<td align=center>16'd32 </td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>1</td>
+<td align=center>16'd48 </td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>1</td>
+<td align=center>16'd64 </td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>1</td>
+<td align=center>16'd80 </td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>1</td>
+<td align=center>16'd96 </td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>1</td>
+<td align=center>16'd112 </td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>1</td>
+<td align=center>16'd128 </td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uRed">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>1</td>
+<td align=center>MISSING_DEFAULT</td>
+<td align=center nowrap>-</td>
+<td>Not Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td align=center>0</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>0</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center>1</td>
+<td>Covered</td>
+</tr><tr class="uGreen">
+<td align=center>0</td>
+<td align=center>DATA </td>
+<td align=center nowrap>-</td>
+<td align=center>0</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center>0</td>
+<td>Covered</td>
+</tr><tr class="uRed">
+<td align=center>0</td>
+<td align=center>MISSING_DEFAULT</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td align=center nowrap>-</td>
+<td>Not Covered</td>
+</tr></table><br clear=all>
+</div>
+</div>
+<div class="ui-layout-center-inner-north">
+<div id="center-bread-crumb" class="breadCrumb module urg-margin-bottom">
+  <ul name="inst_tag_3">
+    <li>
+      <a href="#Line">Line</a>    </li>
+    <li>
+      <a href="#Cond">Cond</a>    </li>
+    <li>
+      <a href="#Toggle">Toggle</a>    </li>
+    <li>
+      <a href="#Branch">Branch</a>    </li>
+  </ul>
+  <ul name="tag_input_stage">
+    <li>
+      <a href="#Line">Line</a>    </li>
+    <li>
+      <a href="#Cond">Cond</a>    </li>
+    <li>
+      <a href="#Toggle">Toggle</a>    </li>
+    <li>
+      <a href="#Branch">Branch</a>    </li>
+  </ul>
+</div>
+</div>
+</div>
+<div class="ui-layout-south">
+<table align=center><tr><td class="s0 cl">0%</td>
+<td class="s1 cl">10%</td>
+<td class="s2 cl">20%</td>
+<td class="s3 cl">30%</td>
+<td class="s4 cl">40%</td>
+<td class="s5 cl">50%</td>
+<td class="s6 cl">60%</td>
+<td class="s7 cl">70%</td>
+<td class="s8 cl">80%</td>
+<td class="s9 cl">90%</td>
+<td class="s10 cl">100%</td></tr></table></div>
+</body>
+</html>
