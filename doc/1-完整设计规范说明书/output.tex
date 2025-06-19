@@ -1,0 +1,478 @@
+\documentclass[12pt,]{article}
+\usepackage{geometry} 		% 設定邊界
+\geometry{
+  top=1in,
+  inner=1in,
+  outer=1in,
+  bottom=1in,
+  headheight=3ex,
+  headsep=2ex
+}
+\usepackage{booktabs}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \usepackage{fontspec} 	% 允許設定字體
+  \usepackage{xeCJK} 		% 分開設置中英文字型
+  \setCJKmainfont{Noto Serif CJK SC} 	% 設定中文字型
+  \setmainfont{Georgia} 	% 設定英文字型
+  \setromanfont{Georgia} 	% 字型
+  \setmonofont{Courier New}
+  \linespread{1.2}\selectfont 	% 行距
+  \XeTeXlinebreaklocale "zh" 	% 針對中文自動換行
+  \XeTeXlinebreakskip = 0pt plus 1pt % 字與字之間加入0pt至1pt的間距，確保左右對整齊
+  \parindent 0em 		% 段落縮進
+  \setlength{\parskip}{20pt} 	% 段落之間的距離
+  \ifxetex
+    \usepackage{xltxtra,xunicode}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+    \setmainfont{Noto Serif CJK SC}
+    \setmonofont{Noto Sans Mono CJK SC}
+\fi
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\usepackage{longtable}
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={},
+            colorlinks=true,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+\setlength{\parindent}{0pt}
+%\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+\title{\huge 在OSX平台上的XeLaTeX中文測試} % 設置標題，使用巨大字體
+\author{FoolEgg.com} 		% 設置作者
+\date{February 2013} 		% 設置日期
+\usepackage{titling}
+\setlength{\droptitle}{-8em} 	% 將標題移動至頁面的上面
+
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancyplain}
+
+\setcounter{secnumdepth}{0}
+
+\author{}
+\date{}
+
+\begin{document}
+\hypertarget{ux5e27ux683cux5f0fux5e8fux5217ux68c0ux6d4bux751fux6210ux6a21ux5757ux8bbeux8ba1ux89c4ux8303}{%
+\section{帧格式序列检测生成模块设计规范}\label{ux5e27ux683cux5f0fux5e8fux5217ux68c0ux6d4bux751fux6210ux6a21ux5757ux8bbeux8ba1ux89c4ux8303}}
+
+\tableofcontents
+
+
+\hypertarget{ux8bbeux8ba1ux6982ux8ff0}{%
+\subsection{设计概述}\label{ux8bbeux8ba1ux6982ux8ff0}}
+
+本规范文件描述了帧格式序列检测与生成模块（Frame Format Sequence
+Generator）的设计规范和特性要求，该模块旨在检测输入数据流中的特定帧格式，并在检测到目标帧时进行串行输出。
+
+如上框图所示，模块接收到数据输入 \texttt{data\_in}
+后，在模块进行以下处理过程：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  输入数据检测: 模块接收并采样输入数据。
+\item
+  帧格式识别:
+  检测并识别输入数据中的特定帧格式，包括帧头、通道选择字段、数据、CRC
+  校验字段和帧尾 5 个部分。
+\item
+  解帧与数据提取: 识别帧头、通道选择和帧尾，提取数据部分。
+\item
+  CRC 校验: 对提取的数据进行 CRC 校验，确保数据完整性。
+
+  \begin{itemize}
+  \item
+    如果 CRC 校验成功，数据将被写入异步 FIFO 进行缓存。
+  \item
+    如果 CRC 校验失败，模块报告错误并丢弃错误数据。
+  \end{itemize}
+\item
+  异步 FIFO 缓存: 提取的数据通过异步 FIFO 进行缓存，提供 FIFO 空、FIFO
+  满信号状态指示。
+\item
+  数据编码: 从 FIFO 中读取数据，按照格雷码进行编码。
+\item
+  根据通道选择进行串行输出:
+  编码后的数据根据通道选择的数值，决定在哪个通道进行串行输出
+\end{enumerate}
+
+\hypertarget{ux5b50ux6a21ux5757ux6982ux8ff0}{%
+\subsection{子模块概述}\label{ux5b50ux6a21ux5757ux6982ux8ff0}}
+
+\hypertarget{input_stage}{%
+\subsubsection{input\_stage}\label{input_stage}}
+
+整体说明：该模块旨在检测输入数据流中的特定帧格式，并提取有效数据。每帧输入16位数据，输出5种状态的指示信号。具体帧格式如下:
+
+\begin{itemize}
+\item
+  帧头: \texttt{32} 位，取值为 \texttt{E0E0E0E0}
+\item
+  通道选择: \texttt{8} 位, 独热码，高位数据丢弃
+\item
+  数据: \texttt{N} 位（可变长度，限制在\texttt{16} 位到\texttt{128}
+  位之间，是\texttt{16}的整数倍，按照 Big-Endian 方式输入）
+\item
+  CRC 校验字段: \texttt{16} 位
+\item
+  帧尾: \texttt{32} 位，取值为 \texttt{0E0E0E0E}
+\end{itemize}
+
+\textbf{状态机状态定义}：
+
+\texttt{1.\hspace{0pt}IDLE\hspace{0pt}（空闲状态）}
+
+\begin{itemize}
+\item
+  初始状态，等待帧头起始
+\item
+  行为：持续监测输入数据是否为帧头的第一部分 E0E0
+\item
+  转换条件：当 data\_in == 16'hE0E0 时进入 HEAD\_CHECK
+\end{itemize}
+
+\texttt{2.HEAD\_CHECK\hspace{0pt}（帧头校验状态）}
+
+\begin{itemize}
+\item
+  验证完整的32位帧头
+\item
+  行为：检查第二个16位数据是否为 E0E0
+\item
+  转换条件： 若 data\_in == 16'hE0E0 进入 CHANNEL 否则返回 IDLE
+\end{itemize}
+
+\texttt{3.\hspace{0pt}CHANNEL\hspace{0pt}（通道选择状态）}
+
+\begin{itemize}
+\item
+  读取通道选择字段
+\item
+  行为：存储输入数据的低8位（高8位丢弃）到 data\_ch 寄存器
+\item
+  转换条件：无条件进入 DATA 状态（仅需1周期）
+\end{itemize}
+
+\texttt{4.\hspace{0pt}DATA\hspace{0pt}（数据接收状态）}
+
+\begin{itemize}
+\item
+  接收数据字段和后续字段
+\item
+  行为：
+
+  启动4位计数器（\texttt{data\_counte}r）从0开始计数
+
+  每个周期将32位寄存器
+  \texttt{tail\_detec\_reg}（用于帧尾检测，初始化全0）左移16位，并存入输入数据\texttt{data\_in}
+
+  每个周期将160位寄存器
+  \texttt{full\_data\_reg}（用于存储数据字段，初始化全0）左移16位，并存入输入数据\texttt{data\_in}
+
+  计数器递增，溢出时丢弃数据
+\item
+  转换条件： 当检测到\texttt{data\_in}为 \texttt{0E0E0E0E} 时进入
+  \texttt{CRC\_OUTPUT}，停止寄存器\texttt{tail\_detec\_reg}和\texttt{full\_data\_reg}的存储
+  若计数器溢出（≥15）返回 \texttt{IDLE}
+\end{itemize}
+
+\texttt{5.\hspace{0pt}CRC\_OUTPUT\hspace{0pt}（CRC提取状态）}
+
+\begin{itemize}
+\item
+  提取CRC字段并计算数据长度
+\item
+  行为：
+
+  从32位寄存器\texttt{tail\_detec\_reg}中获取CRC字段（帧尾前1周期的数据）
+
+  计算数据长度：data\_count = data\_counter - 2
+
+  截取 full\_data\_reg 的高128位作为 data\_128
+\item
+  转换条件：
+
+  当检测到data\_in为 0E0E0 时进入
+  ENABLE\_CRC（确保帧尾正确）否则数据错误，返回 IDLE
+\end{itemize}
+
+\texttt{6.\hspace{0pt}ENABLE\_CRC\hspace{0pt}（CRC校验使能状态）}
+
+\begin{itemize}
+\item
+  使能CRC校验模块
+\item
+  行为： 拉高 start\_crc信号，启动CRC校验模块，结果由CRC校验模块返回
+\item
+  转换条件： \textbf{无条件}返回 IDLE
+\end{itemize}
+
+单独为与CRC交互编写一个always块，确保后续数据的输入在CRC校验期间不会被丢弃：
+
+\begin{itemize}
+\item
+  行为：
+
+  接收到start\_crc信号后，拉低start\_crc信号，crc\_cnt开始计数。
+
+  当crc\_cnt小于data\_count的值的时候，维持 crc16\_valid
+  高电平，同时每个周期从data\_128低位开始每16位作为data\_to\_crc发送给CRC校验模块。所有数据已发送后清零crc16\_valid和crc\_cnt。
+
+  接收到crc16\_done信号后，检查CRC结果data\_from\_crc和crc\_field\_reg是否相等。相等时候拉高fifo\_w\_enable，拉低crc\_err，data\_to\_fifo
+  赋值为\{data\_128, data\_ch,
+  data\_count\}写入fifo。不相等时拉低fifo\_w\_enable，拉高crc\_err。
+\end{itemize}
+
+\textbf{顶层IO}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+信号 & 位宽 & I/O \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+clk\_in & 1 & I \\
+rst\_n & 1 & I \\
+data\_in & 16 & I \\
+crc\_err & 1 & O \\
+data\_to\_fifo & 140 & O \\
+fifo\_w\_enable & 1 & O \\
+data\_to\_crc & 16 & O \\
+data\_from\_crc & 16 & I \\
+crc16\_done & 1 & I \\
+crc16\_valid & 1 & O \\
+\end{longtable}
+
+\textbf{信号说明}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{clk\_in}: 输入时钟
+\item
+  \texttt{rst\_n}:异步复位信号，低电平有效
+\item
+  \texttt{data\_in}: 16位并行输入数据
+\item
+  \texttt{crc\_err}: CRC校验结果，错误时为真
+\item
+  \texttt{data\_to\_fifo}: 输出到fifo的数据
+\item
+  \texttt{fifo\_w\_enable}: fifo模块的写使能信号
+\item
+  \texttt{data\_to\_crc}:输入到CRC校验模块的待校验数据
+\item
+  \texttt{data\_from\_crc}:从CRC校验模块返回的数据校验值
+\item
+  \texttt{crc16\_done}:从CRC校验模块返回的数据校验值有效信号，高电平有效
+\item
+  \texttt{crc16\_valid}:发送给CRC校验模块的使能信号，高电平有效
+\end{itemize}
+
+\hypertarget{async_fifo}{%
+\subsubsection{async\_fifo}\label{async_fifo}}
+
+整体说明: 传统的异步fifo，宽度为140位，深度为8，提供 fifo 空、fifo
+满信号状态指示
+
+\textbf{顶层IO}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+信号 & 位宽 & I/O \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+clk\_in & 1 & I \\
+clk\_out & 1 & I \\
+rst\_n & 1 & I \\
+fifo\_w\_enable & 1 & I \\
+fifo\_r\_enable & 1 & I \\
+data\_to\_fifo & 140 & I \\
+data\_from\_fifo & 140 & O \\
+fifo\_empty & 1 & O \\
+fifo\_full & 1 & O \\
+\end{longtable}
+
+\textbf{信号说明}
+
+\texttt{clk\_in}：fifo输入时钟域的时钟
+
+\texttt{clk\_out}: fifo输出时钟域的时钟，与 \texttt{clk\_in}
+为同频异步。
+
+\texttt{rst\_n}:异步复位信号，低电平有效
+
+\texttt{fifo\_w\_enable}：fifo写使能信号
+
+\texttt{fifo\_r\_enable}：fifo读使能信号
+
+\texttt{data\_to\_fifo}：fifo输入数据
+
+\texttt{data\_from\_fifo}：fifo输出数据，当\texttt{fifo\_empty}为1时应读出140`b0
+
+\texttt{fifo\_empty}：fifo空信号
+
+\texttt{fifo\_full}：fifo满信号
+
+\textbf{时序说明}
+
+数据将在\texttt{fifo\_w\_enable}被拉高的时钟周期内被写入
+
+数据将在\texttt{fifo\_r\_enable}被拉高的时钟周期内被读出
+
+\hypertarget{fifo_data_resolu}{%
+\subsubsection{fifo\_data\_resolu}\label{fifo_data_resolu}}
+
+整体说明：纯组合逻辑模块，将从fifo读到的140位数据分离为128位数据位+8位通道选择位+4位数据长度表示位。
+其中高128位位数据位，中间8位位通道选择位，低4位为数据长度表示位。
+
+4位数据长度表示位生成16位具体数据长度位\texttt{data\_count}，例如0-8分别输出0
+16 32 48 64 80 96 112 128。
+
+数据位高位在前，长度由\texttt{data\_count}给出，不足128位的数据将在低位补0。
+数据位转为格雷码后，在低位补0补齐128位，输出信号\texttt{data\_gray}也是高位在前。
+
+8位通道选择位不做处理，直接输出8位信号\texttt{vld\_ch}。
+
+\textbf{顶层IO}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+信号 & 位宽 & I/O \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+data\_from\_fifo & 140 & I \\
+data\_gray & 128 & O \\
+vld\_ch & 8 & O \\
+data\_count & 16 & O \\
+\end{longtable}
+
+\textbf{信号说明}
+
+\texttt{data\_from\_fifo}：fifo输出数据
+\texttt{data\_gray}：输出数据的格雷码表示 \texttt{vld\_ch}：通道选择数据
+\texttt{data\_count}：具体数据长度位
+
+\hypertarget{output_stage}{%
+\subsubsection{output\_stage}\label{output_stage}}
+
+整体说明:本模块根据前面模块提供的信息，将数据发送到对应的通道并转为串行信号输出。根据\texttt{vld\_ch}所输入的独热码，将输入的\texttt{data\_gray}发送到对应的数据串行输出通道
+(\texttt{data\_out\_ch1\textasciitilde{}8})，同时拉高对应通道的数据有效信号
+(\texttt{data\_vld\_ch1\textasciitilde{}8})。根据\texttt{data\_count}，具体决定输出\texttt{data\_vld\_ch}的持续周期数，即\texttt{data\_vld\_ch}仅在输出时拉高。
+
+\textbf{顶层IO}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+信号 & 位宽 & I/O \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+rst\_n & 1 & I \\
+clk\_out16x & 1 & I \\
+data\_gray & 128 & I \\
+vld\_ch & 8 & I \\
+data\_count & 16 & I \\
+crc\_valid & 1 & O \\
+data\_out\_ch1 & 1 & O \\
+data\_out\_ch2 & 1 & O \\
+\ldots{} & 1 & O \\
+data\_out\_ch8 & 1 & O \\
+data\_vld\_ch1 & 1 & O \\
+data\_vld\_ch2 & 1 & O \\
+\ldots{} & 1 & O \\
+data\_vld\_ch8 & 1 & O \\
+\end{longtable}
+
+\textbf{信号说明}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{rst\_n}:异步复位信号，低电平有效
+\item
+  \texttt{clk\_out16x}:输出串行信号速率的时钟
+\item
+  \texttt{data\_gray}:输出数据的格雷码表示
+\item
+  \texttt{vld\_ch}:通道选择数据，8位宽独热码
+\item
+  \texttt{data\_count}:\texttt{data\_gray}的具体数据长度
+\item
+  \texttt{crc\_valid}:任一\texttt{data\_vld\_ch*}拉高时即拉高
+\item
+  \texttt{data\_out\_ch1\textasciitilde{}8}:数据串行输出通道，输出时高位在前
+\item
+  \texttt{data\_vld\_ch1\textasciitilde{}8}:数据有效信号通道，仅在输出时拉高
+\end{itemize}
+
+\hypertarget{crc_calcu}{%
+\subsubsection{crc\_calcu}\label{crc_calcu}}
+
+整体说明：设计一个CRC校验模块，采用CRC-16/CCITT算法，多项式：0x1021，初始值：0x0000，输入不反转，输出不反转，输出异或值：0x0000。当输入信号crc16\_valid有效的情况下，迭代计算16位数据信号data\_to\_crc的CRC校验值。计算完成时将crc16\_done信号拉高。
+
+\textbf{顶层IO}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+信号 & 位宽 & I/O \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+clk\_in & 1 & I \\
+rst\_n & 1 & I \\
+data\_to\_crc & 16 & I \\
+data\_from\_crc & 16 & O \\
+crc16\_done & 1 & O \\
+crc16\_valid & 1 & I \\
+\end{longtable}
+
+\textbf{信号说明}
+
+\texttt{clk\_in}:输入时钟，时钟频率范围为 50MHz 到 100 MHz
+
+\texttt{rst\_n}:异步复位信号，低电平有效
+
+\texttt{data\_to\_crc}:从帧格式识别模块输入的待校验数据
+
+\texttt{data\_from\_crc}:输出数据的CRC校验值
+
+\texttt{crc16\_done}:CRC校验结束时输出信号，高电平有效
+
+\texttt{crc16\_valid}:指示当前输入有效的信号，高电平有效
+
+\end{document}

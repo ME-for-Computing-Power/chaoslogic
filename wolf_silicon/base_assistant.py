@@ -14,6 +14,7 @@ class BaseAssistant(object):
         self.short_term_memory.append(msg)
         if len(self.short_term_memory) > self.max_short_term_memory_len:
             self.short_term_memory.pop(0)
+            self.env.manual_log(self.name, "短期记忆已满"+str(self.max_short_term_memory_len)+"条，删除最早的消息")
         while self.short_term_memory and self.short_term_memory[0]["role"] != "user":
             self.short_term_memory.pop(0)
 
@@ -93,9 +94,12 @@ class BaseAssistant(object):
             *self.get_short_term_memory()
         ]
         ##将 message 中的 \n 替换为真的换行符，改善log的可读性
-        message_for_logging = json.dumps(messages, ensure_ascii=False).replace('\\n', '\n')
-        self.env.manual_log(self.name, f"Messages: {message_for_logging}")
+        #message_for_logging = json.dumps(messages, ensure_ascii=False).replace('\\n', '\n')
+        self.env.manual_log(self.name, f"Messages: {messages}")
         response = self.agent.model_client.chat.completions.create(
+            temperature=0.1,
+            presence_penalty=-0.1,
+            frequency_penalty=-0.1,
             model=self.agent.MODEL_NAME,
             messages=messages,
             max_tokens=self.agent.MAX_TOKENS,
@@ -110,12 +114,28 @@ class BaseAssistant(object):
         while error_counter < self.agent.MAX_RETRY - 1:
             #检查json格式是否被破坏
             try:
+                if not func_call_list:
+                    self.env.manual_log('Admin', f"警告：大模型未调用函数，进行第 {str(error_counter + 1)} 次重试")
+                
+                    error_counter += 1
+                    #call llm again to fix the error
+                    response = self.agent.model_client.chat.completions.create(
+                        model=self.agent.MODEL_NAME,
+                        messages=messages,
+                        max_tokens=self.agent.MAX_TOKENS,
+                        stream=True,
+                        tools=self.get_tools_description(),
+                        tool_choice = "required" if tools_enable else "none"
+                    )
+                
+                    message, func_call_list = self.handle_chat_response(response) 
+                    continue
                 for func_call in func_call_list:
                     #检查函数调用的参数是否是合法的json
                     self.decode_tool_call(func_call)
                 #如果没有异常，说明json格式正常
                 break
-            except json.JSONDecodeError as e:
+            except Exception as e:
                 self.env.manual_log('Admin', f"警告：输出内容的JSON格式可能被破坏，错误信息：{str(e)}，进行第 {str(error_counter + 1)} 次重试")
                 
                 error_counter += 1

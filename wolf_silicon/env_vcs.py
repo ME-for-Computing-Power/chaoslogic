@@ -24,12 +24,14 @@ class WolfSiliconEnv(object):
         self._cmodel_code_path = os.path.join(self._cmodel_path, "cmodel.cpp")
         self._cmodel_binary_path = os.path.join(self._cmodel_path, "cmodel")
         self._design_code_path = os.path.join(self._design_path, "dut.v")
-        self._design_filelist_path = os.path.join(self._design_path, "filelist")
+        self._design_filelist_path = os.path.join(self._design_path, "filelist.f")
+        self._filelist_path = os.path.join(self._workspace_path, "filelist.f")
         self._verification_code_path = os.path.join(self._verification_path, "tb.sv")
         self._verification_feedback_path = os.path.join(self._doc_path, "feedback.md")
         self._verification_binary_path = os.path.join(self._workspace_path, "simv")
         self._verification_report_path = os.path.join(self._doc_path, "verification_report.md")
         self._log_path = os.path.join(self._doc_path, "chaoslogic.log")
+        self._ref_model_path = os.path.join(self._workspace_path, "ref_model")
 
         self.model_client = model_client
 
@@ -133,28 +135,54 @@ class WolfSiliconEnv(object):
                 return True, mtime, f.read()
         else:
             return False, 0, "No design code found."
-    
+
+    def remove_comments_from_file(code):
+        # 移除 /* ... */ 块注释（包括跨多行）
+        code_no_block_comments = re.sub(r'/\*.*?\*/', '', code, flags=re.DOTALL)
+
+        # 移除 // 单行注释
+        code_no_comments = re.sub(r'//.*', '', code_no_block_comments)
+
+        # 移除多余空行
+        code_cleaned = '\n'.join([line.rstrip() for line in code_no_comments.splitlines() if line.strip() != ''])
+
+        return code_cleaned
+        
     def lint_design(self) -> str:
         # 获取 codebase 中所有 .v 文件
         v_files = []
         for filename in os.listdir(self._design_path):
-            if filename.endswith('.v'):
+            if filename.endswith('.v') and not filename.startswith("cleaned_"):
+                # 只处理未被清理过的文件
                 v_files.append(os.path.join(self._design_path,filename))
         # 保存到 filelist 文件中
         with open(self._design_filelist_path, "w") as f:
             for filepath in v_files:
                 f.write(filepath + "\n")
-        # lint 不使用 execute command，直接使用 os.system vlogan -full64  -f filelist.f -l test.log
+        # 删除注释，避免乱码
+        for i in range(len(v_files)):
+            with open(v_files[i], "r") as f:
+                code = f.read()
+            cleaned_code = WolfSiliconEnv.remove_comments_from_file(code)
+            # 获取原始文件名
+            original_filename = os.path.basename(v_files[i])
+            cleaned_filename = "cleaned_" + original_filename
+            cleaned_filepath = os.path.join(self._design_path, cleaned_filename)
+
+            # 写入新文件
+            with open(cleaned_filepath, "w", encoding="utf-8") as f:
+                f.write(cleaned_code)
+    
+        # lint vlogan -full64  -f filelist.f -l test.log
         command = f"vlogan -full64  -f {self._design_filelist_path} -sverilog"
-        with subprocess.Popen(command.split(' '), 
-                      stdout=subprocess.PIPE, 
-                      stderr=subprocess.PIPE,
-                      text=True) as process:
-            stdout, stderr = process.communicate()
-        output = stdout + stderr
+        output = WolfSiliconEnv.execute_command(command, timeout_sec=300)
         # Remove the matched block
         cleaned_log = re.sub(r'^.*?(Parsing design file .*)', r'\1', output, flags=re.DOTALL)
         print(cleaned_log)
+        # # 删除带有cleaned_前缀的文件
+        # for filename in os.listdir(self._design_path):
+        #     if filename.startswith("cleaned_") and filename.endswith('.v'):
+        #         os.remove(os.path.join(self._design_path, filename))
         return cleaned_log
     
     def write_verification_code(self, code:str):
@@ -184,24 +212,68 @@ class WolfSiliconEnv(object):
             return False, 0, "No verification code found."
     
     def compile_verification(self) -> str:
-        # code_file = []
-        # for filename in os.listdir(self._verification_path):
-        #     if filename.endswith('.v') or filename.endswith('.sv'):
-        #         code_file.append(os.path.join(self._verification_path, filename))
-        # for filename in os.listdir(self._design_path):
-        #     if filename.endswith('.v'):
-        #         code_file.append(os.path.join(self._design_path, filename))
-        # # 保存到 filelist 文件中
-        # with open(self._design_filelist_path, "w") as f:
-        #     for filepath in code_file:
-        #         f.write(filepath + "\n")
+        code_file = []
+        for filename in os.listdir(self._verification_path):
+            if (filename.endswith('.v') or filename.endswith('.sv')) and not filename.startswith("cleaned_"):
+                with open(os.path.join(self._verification_path, filename), "r") as f:
+                    code = f.read()
+                cleaned_code = WolfSiliconEnv.remove_comments_from_file(code)
+                # 获取原始文件名
+                original_filename = os.path.basename(filename)
+                cleaned_filename = "cleaned_" + original_filename
+                cleaned_filepath = os.path.join(self._verification_path, cleaned_filename)
+                # 写入新文件
+                with open(cleaned_filepath, "w", encoding="utf-8") as f:
+                    f.write(cleaned_code)
+                code_file.append(os.path.join(self._verification_path, cleaned_filename))
+        for filename in os.listdir(self._design_path):
+            if filename.endswith('.v') and not filename.startswith("cleaned_"):
+                with open(os.path.join(self._design_path, filename), "r") as f:
+                    code = f.read()
+                cleaned_code = WolfSiliconEnv.remove_comments_from_file(code)
+                # 获取原始文件名
+                original_filename = os.path.basename(filename)
+                cleaned_filename = "cleaned_" + original_filename
+                cleaned_filepath = os.path.join(self._design_path, cleaned_filename)
+                # 写入新文件
+                with open(cleaned_filepath, "w", encoding="utf-8") as f:
+                    f.write(cleaned_code)
+                code_file.append(os.path.join(self._design_path, cleaned_filename))
+        for filename in os.listdir(self._ref_model_path):
+            if (filename.endswith('.v') or filename.endswith('.sv')) and not filename.startswith("cleaned_"):
+                with open(os.path.join(self._ref_model_path, filename), "r") as f:
+                    code = f.read()
+                cleaned_code = WolfSiliconEnv.remove_comments_from_file(code)
+                # 获取原始文件名
+                original_filename = os.path.basename(filename)
+                cleaned_filename = "cleaned_" + original_filename
+                cleaned_filepath = os.path.join(self._ref_model_path, cleaned_filename)
+                # 写入新文件
+                with open(cleaned_filepath, "w", encoding="utf-8") as f:
+                    f.write(cleaned_code)
+                code_file.append(os.path.join(self._ref_model_path, cleaned_filename))
+        # 保存到 filelist 文件中
+        with open(self._filelist_path, "w") as f:
+            for filepath in code_file:
+                f.write(filepath + "\n")
         current_path = os.getcwd()
         os.chdir(self._workspace_path)
         result = WolfSiliconEnv.execute_command(f"make run", 300)
         os.chdir(current_path)
         cleaned_log = re.sub(r'^.*?(Parsing design file .*)', r'\1', result, flags=re.DOTALL)
         print(cleaned_log)
-        
+
+        # # 删除带有cleaned_前缀的文件
+        # for filename in os.listdir(self._verification_path):
+        #     if filename.startswith("cleaned_") and (filename.endswith('.v') or filename.endswith('.sv')):
+        #         os.remove(os.path.join(self._verification_path, filename))
+        # for filename in os.listdir(self._design_path):
+        #     if filename.startswith("cleaned_") and filename.endswith('.v'):
+        #         os.remove(os.path.join(self._design_path, filename))
+        # for filename in os.listdir(self._ref_model_path):
+        #     if filename.startswith("cleaned_") and (filename.endswith('.v') or filename.endswith('.sv')):
+        #         os.remove(os.path.join(self._ref_model_path, filename))
+
         return cleaned_log
 
     def is_verification_binary_exist(self) -> bool:

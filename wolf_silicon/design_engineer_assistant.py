@@ -7,7 +7,7 @@ class DesignEngineerAssistant(BaseAssistant):
         self.name = "设计工程师"
         # State wait_design, design_finished
         self.state = "wait_design"
-        self.max_short_term_memory_len = 10
+        self.max_short_term_memory_len = self.agent.MAX_SHORT_TERM_MEMORY
         self.is_lint_clean = False
         #define the path to prompt
         self.prompt_path = os.path.join('prompt', 'design_engineer')
@@ -56,6 +56,7 @@ class DesignEngineerAssistant(BaseAssistant):
         self.env.write_design_code(code)
         self.env.manual_log(self.name, "开始语法检查")
         lint_output = self.env.lint_design()
+        self.env.manual_log(self.name, lint_output)
         lint_output_lowwer = lint_output.lower()
         self.is_lint_clean = "error" not in lint_output_lowwer and "warning" not in lint_output_lowwer
         if self.is_lint_clean:
@@ -63,10 +64,9 @@ class DesignEngineerAssistant(BaseAssistant):
         else:
             return f"语法验证未通过，报错： {lint_output}"
     
-    def ready_to_handover(self) -> bool:
-        cmodel_code_exist, cmodel_code_mtime, _ = self.env.get_cmodel_code()
+    def design_code_exist(self) -> bool:
         design_code_exist, design_code_mtime, _ = self.env.get_design_code()
-        return design_code_exist and design_code_mtime > cmodel_code_mtime
+        return design_code_exist
     
     def get_tools_description(self):
         
@@ -105,26 +105,27 @@ class DesignEngineerAssistant(BaseAssistant):
         self.clear_short_term_memory()
         #self.call_llm("Observe and analyze the project situation, show me your observation and think", tools_enable=False)
         self.is_lint_clean = False
+        lint_output = ""
         while True:
-            if not self.ready_to_handover():
+            if not self.design_code_exist():
                 llm_message, func_call_list = self.call_llm("""
 使用`submit_design`提交你的设计。
                         
 设计仅在一个.v文件中存储，且符合verilog-2000标准。
 设计的结果将送往语法检查。当没有语法错误时，设计即会通过。               
                     """, tools_enable=True)
+            elif self.state == "design_error":
+
+                    llm_message, func_call_list = self.call_llm('按照反馈修改代码', tools_enable=True)
+                    self.state = "design_finished"
             elif not self.is_lint_clean:
-                if self.state != "design_error":
-                    llm_message, func_call_list = self.call_llm(f"""
+                llm_message, func_call_list = self.call_llm(f"""
 刚才的代码中存在语法错误：
 ```
-{self.env.lint_design()}
+{lint_output}
 ```
 修改错误，并用 submit_design 重新提交。
                     """, tools_enable=True)
-                else:
-
-                    llm_message, func_call_list = self.call_llm('按照反馈修改代码', tools_enable=True)
             else:
                 self.state = "design_finished"
                 return 0
@@ -135,7 +136,7 @@ class DesignEngineerAssistant(BaseAssistant):
             for tool_call in func_call_list:
                 tool_id, name, args = self.decode_tool_call(tool_call)
                 if name == "submit_design":
-                    self.submit_design(args["code"])
+                    lint_output = self.submit_design(args["code"])
                     self.reflect_tool_call(tool_id, "success")
                 
 
