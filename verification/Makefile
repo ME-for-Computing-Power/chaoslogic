@@ -38,7 +38,7 @@ sim : run
 verdi:
 	verdi +v2k -sverilog $(INCDIR) -f filelist.f -ssf wave.fsdb -sswr cfg1.rc
 
-cov:
+cov: sim
 	dve -full64 -dir ./covdir.vdb -cov
 
 .PHONY:clean
