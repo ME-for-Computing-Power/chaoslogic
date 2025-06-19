@@ -442,7 +442,7 @@ data\_vld\_ch8 & 1 & O \\
 \hypertarget{crc_calcu}{%
 \subsubsection{crc\_calcu}\label{crc_calcu}}
 
-整体说明：设计一个CRC校验模块，采用CRC-16/CCITT算法，多项式：0x1021，初始值：0x0000，输入不反转，输出不反转，输出异或值：0x0000。当输入信号crc16\_valid有效的情况下，迭代计算16位数据信号data\_to\_crc的CRC校验值。计算完成时将crc16\_done信号拉高。
+设计一个CRC校验模块，采用CRC-16/CCITT算法，多项式：0x1021，初始值：为输入的crc信号，输入不反转，输出不反转，输出异或值：0x0000。
 
 \textbf{顶层IO}
 
@@ -453,26 +453,18 @@ data\_vld\_ch8 & 1 & O \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-clk\_in & 1 & I \\
-rst\_n & 1 & I \\
 data\_to\_crc & 16 & I \\
+crc & 16 & I \\
 data\_from\_crc & 16 & O \\
-crc16\_done & 1 & O \\
-crc16\_valid & 1 & I \\
 \end{longtable}
 
 \textbf{信号说明}
 
-\texttt{clk\_in}:输入时钟，时钟频率范围为 50MHz 到 100 MHz
-
-\texttt{rst\_n}:异步复位信号，低电平有效
 
 \texttt{data\_to\_crc}:从帧格式识别模块输入的待校验数据
 
+\texttt{crc}:从帧格式识别模块输入的crc校验初始值
+
 \texttt{data\_from\_crc}:输出数据的CRC校验值
-
-\texttt{crc16\_done}:CRC校验结束时输出信号，高电平有效
-
-\texttt{crc16\_valid}:指示当前输入有效的信号，高电平有效
 
 \end{document}
