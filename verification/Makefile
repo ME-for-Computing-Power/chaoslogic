@@ -18,7 +18,7 @@ FSDB = -fsdb -P $(PLI_TAB) $(PLI_A)
 
 
 # generate filelist
-filelist: $(shell find . -name "*.sv" -or -name "*.v")
+filelist: $(shell find ./dut -name "*.sv" -or -name "*.v")
 	@echo "Generating filelist.f"
 	@rm -f filelist.f
 	@for file in $^; do echo $$file >> filelist.f; done

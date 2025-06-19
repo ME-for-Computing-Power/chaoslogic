@@ -114,17 +114,16 @@ AUTOJUMP_SOURCED=1
 AUTOJUMP_ERROR_PATH=/home/zhanyue/.local/share/autojump/errors.log
 AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 0
-13
-1750308985 tb.sv
-1750306001 ref_model/serial_output.sv
-1750306001 ref_model/gray_conv.sv
-1750309140 ref_model/frame_parser.sv
-1750306001 ref_model/fifo_wrapper.sv
-1750306001 ref_model/dut.sv
-1750306001 ref_model/crc_module.sv
-1750306001 ref_model/async_fifo.sv
+12
+1750311441 dut/top.v
+1750312280 dut/tb.sv
+1750312205 dut/output_stage.sv
+1750311730 dut/input_stage.sv
+1750306040 dut/fifo_data_resolu.v
+1750306040 dut/crc_module.v
+1750306040 dut/async_fifo.v
 1551421444 /eda/vcs/include/cm_vcsd.tab
-1750309143 filelist.f
+1750312284 filelist.f
 1551421246 /eda/vcs/linux64/lib/vcsdp_lite.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUXAMD64/novas.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUX64/verdi.tab
@@ -134,5 +133,5 @@ AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 1551421768 /eda/vcs/linux64/lib/libsnpsmalloc.so
 1551421789 /eda/vcs/linux64/lib/libvfs.so
 1550752033 /eda/verdi/share/PLI/VCS/LINUXAMD64/pli.a
-1750309147 simv.daidir
+1750312288 simv.daidir
 -1 partitionlib

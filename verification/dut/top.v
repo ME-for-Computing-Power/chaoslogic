@@ -11,16 +11,15 @@ module top (
     input  [15:0] data_in,        // 16位输入数据
     
     // FIFO控制接口
-    input         fifo_r_enable,  // FIFO读使能
+//    input         fifo_r_enable,  // FIFO读使能
     
     // 状态指示
     output        crc_err,        // CRC错误标志
     output        fifo_full,      // FIFO满标志
     output        fifo_empty,     // FIFO空标志
-    output        crc_done,       // CRC计算完成标志
     
     // 串行输出接口
-    output        crc_valid,      // CRC有效标志
+    output        crc_valid_o,      // CRC有效标志
     output        data_out_ch1,   // 通道1串行数据
     output        data_out_ch2,   // 通道2串行数据
     output        data_out_ch3,   // 通道3串行数据
@@ -38,7 +37,7 @@ module top (
     output        data_vld_ch7,   // 通道7数据有效
     output        data_vld_ch8    // 通道8数据有效
 );
-
+wire fifo_r_enable = 1'b1; // FIFO读使能信号，暂时设为高电平
     // ================= 信号声明 =================
     // 输入处理模块输出
     wire [139:0] data_to_fifo;
@@ -56,7 +55,9 @@ module top (
     wire [127:0] data_gray;
     wire [7:0]   vld_ch;
     wire [15:0]  data_count;
+wire crc_valid;
 
+assign crc_valid_o = crc_valid; // 将CRC有效信号输出
     // ================= 模块实例化 =================
     // 1. 输入处理模块 (帧解析)
     input_stage u_input_stage (

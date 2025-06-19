@@ -1,6 +1,6 @@
 // Synopsys, Inc.
 // User: zhanyue
-// Date: Thu Jun 19 12:59:04 2025
+// Date: Thu Jun 19 13:51:25 2025
 
 // ==================================================================================================
 // This config file prototype is produced from the last run using the complete list of extracted fsms.
@@ -74,7 +74,7 @@
 //SEQ_NUMBER_MAX=10000
 //SEQ_LENGTH_MAX=32
 
-MODULE=frame_parser
+MODULE=input_stage
 CURRENT=state
 NEXT=state
 STATES=CHANNEL,DATA,IDLE,WAIT_1,WAIT_2

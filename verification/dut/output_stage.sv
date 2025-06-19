@@ -1,4 +1,4 @@
-module ref_model (
+module output_stage (
     input  logic         rst_n,
     input  logic         clk_out16x,
     input  logic [127:0] data_gray,
