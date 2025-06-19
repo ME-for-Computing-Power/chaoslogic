@@ -1,136 +1,149 @@
-## 数字系统验证流程说明书
+### 验证流程说明书
 
-### 1. 验证环境架构
+#### 1. 验证环境架构（基于tb.sv实现）
+
 ```mermaid
 graph TD
-    A[Testbench顶层] --> B[VIP: 数据包生成器]
-    A --> C[VIP: 时钟/复位控制器]
-    A --> D[DUT: 帧识别模块]
-    A --> E[DUT: CRC校验模块]
-    A --> F[DUT: 异步FIFO]
-    A --> G[DUT: FIFO数据解析]
-    A --> H[DUT: 输出级模块]
-    B -->|16-bit数据流| D
-    D -->|控制信号| F
-    D -->|CRC数据| E
-    E -->|校验结果| D
-    F -->|140-bit数据| G
-    G -->|128-bit| H
-    G -->|控制信号| H
-    H -->|串行数据| I[VIP: 串行接收器]
-    I -->|数据比对| J[验证记分板]
+    A[Testbench顶层] --> B[时钟生成器]
+    A --> C[复位控制器]
+    A --> D[数据包生成器]
+    A --> E[DUT: top模块]
+    A --> F[串行输出检查器]
+    A --> G[CRC监控器]
+    A --> H[错误注入器]
+    B -->|clk_in/clk_out/clk_out_s| E
+    C -->|rst_n| E
+    D -->|data_in| E
+    E -->|串行输出| F
+    E -->|crc_err| G
+    H -->|错误数据| D
+    F -->|比对结果| I[验证记分板]
+    G -->|错误事件| I
 ```
 
-### 2. 验证流程
+#### 2. 验证执行流程
 
-#### 阶段1：单元模块验证
-```mermaid
-sequenceDiagram
-    验证工程师->>+模块DUT: 1. 初始化验证环境
-    验证工程师->>+测试生成器: 2. 加载基础测试用例
-    测试生成器->>+DUT: 3. 注入激励
-    DUT-->>-记分板: 4. 输出响应
-    记分板->>+覆盖率: 5. 收集覆盖率
-    覆盖率-->>-验证工程师: 6. 生成覆盖率报告
-    验证工程师->>+测试生成器: 7. 补充边界用例
-    loop 迭代过程
-        验证工程师->>验证工程师: 分析覆盖率缺口
-        验证工程师->>测试生成器: 添加定向测试
+##### 阶段1：环境初始化
+```systemverilog
+// 时钟生成
+initial begin
+    clk_in = 0;
+    forever #(CLK_PERIOD_IN/2) clk_in = ~clk_in;
+end
+// 其他时钟类似...
+
+// 复位初始化
+initial begin
+    data_in = 0;
+    rst_n = 0;  // 复位激活
+    #100;
+    rst_n = 1;  // 复位释放
+end
+```
+
+##### 阶段2：定向测试执行
+```systemverilog
+initial begin
+    // 基本功能测试
+    test_single_frame(8'b0000_0001, 128'hA55A, 16);
+    check_output(8'b0000_0001, 128'hA55A, 16);
+    
+    // 边界测试
+    test_single_frame(8'b0000_0010, 128'h0123...3210, 128);
+    check_output(8'b0000_0010, 128'h0123...3210, 128);
+    
+    // CRC错误测试
+    send_frame(8'b0000_0001, 128'h1234, 16, 16'hFFFF); // 错误CRC
+    wait(crc_err === 1'b1);
+end
+```
+
+##### 阶段3：随机压力测试
+```systemverilog
+initial begin
+    for (int i = 0; i < 20000; i++) begin
+        fork
+            test_rand_frame(single_channel, sent_data, rand_len);
+            check_output(single_channel, sent_data, rand_len);
+        join
     end
-    验证工程师->>验证工程师: 8. 达到100%功能覆盖率
+end
 ```
 
-#### 阶段2：集成验证
-| 步骤 | 活动 | 交付物 |
-|------|------|--------|
-| 1 | 模块间接口连接检查 | 接口协议检查报告 |
-| 2 | 时钟域交叉测试 | CDC违例报告 |
-| 3 | 数据通路完整性验证 | 端到端数据比对日志 |
-| 4 | 背压机制测试 | FIFO满/空状态监控 |
-| 5 | 错误注入测试 | 错误恢复分析报告 |
-
-#### 阶段3：系统级验证
-1. **真实流量模拟**
-   - 持续24小时压力测试
-   - 随机化包长(16-128位)和通道选择
-   - 注入10%错误数据包
-
-2. **性能测试**
-   ```python
-   # 伪代码：吞吐量测试
-   for clock_freq in [50, 75, 100]:
-       set_clock(clock_freq)
-       measure_throughput()
-       check_latency(MAX_LATENCY)
-   ```
-
-3. **功耗分析**
-   - 典型场景：0.5×数据速率
-   - 峰值场景：100% FIFO利用率
-   - 空闲场景：仅时钟运行
-
-### 3. 关键检查点
-
-#### 时钟域交叉检查表
-| 信号 | 源模块 | 目标模块 | 同步策略 | 最大延迟 |
-|------|--------|----------|----------|----------|
-| fifo_w_enable | input_stage | async_fifo | 双触发器 | 2周期 |
-| fifo_full | async_fifo | input_stage | 格雷码 | 3周期 |
-| data_gray | fifo_resolu | output_stage | 寄存器采样 | 1周期 |
-
-#### 覆盖率目标
-| 覆盖率类型 | 目标值 | 测量点 |
-|------------|--------|--------|
-| 代码覆盖率 | 100% | 语句/分支/条件 |
-| 功能覆盖率 | 100% | 状态机/边界条件 |
-| 断言覆盖率 | 100% | 接口协议 |
-| 翻转覆盖率 | 95%+ | 关键寄存器 |
-
-### 4. 回归测试策略
-
-**自动化测试框架**
-```yaml
-test_suites:
-  - name: 基础功能
-    tests: [复位测试, 空满标志, 单包传输]
-    weight: 20%
-    
-  - name: 边界条件
-    tests: [最小包长, 最大包长, FIFO深度测试]
-    weight: 30%
-    
-  - name: 错误场景
-    tests: [CRC错误, 帧头错误, 通道冲突]
-    weight: 25%
-    
-  - name: 性能测试
-    tests: [吞吐量, 时钟切换, 背压测试]
-    weight: 25%
+##### 阶段4：异常数据测试
+```systemverilog
+// 超长数据测试
+send_oversize_frame(8'b0010_0000, {128{2'b10}}, 16'h1145);
 ```
 
-**回归测试触发条件**
-1. RTL代码变更（Git commit触发）
-2. 每日夜间自动执行
-3. 发布前的最终验证
+#### 3. 检查机制实现
 
-### 5. 验证交付物
+##### 自动数据比对
+```systemverilog
+task check_serial_output;
+    // ...
+    for (int bit_idx = data_len - 1; bit_idx >= 0; bit_idx--) begin
+        if (exp_gray[bit_idx] != data_out) begin
+            $error("数据不匹配! 位 %0d: 预期=%h, 实际=%h", 
+                bit_idx, exp_gray[bit_idx], data_out);
+        end
+        #CLK_PERIOD_S;
+    end
+endtask
+```
 
-**交付物清单**
-1. 验证计划（已完成）
-2. 测试用例规格文档
-3. 覆盖率报告（HTML格式）
-4. 时序收敛报告
-5. 功耗分析报告
-6. 缺陷跟踪报告
-7. 签核检查表
+##### CRC模型验证
+```systemverilog
+task automatic crc16_ccitt;
+    // 实现与DUT一致的CRC算法
+    // ...
+    crc_value = lfsr_c; // 返回计算值
+endtask
 
-**签核标准**
-1. 所有严重缺陷解决率100%
-2. 功能覆盖率100%达标
-3. 时序满足100MHz要求
-4. 通过72小时持续测试
-5. 错误注入测试恢复率>99.9%
+// 在测试任务中调用
+test_single_frame;
+    crc16_ccitt(data, crc_value); // 计算预期CRC
+    send_frame(channel, data, data_len, crc_value);
+endtask
 
-> **验证周期**：预计4周  
-> **资源需求**：2名验证工程师 + 1000小时仿真算力  
-> **风险控制**：每周评审覆盖率进展，预留20%缓冲时间应对复杂缺陷调试
+// 错误监控
+always @(posedge clk_in) begin
+    if (crc_err) $warning("CRC错误检测");
+end
+```
+
+
+#### 4. 报告生成机制
+
+##### 测试结果摘要
+```systemverilog
+initial begin
+    int total_tests, passed_tests;
+    // ...
+    $display("\n===== 测试总结 =====");
+    $display("执行测试: %0d", total_tests);
+    $display("通过测试: %0d", passed_tests);
+    $display("失败测试: %0d", total_tests - passed_tests);
+    $display("覆盖率: %0.1f%%", $get_coverage());
+end
+```
+
+#### 5. 回归测试自动化
+
+##### Makefile示例
+```makefile
+SIM = vcs
+TEST = tb_frame_detector
+
+sim: run
+	@echo "Simulation started..."
+	./simv -l simv.log -cm line+cond+branch+tgl+fsm
+	@echo "Simulation finished."
+
+cov: 
+	dve -full64 -dir ./covdir.vdb -cov
+
+urg:
+	urg -dir ./covdir.vdb -report urg_report
+```
+
