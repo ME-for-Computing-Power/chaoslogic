@@ -71,12 +71,13 @@ function collapseAll() {
 <b>Total Module Definition Coverage Summary</b>&nbsp;<br clear=all>
 <table align=left>
 <tr class="sortablehead">
-<td nowrap width=65>SCORE</td><td nowrap width=65>LINE</td><td nowrap width=65>COND</td><td nowrap width=65>TOGGLE</td><td nowrap width=65>BRANCH</td></tr><tr>
-<td class="s9 cl rt"> 90.96</td>
-<td class="s9 cl rt"> 96.30</td>
+<td nowrap width=65>SCORE</td><td nowrap width=65>LINE</td><td nowrap width=65>COND</td><td nowrap width=65>TOGGLE</td><td nowrap width=65>FSM</td><td nowrap width=65>BRANCH</td></tr><tr>
+<td class="s8 cl rt"> 87.13</td>
+<td class="s9 cl rt"> 99.05</td>
 <td class="s8 cl rt"> 86.21</td>
-<td class="s8 cl rt"> 89.16</td>
-<td class="s9 cl rt"> 92.19</td>
+<td class="s9 cl rt"> 94.57</td>
+<td class="s6 cl rt"> 62.50</td>
+<td class="s9 cl rt"> 93.33</td>
 </tr></table><br clear=all>
 <br clear=all>
 Total modules in report: 7<hr>
@@ -89,20 +90,11 @@ Total modules in report: 7<hr>
 <table id="hierarchyTable" border="0" cellpadding="0" cellspacing="0" class="sortable">
   <thead class="table-header">
     <tr>
-<th class="alfsrt">NAME</th><th>SCORE</th><th>LINE</th><th>COND</th><th>TOGGLE</th><th>BRANCH</th>    </tr>
+<th class="alfsrt">NAME</th><th>SCORE</th><th>LINE</th><th>COND</th><th>TOGGLE</th><th>FSM</th><th>BRANCH</th>    </tr>
   </thead>
   <tbody>
     <tr data-tt-id="hierarchyTable_root">
-<td></td><td></td><td></td><td></td><td></td><td></td>    </tr>
-    <tr data-tt-id="mod_5" data-tt-parent-id="hierarchyTable_root">
-<td class="wordwrap"><a name="tag_tb_frame_detector"></a>
-<a href="mod5.html" >tb_frame_detector</a></td>
-<td class="s7 cl rt"> 73.21</td>
-<td class="s9 cl rt"><a href="mod5.html#Line" > 94.79</a></td>
-<td class="wht cl rt"></td>
-<td class="s4 cl rt"><a href="mod5.html#Toggle" > 49.85</a></td>
-<td class="s7 cl rt"><a href="mod5.html#Branch" > 75.00</a></td>
-    </tr>
+<td></td><td></td><td></td><td></td><td></td><td></td><td></td>    </tr>
     <tr data-tt-id="mod_0" data-tt-parent-id="hierarchyTable_root">
 <td class="wordwrap"><a name="tag_fifo_data_resolu"></a>
 <a href="mod0.html" >fifo_data_resolu</a></td>
@@ -110,15 +102,17 @@ Total modules in report: 7<hr>
 <td class="s9 cl rt"><a href="mod0.html#Line" > 90.91</a></td>
 <td class="s5 cl rt"><a href="mod0.html#Cond" > 50.00</a></td>
 <td class="s9 cl rt"><a href="mod0.html#Toggle" > 96.01</a></td>
+<td class="wht cl rt"></td>
 <td class="s8 cl rt"><a href="mod0.html#Branch" > 83.33</a></td>
     </tr>
     <tr data-tt-id="mod_3" data-tt-parent-id="hierarchyTable_root">
 <td class="wordwrap"><a name="tag_input_stage"></a>
 <a href="mod3.html" >input_stage</a></td>
-<td class="s8 cl rt"> 87.45</td>
+<td class="s8 cl rt"> 82.46</td>
 <td class="s10 cl rt"><a href="mod3.html#Line" >100.00</a></td>
 <td class="s6 cl rt"><a href="mod3.html#Cond" > 66.67</a></td>
 <td class="s9 cl rt"><a href="mod3.html#Toggle" > 93.65</a></td>
+<td class="s6 cl rt"><a href="mod3.html#FSM" > 62.50</a></td>
 <td class="s8 cl rt"><a href="mod3.html#Branch" > 89.47</a></td>
     </tr>
     <tr data-tt-id="mod_2" data-tt-parent-id="hierarchyTable_root">
@@ -128,6 +122,7 @@ Total modules in report: 7<hr>
 <td class="s10 cl rt"><a href="mod2.html#Line" >100.00</a></td>
 <td class="s7 cl rt"><a href="mod2.html#Cond" > 75.00</a></td>
 <td class="s9 cl rt"><a href="mod2.html#Toggle" > 96.08</a></td>
+<td class="wht cl rt"></td>
 <td class="s10 cl rt"><a href="mod2.html#Branch" >100.00</a></td>
     </tr>
     <tr data-tt-id="mod_6" data-tt-parent-id="hierarchyTable_root">
@@ -138,6 +133,7 @@ Total modules in report: 7<hr>
 <td class="wht cl rt"></td>
 <td class="s9 cl rt"><a href="mod6.html#Toggle" > 94.75</a></td>
 <td class="wht cl rt"></td>
+<td class="wht cl rt"></td>
     </tr>
     <tr data-tt-id="mod_1" data-tt-parent-id="hierarchyTable_root">
 <td class="wordwrap"><a name="tag_output_stage"></a>
@@ -146,6 +142,7 @@ Total modules in report: 7<hr>
 <td class="s10 cl rt"><a href="mod1.html#Line" >100.00</a></td>
 <td class="s10 cl rt"><a href="mod1.html#Cond" >100.00</a></td>
 <td class="s8 cl rt"><a href="mod1.html#Toggle" > 89.85</a></td>
+<td class="wht cl rt"></td>
 <td class="s10 cl rt"><a href="mod1.html#Branch" >100.00</a></td>
     </tr>
     <tr data-tt-id="mod_4" data-tt-parent-id="hierarchyTable_root">
@@ -155,6 +152,17 @@ Total modules in report: 7<hr>
 <td class="s10 cl rt"><a href="mod4.html#Line" >100.00</a></td>
 <td class="wht cl rt"></td>
 <td class="s10 cl rt"><a href="mod4.html#Toggle" >100.00</a></td>
+<td class="wht cl rt"></td>
+<td class="wht cl rt"></td>
+    </tr>
+    <tr data-tt-id="mod_5" data-tt-parent-id="hierarchyTable_root">
+<td class="wordwrap"><a name="tag_tb_frame_detector"></a>
+<a href="mod5.html" >tb_frame_detector</a></td>
+<td class="wht cl rt"></td>
+<td class="wht cl rt"></td>
+<td class="wht cl rt"></td>
+<td class="wht cl rt"></td>
+<td class="wht cl rt"></td>
 <td class="wht cl rt"></td>
     </tr>
   </tbody>
