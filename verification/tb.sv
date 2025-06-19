@@ -27,7 +27,10 @@ localparam TRAILER = 32'h0E0E0E0E;
 localparam CLK_PERIOD_IN = 32;   // 100MHz
 localparam CLK_PERIOD_OUT = 32;  // 100MHz
 localparam CLK_PERIOD_S = 2; // 1600MHz (16×clk_out)
-
+// 添加测试统计变量
+int total_tests = 0;
+int passed_tests = 0;
+bit current_test_pass;
 // 实例化被测模块
 top dut (
     .clk_in(clk_in),
@@ -154,12 +157,13 @@ task check_serial_output;
             if (exp_gray[bit_idx] != data_out) begin
                 $error("[%0t ps] CH%d 数据不匹配! 位 %0d: 预期=%h, 实际=%h", 
                     $time, channel, bit_idx, exp_gray[bit_idx], data_out);
-                error_flag = 1;
+                error_flag = 1;  
             end
             #CLK_PERIOD_S;
         end
         if (~error_flag) begin
             $display("[%0t ps] CH%d 数据验证通过, %0d 位数据正确", $time, channel, data_len);
+            passed_tests +=1;
         end else begin
             $error("[%0t ps] CH%d 数据验证失败, %0d 位数据错误", $time, channel, data_len);
         end
@@ -229,12 +233,17 @@ initial begin
     send_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_1234, 16, 16'hFFFF); // 错误CRC
     wait(crc_err === 1'b1);
     $display("crc_err验证通过");
-    if(data_vld_ch1 !== 0) $error("CRC错误时不应有有效输出");
+    passed_tests += 1;
+    if(data_vld_ch1 !== 0) begin $error("CRC错误时不应有有效输出"); passed_tests -= 1;end
 
     
     //超长数据测试
     send_oversize_frame(8'b0010_0000,{128{2'b10}}, 16'h1145);
     $display("\n===== 所有测试结束 =====");
+    $display("\n===== 测试总结 =====");
+    $display("执行测试: %0d", total_tests);
+    $display("通过测试: %0d", passed_tests);
+    $display("失败测试: %0d", total_tests - passed_tests);
     $dumpflush;
     $finish;
 end
@@ -340,6 +349,7 @@ task test_single_frame;
     $display("[%0t ps] 发送CRC: %h", $time, crc_value);
     // 发送帧
     send_frame(channel, data, data_len, crc_value);
+    total_tests += 1; // 增加测试计数
 endtask
 
 
