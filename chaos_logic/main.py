@@ -1,4 +1,4 @@
-from agent import WolfSiliconAgent
+from agent import chaoslogicAgent
 import argparse
 import os
 import datetime
@@ -30,8 +30,8 @@ if __name__ == "__main__":
         workpath = os.path.abspath(workpath)
     else:
         workpath = create_workspace("./playground",args.name)
-    # 创建 WolfSiliconAgent
-    agent = WolfSiliconAgent(workspace_path=workpath, user_requirements_path=args.req, 
+    # 创建 chaoslogicAgent
+    agent = chaoslogicAgent(workspace_path=workpath, user_requirements_path=args.req, 
                              start_from=args.start_from)
     if agent.run() == 0:
         exit

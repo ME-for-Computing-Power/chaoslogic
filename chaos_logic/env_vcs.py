@@ -9,7 +9,7 @@ import sys
 import itertools
 import textwrap
 import signal
-class WolfSiliconEnv(object):
+class ChaosLogicEnv(object):
     
     def __init__(self, workspace_path:str, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
         self._workspace_path = workspace_path
@@ -105,12 +105,12 @@ class WolfSiliconEnv(object):
         for filename in os.listdir(self._cmodel_path):
             if filename.endswith('.cpp'):
                 cpp_files.append(os.path.join(self._cmodel_path,filename))
-        result = WolfSiliconEnv.execute_command(f"g++  {' '.join(cpp_files)} -I{self._cmodel_path} -o {self._cmodel_path}/cmodel", 300)
+        result = ChaosLogicEnv.execute_command(f"g++  {' '.join(cpp_files)} -I{self._cmodel_path} -o {self._cmodel_path}/cmodel", 300)
         return result[-4*1024:]
     
     def run_cmodel(self, timeout_sec:int=180) -> str:
         # 运行 cmodel binary
-        result = WolfSiliconEnv.execute_command(self._cmodel_binary_path, timeout_sec)
+        result = ChaosLogicEnv.execute_command(self._cmodel_binary_path, timeout_sec)
         return result[-4*1024:]
     
     def compile_and_run_cmodel(self):
@@ -163,7 +163,7 @@ class WolfSiliconEnv(object):
         for i in range(len(v_files)):
             with open(v_files[i], "r") as f:
                 code = f.read()
-            cleaned_code = WolfSiliconEnv.remove_comments_from_file(code)
+            cleaned_code = ChaosLogicEnv.remove_comments_from_file(code)
             # 获取原始文件名
             original_filename = os.path.basename(v_files[i])
             cleaned_filename = "cleaned_" + original_filename
@@ -175,7 +175,7 @@ class WolfSiliconEnv(object):
     
         # lint vlogan -full64  -f filelist.f -l test.log
         command = f"vlogan -full64  -f {self._design_filelist_path} -sverilog"
-        output = WolfSiliconEnv.execute_command(command, timeout_sec=300)
+        output = ChaosLogicEnv.execute_command(command, timeout_sec=300)
         # Remove the matched block
         cleaned_log = re.sub(r'^.*?(Parsing design file .*)', r'\1', output, flags=re.DOTALL)
         print(cleaned_log)
@@ -217,7 +217,7 @@ class WolfSiliconEnv(object):
             if (filename.endswith('.v') or filename.endswith('.sv')) and not filename.startswith("cleaned_"):
                 with open(os.path.join(self._verification_path, filename), "r") as f:
                     code = f.read()
-                cleaned_code = WolfSiliconEnv.remove_comments_from_file(code)
+                cleaned_code = ChaosLogicEnv.remove_comments_from_file(code)
                 # 获取原始文件名
                 original_filename = os.path.basename(filename)
                 cleaned_filename = "cleaned_" + original_filename
@@ -230,7 +230,7 @@ class WolfSiliconEnv(object):
             if filename.endswith('.v') and not filename.startswith("cleaned_"):
                 with open(os.path.join(self._design_path, filename), "r") as f:
                     code = f.read()
-                cleaned_code = WolfSiliconEnv.remove_comments_from_file(code)
+                cleaned_code = ChaosLogicEnv.remove_comments_from_file(code)
                 # 获取原始文件名
                 original_filename = os.path.basename(filename)
                 cleaned_filename = "cleaned_" + original_filename
@@ -243,7 +243,7 @@ class WolfSiliconEnv(object):
             if (filename.endswith('.v') or filename.endswith('.sv')) and not filename.startswith("cleaned_"):
                 with open(os.path.join(self._ref_model_path, filename), "r") as f:
                     code = f.read()
-                cleaned_code = WolfSiliconEnv.remove_comments_from_file(code)
+                cleaned_code = ChaosLogicEnv.remove_comments_from_file(code)
                 # 获取原始文件名
                 original_filename = os.path.basename(filename)
                 cleaned_filename = "cleaned_" + original_filename
@@ -258,7 +258,7 @@ class WolfSiliconEnv(object):
                 f.write(filepath + "\n")
         current_path = os.getcwd()
         os.chdir(self._workspace_path)
-        result = WolfSiliconEnv.execute_command(f"make run", 300)
+        result = ChaosLogicEnv.execute_command(f"make run", 300)
         os.chdir(current_path)
         cleaned_log = re.sub(r'^.*?(Parsing design file .*)', r'\1', result, flags=re.DOTALL)
         print(cleaned_log)
@@ -280,7 +280,7 @@ class WolfSiliconEnv(object):
         return os.path.exists(self._verification_binary_path)
     
     def run_verification(self, timeout_sec:int=300) -> str:
-        result = WolfSiliconEnv.execute_command(self._verification_binary_path + " "+"+vcs+finish+999999" , timeout_sec)
+        result = ChaosLogicEnv.execute_command(self._verification_binary_path + " "+"+vcs+finish+999999" , timeout_sec)
         print(result)
         return result
     
@@ -369,7 +369,7 @@ class WolfSiliconEnv(object):
                 {stdout}
                 --- STDERR ---
                 {stderr}""")
-            return WolfSiliconEnv.compress_lines(output)
+            return ChaosLogicEnv.compress_lines(output)
         except subprocess.TimeoutExpired:
             # 超时：终止整个进程组
             os.killpg(proc.pid, signal.SIGTERM)
@@ -381,7 +381,7 @@ class WolfSiliconEnv(object):
                 {stdout}
                 --- STDERR（超时内容） ---
                 {stderr}""")
-            return WolfSiliconEnv.compress_lines(output)
+            return ChaosLogicEnv.compress_lines(output)
 
 
     def manual_log(self, name, message, newline=True):

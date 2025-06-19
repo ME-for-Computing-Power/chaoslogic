@@ -5,7 +5,7 @@ import queue
 import os
 import sys
 
-class WolfSiliconEnv(object):
+class ChaosLogicEnv(object):
     
     def __init__(self, workspace_path:str, doc_path:str, cmodel_path:str, design_path:str, verification_path:str, model_client:object, translation_model_name:str=None):
         self._doc_path = doc_path

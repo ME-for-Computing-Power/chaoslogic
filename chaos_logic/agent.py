@@ -1,9 +1,9 @@
 import shutil
 
 if shutil.which("vcs"):
-    from env_vcs import WolfSiliconEnv
+    from env_vcs import ChaosLogicEnv
 elif shutil.which("verilator"):
-    from env_verilator import WolfSiliconEnv
+    from env_verilator import ChaosLogicEnv
 else:
     raise RuntimeError("Neither VCS nor Verilator found in PATH. Please install one of them to proceed.")
 
@@ -14,7 +14,7 @@ from design_engineer_assistant import DesignEngineerAssistant
 from verification_engineer_assistant import VerificationEngineerAssistant
 from model_client import mc, model_name
 
-class WolfSiliconAgent(object):
+class chaoslogicAgent(object):
     def __init__(self, workspace_path, user_requirements_path=None, 
                  user_cmodel_code_path=None, 
                  user_design_code_path=None,
@@ -44,7 +44,7 @@ class WolfSiliconAgent(object):
         os.makedirs(self.design_path, exist_ok=True)
         os.makedirs(self.verification_path, exist_ok=True)
         os.makedirs(self.ref_model_path, exist_ok=True)
-        self.env = WolfSiliconEnv(self.workspace_path, self.doc_path, self.cmodel_path, 
+        self.env = ChaosLogicEnv(self.workspace_path, self.doc_path, self.cmodel_path, 
                                   self.design_path, self.verification_path, 
                                   self.model_client)
         # 初始化环境
