@@ -76,15 +76,15 @@ module frame_parser (
                                 16'd16:
                                     data_to_fifo <= {data[15:0],112'd0,ch_sel[7:0],data_count[7:4]};
                                 16'd32:
-                                    data_to_fifo <= {data[31:0],98'd0,ch_sel[7:0],data_count[7:4]};
+                                    data_to_fifo <= {data[31:0],96'd0,ch_sel[7:0],data_count[7:4]};
                                 16'd48:
                                     data_to_fifo <= {data[47:0],80'd0,ch_sel[7:0],data_count[7:4]};
                                 16'd64:
                                     data_to_fifo <= {data[63:0],64'd0,ch_sel[7:0],data_count[7:4]};
                                 16'd80:
                                     data_to_fifo <= {data[79:0],48'd0,ch_sel[7:0],data_count[7:4]};
-                                16'd98:
-                                    data_to_fifo <= {data[97:0],32'd0,ch_sel[7:0],data_count[7:4]};
+                                16'd96:
+                                    data_to_fifo <= {data[95:0],32'd0,ch_sel[7:0],data_count[7:4]};
                                 16'd112:
                                     data_to_fifo <= {data[111:0],16'd0,ch_sel[7:0],data_count[7:4]};
                                 16'd128:
