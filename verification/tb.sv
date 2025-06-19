@@ -1,3 +1,4 @@
+//VCS coverage off
 `timescale 1ns/100ps
 
 module tb_frame_detector();
@@ -214,7 +215,7 @@ initial begin
     $display("[%0t ps] 进行第 1 次随机测试", $time);
     test_rand_frame(single_channel, sent_data, rand_len);
     
-    for (int i = 1; i < 20000; i++) begin
+    for (int i = 1; i < 50000; i++) begin
         fork
             check_output(single_channel, sent_data, rand_len);
             $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
@@ -233,8 +234,10 @@ initial begin
     //超长数据测试
     send_oversize_frame(8'b0010_0000,{128{2'b10}}, 16'h1145);
     $display("\n===== 所有测试结束 =====");
+    $dumpflush;
     $finish;
 end
+
 // 测试任务：发送超长帧
 task send_oversize_frame;
     input [7:0]  channel;     // 通道选择 (独热码)
@@ -359,7 +362,7 @@ always @(posedge clk_in) begin
 end
 
 initial begin
-    #100000000;
+    #1000000000;
     $dumpflush;
     $error("仿真超时");
     $finish;
@@ -379,3 +382,5 @@ initial begin
     $dumpvars(0, tb_frame_detector);
 end
 endmodule
+
+//VCS coverage on
