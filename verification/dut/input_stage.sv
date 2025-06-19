@@ -18,20 +18,16 @@ module input_stage (
 // 状态定义
     typedef enum {
         IDLE,
-        WAIT_1,
-        WAIT_2,
-        WAIT_3,
         CHANNEL,
-        DATA,
-        CRC_OUTPUT,
-        ENABLE_CRC
+        DATA
     } state_t;
     state_t state;
     logic [15:0] ch_sel;
     logic [47:0] data_buffer;
     logic [127:0] data;
     logic [15:0]  data_count;
-    always_ff @( posedge clk_in or negedge rst_n ) begin
+    reg [1:0] wait_count;  // 2位计数器，用于替代WAIT状态
+    always_ff @( posedge clk_in or negedge rst_n) begin
         if(!rst_n)
         begin
             state <= IDLE;
@@ -39,6 +35,7 @@ module input_stage (
             crc_err <= 0;
             data <= 128'b0;
             data_to_fifo <= 140'b0;
+            wait_count <= 0;
         end
         else 
         begin
@@ -46,8 +43,20 @@ module input_stage (
             case(state)
                 IDLE:
                 begin
-                    if(data_buffer[31:0] == 32'he0e0e0e0)
-                        state <= WAIT_1;
+                    //if(data_buffer[31:0] == 32'he0e0e0e0)    state <= WAIT_1;   
+                    if (data_buffer[31:0] == 32'he0e0e0e0 && wait_count == 0)
+                    begin
+                        wait_count <= 1;  // 标记第一个等待周期
+                    end
+                    else if (wait_count == 1)
+                    begin
+                        wait_count <= 2;  // 标记第二个等待周期
+                    end
+                    else if (wait_count == 2)
+                    begin
+                        state <= CHANNEL; // 满足两个周期等待后进入 CHANNEL
+                        wait_count <= 0;
+                    end
                     else state <= state;
                     crc <= 16'h0000;
                     data_count <= 16'h0000;
@@ -55,10 +64,6 @@ module input_stage (
                     fifo_w_enable <= 0;
                     data_to_crc <= 16'h0000;
                 end
-                WAIT_1:
-                    state <= WAIT_2;
-                WAIT_2:
-                    state <= CHANNEL;
                 CHANNEL:
                 begin
                     ch_sel <= data_buffer[47:32];
@@ -89,6 +94,8 @@ module input_stage (
                                     data_to_fifo <= {data[111:0],16'd0,ch_sel[7:0],data_count[7:4]};
                                 16'd128:
                                     data_to_fifo <= {data[127:0],ch_sel[7:0],data_count[7:4]};
+                                default:
+                                    data_to_fifo <= 0;
                             endcase
                             fifo_w_enable <= 1;
                         end
@@ -110,7 +117,15 @@ module input_stage (
                         data <= {data[111:0],data_buffer[47:32]};
                     end
                 end
-
+                default:
+                begin
+                    state <= IDLE; // 默认状态回到IDLE
+                    fifo_w_enable <= 0;
+                    crc_err <= 0;
+                    data_to_fifo <= 140'b0;
+                    data_to_crc <= 16'h0000;
+                    crc <= 16'h0000;
+                end
             endcase
         end
     end

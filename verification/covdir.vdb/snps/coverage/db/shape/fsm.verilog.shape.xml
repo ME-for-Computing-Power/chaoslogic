@@ -2,31 +2,36 @@
 <!DOCTYPE cov SYSTEM "ucdb_fsm.dtd">
   <fsm count="0"  noconst="0"  >
     <ucapi_version  major_ver="13"  minor_ver="1"  patch_str="O-2018.09-SP2"  />
-      <fsmdef file="3"  name="input_stage"  lib=""  chksum="556050235"  >
+      <fsmdef file="3"  name="input_stage"  lib=""  chksum="838037468"  >
         <fsmshape >
-          <fsmfsm name="state"  id="0"  width="32"  line="37"  chksum="556050235"  >
-            <state name="CHANNEL"  value="4"  id="0"  flag="L"  line="61"  />
-            <state name="DATA"  value="5"  id="1"  flag="L"  line="65"  />
-            <state name="IDLE"  value="0"  id="2"  flag="L"  line="37"  />
-            <state name="WAIT_1"  value="1"  id="3"  flag="L"  line="50"  />
-            <state name="WAIT_2"  value="2"  id="4"  flag="L"  line="59"  />
+          <fsmfsm name="state"  id="0"  width="32"  line="33"  chksum="901157059"  >
+            <state name="CHANNEL"  value="1"  id="0"  flag="L"  line="57"  />
+            <state name="DATA"  value="2"  id="1"  flag="L"  line="70"  />
+            <state name="IDLE"  value="0"  id="2"  flag="L"  line="33"  />
 
-            <transition fromid="0"  toid="1"  flag="L"  line="65"  />
-            <transition fromid="0"  toid="2"  flag="L"  line="37"  />
+            <transition fromid="0"  toid="1"  flag="L"  line="70"  />
+            <transition fromid="0"  toid="2"  flag="L"  line="33"  />
             
-            <transition fromid="1"  toid="2"  flag="L"  line="37"  />
+            <transition fromid="1"  toid="2"  flag="L"  line="33"  />
             
-            <transition fromid="2"  toid="3"  flag="L"  line="50"  />
-            
-            <transition fromid="3"  toid="2"  flag="L"  line="37"  />
-            <transition fromid="3"  toid="4"  flag="L"  line="59"  />
-            
-            <transition fromid="4"  toid="0"  flag="L"  line="61"  />
-            <transition fromid="4"  toid="2"  flag="L"  line="37"  />
+            <transition fromid="2"  toid="0"  flag="L"  line="57"  />
             
           </fsmfsm>
-        </fsmshape>
-        <fsminst name="tb_frame_detector.dut.u_input_stage"  />
-      </fsmdef>
-          <metric_sig chksum="718B019518D9E0E81FFD2A3BD871F3CC86812E85"  />
-    </fsm>
+        <fsmfsm name="wait_count"  id="1"  width="2"  line="38"  chksum="3719539111"  >
+          <state name="&apos;h0"  value="0"  id="0"  flag="L"  line="38"  />
+          <state name="&apos;h1"  value="1"  id="1"  flag="L"  line="49"  />
+          <state name="&apos;h2"  value="2"  id="2"  flag="L"  line="53"  />
+
+          <transition fromid="0"  toid="1"  flag="L"  line="49"  />
+          
+          <transition fromid="1"  toid="0"  flag="L"  line="38"  />
+          <transition fromid="1"  toid="2"  flag="L"  line="53"  />
+          
+          <transition fromid="2"  toid="0"  flag="L"  line="38"  />
+          
+        </fsmfsm>
+      </fsmshape>
+      <fsminst name="tb_frame_detector.dut.u_input_stage"  />
+    </fsmdef>
+      <metric_sig chksum="1DDD5BED5A3BBAE010EE6EEFBF418B779E243201"  />
+  </fsm>

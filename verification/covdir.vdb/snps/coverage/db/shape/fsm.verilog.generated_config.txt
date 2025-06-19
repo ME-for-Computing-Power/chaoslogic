@@ -1,6 +1,6 @@
 // Synopsys, Inc.
 // User: zhanyue
-// Date: Thu Jun 19 14:26:07 2025
+// Date: Thu Jun 19 20:45:28 2025
 
 // ==================================================================================================
 // This config file prototype is produced from the last run using the complete list of extracted fsms.
@@ -77,12 +77,16 @@
 MODULE=input_stage
 CURRENT=state
 NEXT=state
-STATES=CHANNEL,DATA,IDLE,WAIT_1,WAIT_2
+STATES=CHANNEL,DATA,IDLE
 TRANSITIONS=CHANNEL->DATA,
 CHANNEL->IDLE,
 DATA->IDLE,
-IDLE->WAIT_1,
-WAIT_1->IDLE,
-WAIT_1->WAIT_2,
-WAIT_2->CHANNEL,
-WAIT_2->IDLE
+IDLE->CHANNEL
+MODULE=input_stage
+CURRENT=wait_count
+NEXT=wait_count
+STATES='h0,'h1,'h2
+TRANSITIONS='h0->'h1,
+'h1->'h0,
+'h1->'h2,
+'h2->'h0

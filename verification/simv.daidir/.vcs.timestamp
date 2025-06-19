@@ -42,20 +42,22 @@
 line+cond+fsm+branch+tgl
 tb_frame_detector
 tb_frame_detector_cov
-70
+94
 sysc_uni_pwd=/mnt/d/project/chaoslogic/verification
 no_proxy=192.168.*,172.31.*,172.30.*,172.29.*,172.28.*,172.27.*,172.26.*,172.25.*,172.24.*,172.23.*,172.22.*,172.21.*,172.20.*,172.19.*,172.18.*,172.17.*,172.16.*,10.*,127.*,localhost,<local>
 https_proxy=http://127.0.0.1:7890
 http_proxy=http://127.0.0.1:7890
 ZSH=/home/zhanyue/.oh-my-zsh
+ZDOTDIR=/home/zhanyue
 YOSYS_HOME=/home/zhanyue/ysyx/yosys-sta
 XDG_RUNTIME_DIR=/run/user/1000/
-WSL_INTEROP=/run/WSL/452_interop
+WSL_INTEROP=/run/WSL/472_interop
 WSL_DISTRO_NAME=Ubuntu
 WSLENV=VSCODE_WSL_EXT_LOCATION/up
 WSL2_GUI_APPS_ENABLED=1
 WAYLAND_DISPLAY=wayland-0
-VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-3efb39d6-0c86-4f3d-8bd4-91b2571c9a02.sock
+VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-989a5d90-343b-4b88-99d5-c72836bb55ac.sock
+VSCODE_INJECTION=1
 VSCODE_GIT_IPC_HANDLE=/run/user/1000/vscode-git-c2d6884bb7.sock
 VSCODE_GIT_ASKPASS_NODE=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/node
 VSCODE_GIT_ASKPASS_MAIN=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/extensions/git/dist/askpass-main.js
@@ -71,6 +73,7 @@ VCS_ARG_ADDED_FOR_TMP=1
 VCS_ARCH_OVERRIDE=linux
 VCS_ARCH=linux64
 UVM_HOME=/home/zhanyue/uvm/uvm-1.1a
+USER_ZDOTDIR=/home/zhanyue
 UNAME=/bin/uname
 TOOL_HOME=/eda/vcs/linux64
 TERM_PROGRAM_VERSION=1.99.3
@@ -94,8 +97,8 @@ MTASIM_HOME=/home/zhanyue/map_whole/MTASim
 MPTLS_HOME=/home/zhanyue/map_whole/maptools/maptools
 MFLAGS=
 MANPAGER=sh -c "col -b | code --wait --reuse-window -"
-MAKE_TERMOUT=/dev/pts/7
-MAKE_TERMERR=/dev/pts/7
+MAKE_TERMOUT=/dev/pts/8
+MAKE_TERMERR=/dev/pts/8
 MAKELEVEL=1
 MAKEFLAGS=
 LSCOLORS=Gxfxcxdxbxegedabagacad
@@ -105,6 +108,27 @@ HTTP_PROXY=http://127.0.0.1:7890
 HTTPS_PROXY=http://127.0.0.1:7890
 HOSTTYPE=x86_64
 GIT_ASKPASS=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/extensions/git/dist/askpass.sh
+DVT_VSCODE_WORKSPACES_HOME=/home/zhanyue/.dvt/vscode/workspaces
+DVT_VSCODE_HOME=/home/zhanyue/.dvt/vscode
+DVT_USER_DIR=/home/zhanyue/.dvt
+DVT_SIMLOG_PROCESSOR=/home/zhanyue/.vscode-server/extensions/amiq.dvt-25.1.11-linux-x64/dvt_home/platform/linux_64/bin/dvt_simlog_processor.sh
+DVT_SCRIPTS_HOME=/home/zhanyue/.vscode-server/extensions/amiq.dvt-25.1.11-linux-x64/dvt_home/platform/linux_64/bin
+DVT_RUNTIME_REGISTRY_LOCATION=/home/zhanyue/.dvt/vscode/runtime
+DVT_RUNTIME_LATEST_REGISTRY_ENTRY_LOCATION=/home/zhanyue/.dvt/vscode/runtime/latest.pid
+DVT_PYTHON_BIN=/home/zhanyue/.dvt/python_runtimes/866a2c6f7d9d5154523db2887c55fb59/python/bin/python3.10
+DVT_PREDEFINED_PROJECTS=/home/zhanyue/.vscode-server/extensions/amiq.dvt-25.1.11-linux-x64/dvt_home/common/predefined_projects
+DVT_LS_SH=/home/zhanyue/.vscode-server/extensions/amiq.dvt-25.1.11-linux-x64/dvt_home/platform/linux_64/bin/dvt_ls.sh
+DVT_LS_REGISTRY_DIR=/home/zhanyue/.dvt/ls/registry
+DVT_LS_LOGS_DIR=/home/zhanyue/.dvt/ls/logs
+DVT_LICENSE_FILE=/home/zhanyue/dvt.lic
+DVT_JAVA_HOME=/home/zhanyue/.vscode-server/extensions/amiq.dvt-25.1.11-linux-x64/dvt_home/platform/linux_64/jdk
+DVT_HOME=/home/zhanyue/.vscode-server/extensions/amiq.dvt-25.1.11-linux-x64/dvt_home
+DVT_DATA=/mnt/d/project/chaoslogic/dvt.data
+DVT_CODE_SH=/home/zhanyue/.vscode-server/extensions/amiq.dvt-25.1.11-linux-x64/dvt_home/platform/linux_64/bin/dvt_code.sh
+DVT_CODE_INTEGRATED_TERMINAL=true
+DVT_CODE_BIN=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/bin/remote-cli/code
+DVT_BATCH_HOME=/home/zhanyue/.vscode-server/extensions/amiq.dvt-25.1.11-linux-x64/dvt_home/common/batch
+DEFAULT_PREDEFINED_PROJECTS=/home/zhanyue/.vscode-server/extensions/amiq.dvt-25.1.11-linux-x64/dvt_home/common/predefined_projects
 DC_HOME=/eda/syn
 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 CUDA_HOME=/usr/local/cuda-12.9
@@ -115,15 +139,15 @@ AUTOJUMP_ERROR_PATH=/home/zhanyue/.local/share/autojump/errors.log
 AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 0
 12
-1750314332 tb.sv
+1750336996 tb.sv
 1750311441 dut/top.v
 1750312205 dut/output_stage.sv
-1750311730 dut/input_stage.sv
+1750337109 dut/input_stage.sv
 1750306040 dut/fifo_data_resolu.v
 1750306040 dut/crc_module.v
 1750306040 dut/async_fifo.v
 1551421444 /eda/vcs/include/cm_vcsd.tab
-1750314366 filelist.f
+1750337127 filelist.f
 1551421246 /eda/vcs/linux64/lib/vcsdp_lite.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUXAMD64/novas.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUX64/verdi.tab
@@ -133,5 +157,5 @@ AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 1551421768 /eda/vcs/linux64/lib/libsnpsmalloc.so
 1551421789 /eda/vcs/linux64/lib/libvfs.so
 1550752033 /eda/verdi/share/PLI/VCS/LINUXAMD64/pli.a
-1750314372 simv.daidir
+1750337132 simv.daidir
 -1 partitionlib

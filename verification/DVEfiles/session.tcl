@@ -1,6 +1,6 @@
 # Begin_DVE_Session_Save_Info
 # DVE full session
-# Saved on Thu Jun 19 14:27:03 2025
+# Saved on Thu Jun 19 20:41:02 2025
 # Designs open: 1
 # Toplevel windows open: 1
 # 	CovTopLevel.1
@@ -63,7 +63,7 @@ if {![gui_exist_window -window CovTopLevel.1]} {
 } else { 
     set CovTopLevel.1 CovTopLevel.1
 }
-gui_show_window -window ${CovTopLevel.1} -show_state maximized -rect {{6 27} {2553 1533}}
+gui_show_window -window ${CovTopLevel.1} -show_state normal -rect {{-1097 328} {1446 1830}}
 
 # ToolBar settings
 gui_set_toolbar_attributes -toolbar {&File} -dock_state top
@@ -107,12 +107,12 @@ set CovHier.1 [gui_create_window -type CovHier -parent ${CovTopLevel.1} -dock_st
 gui_set_window_pref_key -window ${CovHier.1} -key dock_width -value_type integer -value 200
 gui_set_window_pref_key -window ${CovHier.1} -key dock_height -value_type integer -value 260
 gui_set_window_pref_key -window ${CovHier.1} -key dock_offset -value_type integer -value 0
-gui_update_layout -id ${CovHier.1} {{left 0} {top 0} {width 199} {height 1248} {dock_state left} {dock_on_new_line true} {child_covhier_colhier 140} {child_covhier_coltype 100} {child_covhier_col1 1} {child_covhier_col2 2}}
+gui_update_layout -id ${CovHier.1} {{left 0} {top 0} {width 199} {height 1244} {dock_state left} {dock_on_new_line true} {child_covhier_colhier 140} {child_covhier_coltype 100} {child_covhier_col1 1} {child_covhier_col2 2}}
 set Console.1 [gui_create_window -type Console -parent ${CovTopLevel.1} -dock_state bottom -dock_on_new_line true -dock_extent 180]
 gui_set_window_pref_key -window ${Console.1} -key dock_width -value_type integer -value 689
 gui_set_window_pref_key -window ${Console.1} -key dock_height -value_type integer -value 180
 gui_set_window_pref_key -window ${Console.1} -key dock_offset -value_type integer -value 0
-gui_update_layout -id ${Console.1} {{left 0} {top 0} {width 2547} {height 179} {dock_state bottom} {dock_on_new_line true}}
+gui_update_layout -id ${Console.1} {{left 0} {top 0} {width 2543} {height 179} {dock_state bottom} {dock_on_new_line true}}
 #### Start - Readjusting docked view's offset / size
 set dockAreaList { top left right bottom }
 foreach dockArea $dockAreaList {
@@ -138,7 +138,7 @@ gui_show_window -window ${CoverageTable.1} -show_state maximized
 gui_update_layout -id ${CoverageTable.1} {{show_state maximized} {dock_state undocked} {dock_on_new_line false} {Layout_CoverageTable_covtblFGroupsList_names Group,    , ,  ,   ,Score,} {Layout_CoverageTable_covtblFGroupsList_widths 220,0,25,0,0,125,} {Layout_CoverageTable_covtblFGroupsList_orders 4,0,1,2,3,5,} {Layout_CoverageTable_covtblInstancesList_names Name,    , ,  ,   ,Score,Line,Toggle,FSM,Condition,Branch,} {Layout_CoverageTable_covtblInstancesList_widths 220,0,25,0,0,125,125,125,125,125,125,} {Layout_CoverageTable_covtblInstancesList_orders 4,0,1,2,3,5,6,7,8,9,10,} {Layout_CoverageTable_covtblModulesList_names Name,    , ,  ,   ,Score,Line,Toggle,FSM,Condition,Branch,} {Layout_CoverageTable_covtblModulesList_widths 220,0,25,0,0,125,125,125,125,125,125,} {Layout_CoverageTable_covtblModulesList_orders 4,0,1,2,3,5,6,7,8,9,10,}}
 set CovDetail.1 [gui_create_window -type {CovDetail}  -parent ${CovTopLevel.1}]
 gui_show_window -window ${CovDetail.1} -show_state maximized
-gui_update_layout -id ${CovDetail.1} {{show_state maximized} {dock_state undocked} {dock_on_new_line false} {Layout_CovDetail_lnListView_names Category,Coverage,} {Layout_CovDetail_lnListView_widths 87,125,} {Layout_CovDetail_lnListView_orders 0,1,} {Layout_CovDetail_tglListView_names Variable, ,  ,   ,Type,Coverage,Display,} {Layout_CovDetail_tglListView_widths 140,25,0,0,50,125,140,} {Layout_CovDetail_tglListView_orders 3,0,1,2,4,5,6,} {Layout_CovDetail_tglDetailListView_names Variable, ,  ,   ,0->1,1->0,} {Layout_CovDetail_tglDetailListView_widths 140,25,0,0,50,50,} {Layout_CovDetail_tglDetailListView_orders 3,0,1,2,4,5,} {Layout_CovDetail_fsmListView_names FSM, ,  ,   ,State,Transition,Sequence,} {Layout_CovDetail_fsmListView_widths 57,25,0,0,125,125,125,} {Layout_CovDetail_fsmListView_orders 3,0,1,2,5,4,6,} {Layout_CovDetail_fsmlist_names Coverage, ,  ,   ,Transition,} {Layout_CovDetail_fsmlist_widths 125,25,0,0,76,} {Layout_CovDetail_fsmlist_orders 3,0,1,2,4,} {Layout_CovDetail_cndListView_names Expression, ,  ,   ,ID,Coverage,Line No.,} {Layout_CovDetail_cndListView_widths 320,25,0,0,0,125,64,} {Layout_CovDetail_cndListView_orders 3,0,1,2,4,5,6,} {Layout_CovDetail_brListView_names Name, ,  ,   ,Coverage,Line No.,} {Layout_CovDetail_brListView_widths 100,25,0,0,125,64,} {Layout_CovDetail_brListView_orders 3,0,1,2,4,5,} {Layout_CovDetail_designAssertListView_names Assert Name,    , ,  ,   ,Attempts,Real Successes,Failures,Incompletes,Category,Severity,} {Layout_CovDetail_designAssertListView_widths 105,0,25,0,0,64,100,64,82,64,64,} {Layout_CovDetail_designAssertListView_orders 4,0,1,2,3,5,6,7,8,9,10,} {Layout_CovDetail_codeMiddleSplitter_value1 871} {Layout_CovDetail_codeMiddleSplitter_value2 1451} {Layout_CovDetail_cndSplitter_value1 180} {Layout_CovDetail_cndSplitter_value2 106} {Layout_CovDetail_covGrpInsListView_names Cover Group Item,    , ,  ,   ,Definition,Score,Goal,Weight,At Least,Per Instance,Overlap,Auto Bin Max,Print Missing,Comment,} {Layout_CovDetail_covGrpInsListView_widths 135,0,25,0,0,76,125,28,40,52,76,0,76,82,46,} {Layout_CovDetail_covGrpInsListView_orders 4,0,1,2,3,5,6,7,8,9,10,11,12,13,14,} {Layout_CovDetail_covGrpDefListView_names Cover Group Item,    , ,  ,   ,Score,Goal,Weight,At Least,Per Instance,Overlap,Auto Bin Max,Print Missing,Comment,} {Layout_CovDetail_covGrpDefListView_widths 135,0,25,0,0,125,28,40,52,76,0,76,82,46,} {Layout_CovDetail_covGrpDefListView_orders 4,0,1,2,3,5,6,7,8,9,10,11,12,13,} {Layout_CovDetail_m_CovGrpTable_names Bin Name,    , ,  ,   ,Status,Cross,At Least,Size,Hit Count,} {Layout_CovDetail_m_CovGrpTable_widths 87,0,25,0,0,150,0,64,40,70,} {Layout_CovDetail_m_CovGrpTable_orders 5,0,1,2,3,4,6,7,8,9,} {Layout_CovDetail_assertion list_names Instance,    , ,  ,   ,Assert Name,Attempts,Real Successes,Failures,Incompletes,Category,Severity,} {Layout_CovDetail_assertion list_widths 87,0,25,0,0,82,64,100,110,82,64,64,} {Layout_CovDetail_assertion list_orders 4,0,1,2,3,5,6,7,8,9,10,11,} {Layout_CovDetail_funMiddleSplitter_value1 32} {Layout_CovDetail_funMiddleSplitter_value2 52} {Layout_CovDetail_splitterWithPrefVal_value1 180} {Layout_CovDetail_splitterWithPrefVal_value2 1031}}
+gui_update_layout -id ${CovDetail.1} {{show_state maximized} {dock_state undocked} {dock_on_new_line false} {Layout_CovDetail_lnListView_names Category,Coverage,} {Layout_CovDetail_lnListView_widths 108,125,} {Layout_CovDetail_lnListView_orders 0,1,} {Layout_CovDetail_tglListView_names Variable, ,  ,   ,Type,Coverage,Display,} {Layout_CovDetail_tglListView_widths 140,25,0,0,50,125,140,} {Layout_CovDetail_tglListView_orders 3,0,1,2,4,5,6,} {Layout_CovDetail_tglDetailListView_names Variable, ,  ,   ,0->1,1->0,} {Layout_CovDetail_tglDetailListView_widths 140,25,0,0,50,50,} {Layout_CovDetail_tglDetailListView_orders 3,0,1,2,4,5,} {Layout_CovDetail_fsmListView_names FSM, ,  ,   ,State,Transition,Sequence,} {Layout_CovDetail_fsmListView_widths 57,25,0,0,125,125,125,} {Layout_CovDetail_fsmListView_orders 3,0,1,2,5,4,6,} {Layout_CovDetail_fsmlist_names Coverage, ,  ,   ,Transition,} {Layout_CovDetail_fsmlist_widths 125,25,0,0,76,} {Layout_CovDetail_fsmlist_orders 3,0,1,2,4,} {Layout_CovDetail_cndListView_names Expression, ,  ,   ,ID,Coverage,Line No.,} {Layout_CovDetail_cndListView_widths 320,25,0,0,0,125,64,} {Layout_CovDetail_cndListView_orders 3,0,1,2,4,5,6,} {Layout_CovDetail_brListView_names Name, ,  ,   ,Coverage,Line No.,} {Layout_CovDetail_brListView_widths 100,25,0,0,125,64,} {Layout_CovDetail_brListView_orders 3,0,1,2,4,5,} {Layout_CovDetail_designAssertListView_names Assert Name,    , ,  ,   ,Attempts,Real Successes,Failures,Incompletes,Category,Severity,} {Layout_CovDetail_designAssertListView_widths 105,0,25,0,0,64,100,64,82,64,64,} {Layout_CovDetail_designAssertListView_orders 4,0,1,2,3,5,6,7,8,9,10,} {Layout_CovDetail_codeMiddleSplitter_value1 10} {Layout_CovDetail_codeMiddleSplitter_value2 298} {Layout_CovDetail_cndSplitter_value1 100} {Layout_CovDetail_cndSplitter_value2 186} {Layout_CovDetail_covGrpInsListView_names Cover Group Item,    , ,  ,   ,Definition,Score,Goal,Weight,At Least,Per Instance,Overlap,Auto Bin Max,Print Missing,Comment,} {Layout_CovDetail_covGrpInsListView_widths 135,0,25,0,0,76,125,28,40,52,76,0,76,82,46,} {Layout_CovDetail_covGrpInsListView_orders 4,0,1,2,3,5,6,7,8,9,10,11,12,13,14,} {Layout_CovDetail_covGrpDefListView_names Cover Group Item,    , ,  ,   ,Score,Goal,Weight,At Least,Per Instance,Overlap,Auto Bin Max,Print Missing,Comment,} {Layout_CovDetail_covGrpDefListView_widths 135,0,25,0,0,125,28,40,52,76,0,76,82,46,} {Layout_CovDetail_covGrpDefListView_orders 4,0,1,2,3,5,6,7,8,9,10,11,12,13,} {Layout_CovDetail_m_CovGrpTable_names Bin Name,    , ,  ,   ,Status,Cross,At Least,Size,Hit Count,} {Layout_CovDetail_m_CovGrpTable_widths 87,0,25,0,0,150,0,64,40,70,} {Layout_CovDetail_m_CovGrpTable_orders 5,0,1,2,3,4,6,7,8,9,} {Layout_CovDetail_assertion list_names Instance,    , ,  ,   ,Assert Name,Attempts,Real Successes,Failures,Incompletes,Category,Severity,} {Layout_CovDetail_assertion list_widths 87,0,25,0,0,82,64,100,110,82,64,64,} {Layout_CovDetail_assertion list_orders 4,0,1,2,3,5,6,7,8,9,10,11,} {Layout_CovDetail_funMiddleSplitter_value1 42} {Layout_CovDetail_funMiddleSplitter_value2 42} {Layout_CovDetail_splitterWithPrefVal_value1 100} {Layout_CovDetail_splitterWithPrefVal_value2 1107}}
 
 # End MDI window settings
 
@@ -210,28 +210,30 @@ gui_list_set_filter -id ${CovHier.1} -list { {Cover Property 1} {All 1} {Cover S
 gui_list_set_filter -id ${CovHier.1} -text {*}
 catch {gui_list_expand -id ${CovHier.1} {/<Design Hierarchy>}}
 catch {gui_list_expand -id ${CovHier.1} tb_frame_detector}
+catch {gui_list_expand -id ${CovHier.1} tb_frame_detector.dut}
 catch {gui_list_expand -id ${CovHier.1} tb_frame_detector}
+catch {gui_list_expand -id ${CovHier.1} tb_frame_detector.dut}
+catch {gui_list_expand -id ${CovHier.1} tb_frame_detector.dut}
 catch {gui_list_select -id ${CovHier.1} {tb_frame_detector.dut}}
 gui_covtable_show -id CoverageTable.1 -show {Design Hierarchy}  -cumulative 1
-catch {gui_list_expand -id ${CoverageTable.1} tb_frame_detector}
 catch {gui_list_select -id ${CoverageTable.1} {tb_frame_detector}}
 
 # Source 'CovDetail.1'
 gui_src_value_annotate -id ${CovDetail.1} -switch false
 gui_set_env TOGGLE::VALUEANNOTATE 0
-gui_open_source -id ${CovDetail.1}  -matrix Fsm -replace -active tb_frame_detector -type {Scope}  /mnt/d/project/chaoslogic/verification/tb.sv
+gui_open_source -id ${CovDetail.1}  -matrix Line -replace -active tb_frame_detector.dut -type {Scope}  /mnt/d/project/chaoslogic/verification/dut/top.v
 gui_src_value_annotate -id ${CovDetail.1} -switch true
 gui_set_env TOGGLE::VALUEANNOTATE 1
-gui_view_scroll -id ${CovDetail.1} -vertical -set 1200
+gui_view_scroll -id ${CovDetail.1} -vertical -set 30
 gui_src_set_reusable -id ${CovDetail.1}
-gui_covdetail_select -id CovDetail.1 -name FSM
+gui_covdetail_select -id CovDetail.1 -name Line
 gui_covdetail_select -id CovDetail.1 -assert {Assertions}
 gui_covdetail_select -id CovDetail.1 -fsmShow Table
 gui_covdetail_select -id CovDetail.1 -fsmMode Transition
 gui_covdetail_select -id CovDetail.1 -test MergedTest
-gui_covdetail_select -id CovDetail.1 -region {tb_frame_detector} -type {Instance}
-set selected [gui_list_get_selected -id CovDetail.1 -list {fsmnames} -first ]
-gui_list_select -id CovDetail.1 -list {fsmnames} -unselect [lindex $selected 0] 
+gui_covdetail_select -id CovDetail.1 -region {tb_frame_detector.dut} -type {Instance}
+set selected [gui_list_get_selected -id CovDetail.1 -list {line} -first ]
+gui_list_select -id CovDetail.1 -list {line} -unselect [lindex $selected 0] 
 
 # Restore toplevel window zorder
 # The toplevel window could be closed if it has no view/pane

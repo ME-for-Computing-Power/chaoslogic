@@ -20,11 +20,8 @@ module frame_parser (
         IDLE,
         WAIT_1,
         WAIT_2,
-        WAIT_3,
         CHANNEL,
-        DATA,
-        CRC_OUTPUT,
-        ENABLE_CRC
+        DATA
     } state_t;
     state_t state;
     logic [15:0] ch_sel;

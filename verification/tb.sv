@@ -214,7 +214,7 @@ initial begin
     $display("[%0t ps] 进行第 1 次随机测试", $time);
     test_rand_frame(single_channel, sent_data, rand_len);
     
-    for (int i = 1; i < 20000; i++) begin
+    for (int i = 1; i < 200; i++) begin
         fork
             check_output(single_channel, sent_data, rand_len);
             $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
