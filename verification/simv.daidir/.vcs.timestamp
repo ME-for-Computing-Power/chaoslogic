@@ -50,13 +50,13 @@ http_proxy=http://127.0.0.1:7890
 ZSH=/home/zhanyue/.oh-my-zsh
 YOSYS_HOME=/home/zhanyue/ysyx/yosys-sta
 XDG_RUNTIME_DIR=/run/user/1000/
-WSL_INTEROP=/run/WSL/470_interop
+WSL_INTEROP=/run/WSL/474_interop
 WSL_DISTRO_NAME=Ubuntu
 WSLENV=VSCODE_WSL_EXT_LOCATION/up
 WSL2_GUI_APPS_ENABLED=1
 WAYLAND_DISPLAY=wayland-0
-VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-be67af60-119d-456a-88a6-c32783f2010a.sock
-VSCODE_GIT_IPC_HANDLE=/run/user/1000/vscode-git-c2d6884bb7.sock
+VSCODE_IPC_HOOK_CLI=/run/user/1000/vscode-ipc-dd1f168a-3f72-45ca-9b52-de05a7888c05.sock
+VSCODE_GIT_IPC_HANDLE=/run/user/1000/vscode-git-9813dfc62d.sock
 VSCODE_GIT_ASKPASS_NODE=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/node
 VSCODE_GIT_ASKPASS_MAIN=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217ca7c570c76ee87b957/extensions/git/dist/askpass-main.js
 VSCODE_GIT_ASKPASS_EXTRA_ARGS=
@@ -114,65 +114,17 @@ AUTOJUMP_SOURCED=1
 AUTOJUMP_ERROR_PATH=/home/zhanyue/.local/share/autojump/errors.log
 AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 0
-61
-1750299128 tb.sv
-1750299127 rtl/serial_output.sv
-1750299127 rtl/gray_conv.sv
-1750299127 rtl/frame_parser.sv
-1750299127 rtl/fifo_wrapper.sv
-1750299127 rtl/dut.sv
-1750299127 rtl/crc_module.sv
-1750299127 rtl/async_fifo.sv
-1750299128 tb.sv
-1750299127 rtl/serial_output.sv
-1750299127 rtl/gray_conv.sv
-1750299127 rtl/frame_parser.sv
-1750299127 rtl/fifo_wrapper.sv
-1750299127 rtl/dut.sv
-1750299127 rtl/crc_module.sv
-1750299127 rtl/async_fifo.sv
-1750299128 tb.sv
-1750299127 rtl/serial_output.sv
-1750299127 rtl/gray_conv.sv
-1750299127 rtl/frame_parser.sv
-1750299127 rtl/fifo_wrapper.sv
-1750299127 rtl/dut.sv
-1750299127 rtl/crc_module.sv
-1750299127 rtl/async_fifo.sv
-1750299128 tb.sv
-1750299127 rtl/serial_output.sv
-1750299127 rtl/gray_conv.sv
-1750299127 rtl/frame_parser.sv
-1750299127 rtl/fifo_wrapper.sv
-1750299127 rtl/dut.sv
-1750299127 rtl/crc_module.sv
-1750299127 rtl/async_fifo.sv
-1750299128 tb.sv
-1750299127 rtl/serial_output.sv
-1750299127 rtl/gray_conv.sv
-1750299127 rtl/frame_parser.sv
-1750299127 rtl/fifo_wrapper.sv
-1750299127 rtl/dut.sv
-1750299127 rtl/crc_module.sv
-1750299127 rtl/async_fifo.sv
-1750299128 tb.sv
-1750299127 rtl/serial_output.sv
-1750299127 rtl/gray_conv.sv
-1750299127 rtl/frame_parser.sv
-1750299127 rtl/fifo_wrapper.sv
-1750299127 rtl/dut.sv
-1750299127 rtl/crc_module.sv
-1750299127 rtl/async_fifo.sv
-1750299128 tb.sv
-1750299127 rtl/serial_output.sv
-1750299127 rtl/gray_conv.sv
-1750299127 rtl/frame_parser.sv
-1750299127 rtl/fifo_wrapper.sv
-1750299127 rtl/dut.sv
-1750299127 rtl/crc_module.sv
-1750299127 rtl/async_fifo.sv
+13
+1750308985 tb.sv
+1750306001 ref_model/serial_output.sv
+1750306001 ref_model/gray_conv.sv
+1750309140 ref_model/frame_parser.sv
+1750306001 ref_model/fifo_wrapper.sv
+1750306001 ref_model/dut.sv
+1750306001 ref_model/crc_module.sv
+1750306001 ref_model/async_fifo.sv
 1551421444 /eda/vcs/include/cm_vcsd.tab
-1750300663 filelist.f
+1750309143 filelist.f
 1551421246 /eda/vcs/linux64/lib/vcsdp_lite.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUXAMD64/novas.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUX64/verdi.tab
@@ -182,5 +134,5 @@ AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 1551421768 /eda/vcs/linux64/lib/libsnpsmalloc.so
 1551421789 /eda/vcs/linux64/lib/libvfs.so
 1550752033 /eda/verdi/share/PLI/VCS/LINUXAMD64/pli.a
-1750300674 simv.daidir
+1750309147 simv.daidir
 -1 partitionlib

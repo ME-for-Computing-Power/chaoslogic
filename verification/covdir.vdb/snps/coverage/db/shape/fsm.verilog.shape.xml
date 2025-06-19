@@ -5,13 +5,13 @@
       <fsmdef file="4"  name="frame_parser"  lib=""  chksum="556050235"  >
         <fsmshape >
           <fsmfsm name="state"  id="0"  width="32"  line="37"  chksum="556050235"  >
-            <state name="CHANNEL"  value="4"  id="0"  flag="L"  line="61"  />
-            <state name="DATA"  value="5"  id="1"  flag="L"  line="65"  />
+            <state name="CHANNEL"  value="4"  id="0"  flag="L"  line="62"  />
+            <state name="DATA"  value="5"  id="1"  flag="L"  line="66"  />
             <state name="IDLE"  value="0"  id="2"  flag="L"  line="37"  />
             <state name="WAIT_1"  value="1"  id="3"  flag="L"  line="50"  />
-            <state name="WAIT_2"  value="2"  id="4"  flag="L"  line="59"  />
+            <state name="WAIT_2"  value="2"  id="4"  flag="L"  line="60"  />
 
-            <transition fromid="0"  toid="1"  flag="L"  line="65"  />
+            <transition fromid="0"  toid="1"  flag="L"  line="66"  />
             <transition fromid="0"  toid="2"  flag="L"  line="37"  />
             
             <transition fromid="1"  toid="2"  flag="L"  line="37"  />
@@ -19,9 +19,9 @@
             <transition fromid="2"  toid="3"  flag="L"  line="50"  />
             
             <transition fromid="3"  toid="2"  flag="L"  line="37"  />
-            <transition fromid="3"  toid="4"  flag="L"  line="59"  />
+            <transition fromid="3"  toid="4"  flag="L"  line="60"  />
             
-            <transition fromid="4"  toid="0"  flag="L"  line="61"  />
+            <transition fromid="4"  toid="0"  flag="L"  line="62"  />
             <transition fromid="4"  toid="2"  flag="L"  line="37"  />
             
           </fsmfsm>

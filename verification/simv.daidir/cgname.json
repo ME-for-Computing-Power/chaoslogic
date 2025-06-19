@@ -5,16 +5,16 @@
         "module",
         1
     ],
-    "...MASTER...": [
-        "SIM",
-        "amcQw",
-        "module",
-        3
-    ],
     "tb_frame_detector": [
         "tb_frame_detector",
         "ZV3ev",
         "module",
         2
+    ],
+    "...MASTER...": [
+        "SIM",
+        "amcQw",
+        "module",
+        3
     ]
 }
