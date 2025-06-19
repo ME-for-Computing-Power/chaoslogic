@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE cov SYSTEM "ucdb_fsm.dtd">
+  <fsm count="0"  noconst="0"  >
+    <ucapi_version  major_ver="13"  minor_ver="1"  patch_str="O-2018.09-SP2"  />
+      <fsmdef file="4"  name="frame_parser"  lib=""  chksum="556050235"  >
+        <fsmshape >
+          <fsmfsm name="state"  id="0"  width="32"  line="37"  chksum="556050235"  >
+            <state name="CHANNEL"  value="4"  id="0"  flag="L"  line="61"  />
+            <state name="DATA"  value="5"  id="1"  flag="L"  line="65"  />
+            <state name="IDLE"  value="0"  id="2"  flag="L"  line="37"  />
+            <state name="WAIT_1"  value="1"  id="3"  flag="L"  line="50"  />
+            <state name="WAIT_2"  value="2"  id="4"  flag="L"  line="59"  />
+
+            <transition fromid="0"  toid="1"  flag="L"  line="65"  />
+            <transition fromid="0"  toid="2"  flag="L"  line="37"  />
+            
+            <transition fromid="1"  toid="2"  flag="L"  line="37"  />
+            
+            <transition fromid="2"  toid="3"  flag="L"  line="50"  />
+            
+            <transition fromid="3"  toid="2"  flag="L"  line="37"  />
+            <transition fromid="3"  toid="4"  flag="L"  line="59"  />
+            
+            <transition fromid="4"  toid="0"  flag="L"  line="61"  />
+            <transition fromid="4"  toid="2"  flag="L"  line="37"  />
+            
+          </fsmfsm>
+        </fsmshape>
+        <fsminst name="tb_frame_detector.dut.u_frame_parser"  />
+      </fsmdef>
+          <metric_sig chksum="718B019518D9E0E81FFD2A3BD871F3CC86812E85"  />
+    </fsm>

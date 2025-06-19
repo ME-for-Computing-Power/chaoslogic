@@ -1,6 +1,11 @@
 # VCS
 COMPILER = vcs -full64 -cc gcc -cpp g++ -LDFLAGS -Wl,-no-as-needed
 TOP_MODULE = -top tb_frame_detector
+
+COMPILER += -cm line+cond+fsm+branch+tgl
+COMPILER    += -cm_name tb_frame_detector_cov
+COMPILER    += -cm_dir ./covdir.vdb
+
 TIMESCALE = -timescale=1ns/100ps
 INCDIR = +incdir+config
 DEBUG = -debug_access
@@ -27,12 +32,13 @@ run: filelist
 
 sim : run
 	@echo "Simulation started..."
-	./simv -l simv.log
+	./simv -l simv.log -cm line+cond+fsm+branch+tgl
 	@echo "Simulation finished."
 verdi:
 	verdi +v2k -sverilog $(INCDIR) -f filelist.f -ssf wave.fsdb -sswr cfg1.rc
 
-
+cov:
+	dve -full64 -dir ./covdir.vdb -cov
 
 .PHONY:clean
 clean:

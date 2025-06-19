@@ -19,9 +19,9 @@ PRODUCT_TIMESTAMP=product_timestamp
 # Path to runtime library
 DEPLIBS=
 VCSUCLI=-lvcsucli
-RUNTIME=-lvcsnew -lsimprofile -luclinative /eda/vcs18/vcs/O-2018.09-SP2/linux64/lib/vcs_tls.o $(DEPLIBS) 
+RUNTIME=-lvcsnew -lsimprofile -lreader_common /eda/vcs/linux64/lib/libBA.a -luclinative /eda/vcs/linux64/lib/vcs_tls.o $(DEPLIBS) 
 
-VCS_SAVE_RESTORE_OBJ=/eda/vcs18/vcs/O-2018.09-SP2/linux64/lib/vcs_save_restore_new.o
+VCS_SAVE_RESTORE_OBJ=/eda/vcs/linux64/lib/vcs_save_restore_new.o
 
 # Select your favorite compiler
 
@@ -40,7 +40,7 @@ STRIPFLAGS=
 
 PRE_LDFLAGS=  -no-pie 
 # Loader Flags
-LDFLAGS= -Wl,-no-as-needed -rdynamic  -Wl,-rpath=/eda/vcs18/vcs/O-2018.09-SP2/linux64/lib -L/eda/vcs18/vcs/O-2018.09-SP2/linux64/lib 
+LDFLAGS= -Wl,-no-as-needed -rdynamic  -Wl,-rpath=/eda/vcs/linux64/lib -L/eda/vcs/linux64/lib 
 # Picarchive Flags
 PICLDFLAGS=-Wl,-rpath-link=./ -Wl,-rpath='$$ORIGIN'/simv.daidir/ -Wl,-rpath=./simv.daidir/ -Wl,-rpath='$$ORIGIN'/simv.daidir//scsim.db.dir 
 
@@ -49,7 +49,7 @@ CRT0=
 # C run time startup
 CRTN=
 # Machine specific libraries
-SYSLIBS=/eda/verdi/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/LINUX64/pli.a -ldl -lm  -lc -lpthread -ldl
+SYSLIBS=/eda/verdi/share/PLI/VCS/LINUX64/pli.a -ldl -lm  -lc -lpthread -ldl
 
 # Default defines
 SHELL=/bin/sh
@@ -65,17 +65,17 @@ TMPSPECENV=$(VCSTMPSPECENV)
 CC=$(TMPSPECENV) $(VCS_CC) $(TMPSPECARG)
 
 # C flags for compilation
-CFLAGS=-w  -pipe -fPIC -O -I/eda/vcs18/vcs/O-2018.09-SP2/include   
+CFLAGS=-w  -pipe -fPIC -O -I/eda/vcs/include   
 
-CFLAGS_O0=-w  -pipe -fPIC -I/eda/vcs18/vcs/O-2018.09-SP2/include -O0  -fno-strict-aliasing   
+CFLAGS_O0=-w  -pipe -fPIC -I/eda/vcs/include -O0  -fno-strict-aliasing   
 
-CFLAGS_CG=-w  -pipe -fPIC -I/eda/vcs18/vcs/O-2018.09-SP2/include -O  -fno-strict-aliasing   
+CFLAGS_CG=-w  -pipe -fPIC -I/eda/vcs/include -O  -fno-strict-aliasing   
 
 LD_PARTIAL_LOADER=ld
 # Partial linking
 LD_PARTIAL=$(LD_PARTIAL_LOADER) -r -o
 ASFLAGS=
-LIBS=-lzerosoft_rt_stubs -lvirsim -lerrorinf -lsnpsmalloc -lvfs /eda/verdi/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/LINUXAMD64/pli.a 
+LIBS=-lzerosoft_rt_stubs -lvirsim -lerrorinf -lsnpsmalloc -lvfs /eda/verdi/share/PLI/VCS/LINUXAMD64/pli.a 
 # Note: if make gives you errors about include, either get gmake, or
 # replace the following line with the contents of the file filelist,
 # EACH TIME IT CHANGES
@@ -112,6 +112,6 @@ $(PRODUCT_TIMESTAMP) : product_clean_order
 	@touch $(PRODUCT_TIMESTAMP)
 	@-if [ -d ./objs ]; then find ./objs -type d -empty -delete; fi
 
-$(PRODUCT) :  $(LD_VERSION_CHECK)  $(OBJS) $(DOTLIBS) $(DPI_STUB_OBJS) $(PLI_STUB_OBJS) $(CMODLIB) /eda/vcs18/vcs/O-2018.09-SP2/linux64/lib/libvcsnew.so /eda/vcs18/vcs/O-2018.09-SP2/linux64/lib/libsimprofile.so /eda/vcs18/vcs/O-2018.09-SP2/linux64/lib/libuclinative.so /eda/vcs18/vcs/O-2018.09-SP2/linux64/lib/vcs_tls.o /eda/vcs18/vcs/O-2018.09-SP2/linux64/lib/libvcsucli.so  $(VCS_SAVE_RESTORE_OBJ) 
+$(PRODUCT) :  $(LD_VERSION_CHECK)  $(OBJS) $(DOTLIBS) $(DPI_STUB_OBJS) $(PLI_STUB_OBJS) $(CMODLIB) /eda/vcs/linux64/lib/libvcsnew.so /eda/vcs/linux64/lib/libsimprofile.so /eda/vcs/linux64/lib/libreader_common.so /eda/vcs/linux64/lib/libBA.a /eda/vcs/linux64/lib/libuclinative.so /eda/vcs/linux64/lib/vcs_tls.o /eda/vcs/linux64/lib/libvcsucli.so  $(VCS_SAVE_RESTORE_OBJ) 
 	@touch $(PRODUCT)
 
