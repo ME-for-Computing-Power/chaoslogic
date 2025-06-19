@@ -36,11 +36,15 @@ sim : run
 	@echo "Simulation started..."
 	./simv -l simv.log -cm line+cond+fsm+branch+tgl
 	@echo "Simulation finished."
+	
 verdi:
 	verdi +v2k -sverilog $(INCDIR) -f filelist.f -ssf wave.fsdb -sswr cfg1.rc
 
-cov: sim
+cov: 
 	dve -full64 -dir ./covdir.vdb -cov
+
+urg:
+	urg -dir ./covdir.vdb -report urg_report
 
 .PHONY:clean
 clean:
