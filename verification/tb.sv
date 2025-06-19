@@ -175,20 +175,27 @@ initial begin
     #100;
     
     $display("\n===== 测试1: 基本功能测试 (16位数据) =====");
-    test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
-    
+    fork
+        test_single_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
+        check_output(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16);
+    join_any
+
     $display("\n===== 测试2: 最大长度测试 (128位数据) =====");
-    test_single_frame(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
-    
-    // $display("\n===== 测试3: 多通道测试 =====");
-    // fork
-    //     test_single_frame(8'b0000_0100, 128'hCAFEBABE12345678, 64);
-    //     test_single_frame(8'b0100_0000, 128'hDEADBEEF00FF00FF, 64);
-    // join
-    // 添加边界测试
+    fork
+        test_single_frame(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
+        check_output(8'b0000_0010, 128'h0123456789ABCDEFFEDCBA9876543210, 128);
+    join_any
+
     $display("\n===== 测试3: 边界长度测试 =====");
-    test_single_frame(8'b0000_0100, 128'h1234, 16);  // 最小长度
-    test_single_frame(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128); // 最大长度
+    fork
+        test_single_frame(8'b0000_0100, 128'h1234, 16);  // 最小长度
+        check_output(8'b0000_0100, 128'h1234, 16);
+    join_any
+
+    fork
+        test_single_frame(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128); // 最大长度
+        check_output(8'b0001_0000, 128'hA5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A5, 128);
+    join_any
 
     // 添加错误测试
     $display("\n===== 测试4: CRC错误测试 =====");
@@ -200,7 +207,7 @@ initial begin
     // 大规模随机测试
     $display("\n===== 测试5: 大规模随机测试 =====");
     for (int i = 0; i < 1024; i++) begin
-        $display("[%0t] 进行第 %0d 次随机测试", $time, i+1);
+        $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
         rand_channel = $urandom() >> (32 - 8); // 生成随机通道
         single_channel = 1'b1 << (rand_channel % 8); // 独热码
         rand_data = {$urandom(), $urandom(), $urandom(), $urandom()}; // 生成随机数据
@@ -208,7 +215,10 @@ initial begin
         if (rand_len < 16) rand_len = 16; // 确保最小长度为16位
         if (rand_len > 128) rand_len = 128; // 确保最大长度为128位
         sent_data = rand_data >> (128 - rand_len); // 截断数据到指定长度
-        test_single_frame(single_channel, sent_data, rand_len);
+        fork
+            test_single_frame(single_channel, sent_data, rand_len);
+            check_output(single_channel, sent_data, rand_len);
+        join_any
     end 
     $display("\n===== 所有测试结束 =====");
     $finish;
@@ -263,13 +273,21 @@ task test_single_frame;
     $display("[%0t] 发送CRC: %h", $time, crc_value);
     // 发送帧
     send_frame(channel, data, data_len, crc_value);
-        // 检查输出
+endtask
+
+
+task check_output ;
+    input [7:0]  channel;
+    input [127:0] data;
+    input [15:0] data_len;
+// 检查输出
     for (int ch = 1; ch <= 8; ch++) begin
         if (channel[ch-1]) begin
             $display("[%0t] 检查CH%d输出", $time, ch);
             check_serial_output(ch, data, data_len);
         end
     end
+
 endtask
 
 // 监控错误信号
