@@ -16,7 +16,7 @@ logic data_out_ch1, data_out_ch2, data_out_ch3, data_out_ch4;
 logic data_out_ch5, data_out_ch6, data_out_ch7, data_out_ch8;
 logic data_vld_ch1, data_vld_ch2, data_vld_ch3, data_vld_ch4;
 logic data_vld_ch5, data_vld_ch6, data_vld_ch7, data_vld_ch8;
-logic fifo_empty, fifo_full;
+//logic fifo_empty, fifo_full;
 logic crc_valid, crc_err;
 
 // 测试参数
@@ -126,9 +126,7 @@ task check_serial_output;
     
     logic data_vld;
     logic data_out;
-    int bit_count = 0;
-    int word_count = 0;
-    
+
     
     // 等待有效信号
     wait(crc_valid === 1'b1);
@@ -138,14 +136,14 @@ task check_serial_output;
     // 收集串行数据 (修复循环变量冲突) 
     for (int bit_idx = data_len - 1; bit_idx >= 0; bit_idx--) begin
         case(channel)
-            1: begin data_vld = data_vld_ch1; data_out = data_out_ch1; end
-            2: begin data_vld = data_vld_ch2; data_out = data_out_ch2; end
-            3: begin data_vld = data_vld_ch3; data_out = data_out_ch3; end
-            4: begin data_vld = data_vld_ch4; data_out = data_out_ch4; end
-            5: begin data_vld = data_vld_ch5; data_out = data_out_ch5; end
-            6: begin data_vld = data_vld_ch6; data_out = data_out_ch6; end
-            7: begin data_vld = data_vld_ch7; data_out = data_out_ch7; end
-            8: begin data_vld = data_vld_ch8; data_out = data_out_ch8; end
+            4'd1: begin data_vld = data_vld_ch1; data_out = data_out_ch1; end
+            4'd2: begin data_vld = data_vld_ch2; data_out = data_out_ch2; end
+            4'd3: begin data_vld = data_vld_ch3; data_out = data_out_ch3; end
+            4'd4: begin data_vld = data_vld_ch4; data_out = data_out_ch4; end
+            4'd5: begin data_vld = data_vld_ch5; data_out = data_out_ch5; end
+            4'd6: begin data_vld = data_vld_ch6; data_out = data_out_ch6; end
+            4'd7: begin data_vld = data_vld_ch7; data_out = data_out_ch7; end
+            4'd8: begin data_vld = data_vld_ch8; data_out = data_out_ch8; end
         endcase
         if (exp_gray[bit_idx] != data_out) begin
             $error("[%0t] CH%d 数据不匹配! 位 %0d: 预期=%h, 实际=%h", 
@@ -184,7 +182,7 @@ initial begin
 
     // 添加错误测试
     $display("\n===== 测试5: CRC错误测试 =====");
-    send_frame(8'b0000_0001, 16'h1234, 16, 16'hFFFF); // 错误CRC
+    send_frame(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_1234, 16, 16'hFFFF); // 错误CRC
     wait(crc_err === 1'b1);
     $display("crc_err验证通过");
     if(data_vld_ch1 !== 0) $error("CRC错误时不应有有效输出");
