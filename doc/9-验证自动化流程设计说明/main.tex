@@ -325,6 +325,39 @@ veri\_plan.md 中简要提出了用户对验证的要求，如下所示。
   breaklines=true
 ]{markdown}{./spec.md}
 
+根据完整的Spec，设计工程师进行了多轮迭代，其详细过程过长，在提交文档中的‘3-LLM运行’文件夹中给出。在几次迭代后，成功的设计如下：
+
+\textbf{fifo\_data\_resolu/design/dut.v}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{verilog}{./dut.v}
+
+同上，验证工程师的迭代过程也不再此处赘述。
+根据完整的Spec和用户生成的参考模型，验证工程师提供的最终Testbench如下：
+
+\textbf{fifo\_data\_resolu/verification/tb.sv}
+\inputminted[
+  fontsize=\small,
+  frame=lines,
+  bgcolor=gray!10,
+  breaklines=true
+]{verilog}{./tb.sv}
+
+运行该Testbench，可以看到全部设计通过，覆盖率如图~\ref{fig:cov}所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.90\textwidth]{cov.png}
+    \caption{覆盖率}
+    \label{fig:cov}
+\end{figure}
+
+可以看到，LLM设计的Testbench成功覆盖了本模块的绝大部分内容，整体的代码覆盖率达到了99.56\%。
+
+然而，必须承认的是，在设计较为复杂的模块以及含有时序逻辑的模块时，LLM的能力将捉襟见肘，甚至需要人类工程师的介入才能完成设计。
 
 \section{总结}
 本项目设计了一套由LLM驱动的RTL代码的生成与验证自动化软件，实现了IC设计流程的自动化，能够快速产出原型设计。然而，在设计中，我们发现，一般的通用大模型在数字电路相关任务上、尤其是验证任务上，存在相当大的局限性。要进一步减少本项目的迭代次数，提升设计效率，必须对大模型进行针对性的训练，以使其能够更好地理解数字电路的设计与验证流程。本项目产出的原型设计，也应由专业的设计工程师和验证工程师进行进一步的修改与验证，以确保其满足实际的设计需求。
