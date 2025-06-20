@@ -2,24 +2,7 @@
 
 #### 1. 验证环境架构（基于tb.sv实现）
 
-```mermaid
-graph TD
-    A[Testbench顶层] --> B[时钟生成器]
-    A --> C[复位控制器]
-    A --> D[数据包生成器]
-    A --> E[DUT: top模块]
-    A --> F[串行输出检查器]
-    A --> G[CRC监控器]
-    A --> H[错误注入器]
-    B -->|clk_in/clk_out/clk_out_s| E
-    C -->|rst_n| E
-    D -->|data_in| E
-    E -->|串行输出| F
-    E -->|crc_err| G
-    H -->|错误数据| D
-    F -->|比对结果| I[验证记分板]
-    G -->|错误事件| I
-```
+![mermaid-diagram.png](mermaid-diagram.png)
 
 #### 2. 验证执行流程
 
@@ -43,37 +26,36 @@ end
 
 ##### 阶段2：定向测试执行
 ```systemverilog
-initial begin
     // 基本功能测试
+    $display("\n===== 测试1: 基本功能测试 (16、128位数据) =====");
     test_single_frame(8'b0000_0001, 128'hA55A, 16);
     check_output(8'b0000_0001, 128'hA55A, 16);
     
-    // 边界测试
     test_single_frame(8'b0000_0010, 128'h0123...3210, 128);
     check_output(8'b0000_0010, 128'h0123...3210, 128);
-    
-    // CRC错误测试
-    send_frame(8'b0000_0001, 128'h1234, 16, 16'hFFFF); // 错误CRC
-    wait(crc_err === 1'b1);
-end
 ```
 
-##### 阶段3：随机压力测试
+##### 阶段3：大规模随机测试
 ```systemverilog
-initial begin
-    for (int i = 0; i < 20000; i++) begin
+    $display("\n===== 测试4: 大规模随机测试 =====");
+    test_rand_frame(single_channel, sent_data, rand_len);
+    
+    for (int i = 1; i < 5000; i++) begin
         fork
-            test_rand_frame(single_channel, sent_data, rand_len);
             check_output(single_channel, sent_data, rand_len);
+            $display("[%0t ps] 进行第 %0d 次随机测试", $time, i+1);
+            test_rand_frame(single_channel, sent_data, rand_len);
         join
-    end
-end
+    end 
 ```
 
 ##### 阶段4：异常数据测试
 ```systemverilog
-// 超长数据测试
-send_oversize_frame(8'b0010_0000, {128{2'b10}}, 16'h1145);
+    // 超长数据测试
+    send_oversize_frame(8'b0010_0000, {128{2'b10}}, 16'h1145);
+    // 状态转移测试
+    fsm_test(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16, 16'h1934); 
+    wait_test(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16, 16'h1934); 
 ```
 
 #### 3. 检查机制实现
@@ -124,17 +106,19 @@ initial begin
     $display("执行测试: %0d", total_tests);
     $display("通过测试: %0d", passed_tests);
     $display("失败测试: %0d", total_tests - passed_tests);
-    $display("覆盖率: %0.1f%%", $get_coverage());
 end
 ```
 
 #### 5. 仿真自动化设计
 
-##### Makefile示例
+##### Makefile命令
+
+说明：执行make sim启动编译并运行仿真，make cov使用dve展示覆盖率，make urg生成urg报告，文件夹名为urg_report
 ```makefile
+……
 SIM = vcs
 TEST = tb_frame_detector
-
+……
 sim: run
 	@echo "Simulation started..."
 	./simv -l simv.log -cm line+cond+branch+tgl+fsm
@@ -145,5 +129,25 @@ cov:
 
 urg:
 	urg -dir ./covdir.vdb -report urg_report
+……
 ```
 
+##### genReport.sh
+
+说明：本脚本依赖python，执行后输出vcsDesignStats和vcsSimprofile
+```bash
+make check_compile
+mv ./vcs_design_stats.log ../doc/10-vcsDesignStats/
+
+echo "no.11, vcs simprofile\n"
+# time usage
+rm -rf ./profileReport
+rm -rf ./simprofile_dir
+rm profileReport.*
+rm -rf ../doc/11-vcsSimprofile/time
+mkdir ../doc/11-vcsSimprofile/time
+make simp
+
+./simv  -simprofile time
+……
+```
