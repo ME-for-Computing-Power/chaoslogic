@@ -120,6 +120,66 @@ task send_frame;
     //data_in = 0;  //fix me
     //@(posedge clk_in);
 endtask
+// 测试任务：转态转移测试
+task fsm_test;
+    input [15:0]  channel;     // 通道选择 (独热码)
+    input [127:0] data;        // 数据负载 (最大128位)
+    input [15:0]  data_len;    // 数据长度 (16-128位)
+    input [15:0]  crc;         // CRC校验值
+    
+    // 发送帧头
+    //data_in = 0;  //fix me
+    @(posedge clk_in);
+    data_in = HEADER[31:16];
+    @(posedge clk_in);
+    data_in = HEADER[15:0];
+    @(posedge clk_in);
+    
+    // 发送通道选择
+    data_in = channel;
+    @(posedge clk_in);
+    
+    // 发送数据
+    for (int i = 0; i < data_len; i += 16) begin
+        data_in = data[(data_len-i-1) -: 16]; // Big-Endian顺序
+        @(posedge clk_in);
+    end
+    
+    // 发送CRC
+    data_in = crc;
+    @(posedge clk_in);
+    
+    // 发送复位
+    rst_n = 0; // 触发复位
+    @(posedge clk_in);
+    rst_n = 1; // 解除复位
+    //data_in = 0;  //fix me
+    @(posedge clk_in);
+endtask
+
+// 测试任务：wait状态转移测试
+task wait_test;
+    input [15:0]  channel;     // 通道选择 (独热码)
+    input [127:0] data;        // 数据负载 (最大128位)
+    input [15:0]  data_len;    // 数据长度 (16-128位)
+    input [15:0]  crc;         // CRC校验值
+    
+    // 发送帧头
+    //data_in = 0;  //fix me
+    @(posedge clk_in);
+    data_in = HEADER[31:16];
+    @(posedge clk_in);
+    data_in = HEADER[15:0];
+    @(posedge clk_in);
+    @(posedge clk_in);
+    
+    // 发送复位
+    rst_n = 0; // 触发复位
+    @(posedge clk_in);
+    rst_n = 1; // 解除复位
+    //data_in = 0;  //fix me
+    //@(posedge clk_in);
+endtask
 
 // 测试任务：检查串行输出
 task check_serial_output;
@@ -237,10 +297,15 @@ initial begin
 
     $display("\n===== 测试5: 特殊数据测试 =====");
     test_single_frame(8'b0000_0100, 128'he0e0, 16);  // 帧头数据重合
+    passed_tests +=1;
     //check_output(8'b0000_0100, 128'he0e0, 16);
 
     test_single_frame(16'he0e0, 128'he0e0, 16);  // 通道数据错误
+    passed_tests +=1;
     //check_output(16'he0e0, 128'he0e0, 16);
+    fsm_test(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16, 16'h1934); // 状态转移测试
+
+    wait_test(8'b0000_0001, 128'h0000_0000_0000_0000_0000_0000_0000_A55A, 16, 16'h1934); // 状态转移测试
 
     // 添加错误测试
     $display("\n===== 测试6: CRC错误测试 =====");
