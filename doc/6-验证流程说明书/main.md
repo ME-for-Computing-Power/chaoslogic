@@ -2,6 +2,8 @@
 
 #### 1. 验证环境架构（基于tb.sv实现）
 
+如上图所示：
+
 ![mermaid-diagram.png](mermaid-diagram.png)
 
 #### 2. 验证执行流程
