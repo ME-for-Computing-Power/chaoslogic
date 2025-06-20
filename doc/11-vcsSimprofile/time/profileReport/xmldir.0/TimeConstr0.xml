@@ -1,33 +1,36 @@
 <types>
-  <total>299</total>
-  <totalv>160</totalv>
-  <type name='Initial' value='110'>
-    <constr mid='9' id='5' value='100'/>
-    <constr mid='9' id='6' value='7'/>
-    <constr mid='9' id='4' value='3'/>
+  <total>134</total>
+  <totalv>97</totalv>
+  <type name='Task' value='64'>
+    <constr mid='9' id='13' value='32'/>
+    <constr mid='9' id='17' value='17'/>
+    <constr mid='9' id='18' value='7'/>
+    <constr mid='9' id='15' value='5'/>
+    <constr mid='9' id='10' value='3'/>
     <f v='0'/>
   </type>
-  <type name='Task' value='36'>
-    <constr mid='9' id='16' value='13'/>
-    <constr mid='9' id='12' value='9'/>
-    <constr mid='9' id='11' value='8'/>
-    <constr mid='9' id='17' value='5'/>
-    <f v='1'/>
+  <type name='Initial' value='24'>
+    <constr mid='9' id='5' value='17'/>
+    <constr mid='9' id='4' value='3'/>
+    <constr mid='9' id='6' value='3'/>
+    <constr mid='9' id='3' value='1'/>
+    <f v='0'/>
   </type>
-  <type name='ContAssign' value='7'>
-    <constr mid='4' id='3' value='4'/>
-    <constr mid='6' id='9' value='2'/>
-    <f v='1'/>
+  <type name='AlwaysFF' value='5'>
+    <constr mid='6' id='2' value='4'/>
+    <constr mid='7' id='2' value='1'/>
+    <f v='0'/>
   </type>
-  <type name='Always' value='3'>
-    <constr mid='6' id='3' value='2'/>
-    <f v='1'/>
+  <type name='ContAssign' value='2'>
+    <constr mid='3' id='9' value='2'/>
+    <f v='0'/>
   </type>
-  <type name='AlwaysFF' value='2'>
-    <f v='2'/>
+  <type name='Always' value='1'>
+    <constr mid='4' id='2' value='1'/>
+    <f v='0'/>
   </type>
-  <type name='Hsim' value='2'>
-    <constr mid='9' id='1' value='2'/>
+  <type name='Hsim' value='1'>
+    <constr mid='9' id='1' value='1'/>
     <f v='0'/>
   </type>
   <cf v='0'/>

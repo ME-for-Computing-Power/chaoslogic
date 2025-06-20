@@ -33,7 +33,7 @@ TMPSPECENV=$(VCSTMPSPECENV)
 CC=$(TMPSPECENV) $(VCS_CC) $(TMPSPECARG)
 
 # C flags for compilation
-CFLAGS=-w  -pipe -fPIC -O -I/eda/vcs/include    
+CFLAGS=-w  -pipe -fPIC -O -I/eda/vcs/include    -fasynchronous-unwind-tables
 
 CFLAGS_CG=-w  -pipe -fPIC -I/eda/vcs/include -O  -fno-strict-aliasing   
 

@@ -1,8 +1,7 @@
-var total = 299;
+var total = 134;
 
 var callerdata = {
-    'aaData': [["<a href='./node1Time.html' title='unnamed$$_0'>unnamed$$_0</a>", 36, 37, 6, "<a href='javascript:void(0)' onclick='var src=new RptCode(\"tb.sv:231\")'>tb.sv:231</a>"],
-        ["<a href='./node1Time.html' title='unnamed$$_0'>unnamed$$_0</a>", 3, 37, 6, "<a href='javascript:void(0)' onclick='var src=new RptCode(\"tb.sv:234\")'>tb.sv:234</a>"]],
+    'aaData': [["<a href='./node3Time.html' title='test_rand_frame'>test_rand_frame</a>", 17, 22, 5, "<a href='javascript:void(0)' onclick='var src=new RptCode(\"tb.sv:378\")'>tb.sv:378</a>"]],
     'aoColumns': [
         {'sTitle': 'Caller Name', 'sClass': 'stackleft', 'sWidth': '24%'},
         {'sTitle': 'Attribute Time', 'sClass': 'stackright', 'sWidth': '17%'},
@@ -12,7 +11,7 @@ var callerdata = {
     ],
     'aoColumnDefs': [
         {'fnRender': function(oObj, sVal){
-            var input = sVal * 1000000 * 2.79 / 299;
+            var input = sVal * 1000000 * 0.94 / 134;
             var ret;
             if(input>1000000){
                 ret = (input/1000000).toFixed(1).toString() + ' s';
@@ -35,11 +34,7 @@ var callerdata = {
     'bScrollCollapse': true
 }
 var calleedata = {
-    'aaData': [["<a href='./node1Time.html' title='unnamed$$_0'>unnamed$$_0</a>", 36, 37, 6, "<a href='javascript:void(0)' onclick='var src=new RptCode(\"tb.sv:231\")'>tb.sv:231</a>"],
-        ["<a href='./node2Time.html' title='check_output'>check_output</a>", 14, 14, 1, "<a href='javascript:void(0)' onclick='var src=new RptCode(\"tb.sv:232\")'>tb.sv:232</a>"],
-        ["<a href='./node6Time.html' title='test_rand_frame'>test_rand_frame</a>", 14, 17, 0, "<a href='javascript:void(0)' onclick='var src=new RptCode(\"tb.sv:5\")'>tb.sv:5</a>"],
-        ["<a href='./node1Time.html' title='unnamed$$_0'>unnamed$$_0</a>", 3, 37, 6, "<a href='javascript:void(0)' onclick='var src=new RptCode(\"tb.sv:234\")'>tb.sv:234</a>"],
-        ["<a href='./node6Time.html' title='test_rand_frame'>test_rand_frame</a>", 3, 17, 0, "<a href='javascript:void(0)' onclick='var src=new RptCode(\"tb.sv:234\")'>tb.sv:234</a>"]],
+    'aaData': [["<a href='./node8Time.html' title='send_frame'>send_frame</a>", 1, 3, 2, "<a href='javascript:void(0)' onclick='var src=new RptCode(\"tb.sv:430\")'>tb.sv:430</a>"]],
     'aoColumns': [
         {'sTitle': 'Callee Name', 'sClass': 'stackleft', 'sWidth': '24%'},
         {'sTitle': 'Attribute Time', 'sClass': 'stackright', 'sWidth': '17%'},
@@ -49,7 +44,7 @@ var calleedata = {
     ],
     'aoColumnDefs': [
         {'fnRender': function(oObj, sVal){
-            var input = sVal * 1000000 * 2.79 / 299;
+            var input = sVal * 1000000 * 0.94 / 134;
             var ret;
             if(input>1000000){
                 ret = (input/1000000).toFixed(1).toString() + ' s';

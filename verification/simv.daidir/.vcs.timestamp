@@ -1,5 +1,5 @@
 0 
-42
+43
 +incdir+config
 +itf+/eda/vcs/linux64/lib/vcsdp_lite.tab
 +vcsd1
@@ -32,6 +32,7 @@
 -full64
 -gen_obj
 -picarchive
+-simprofile
 -sverilog
 -timescale=1ns/100ps
 -top
@@ -42,7 +43,7 @@
 line+cond+branch+tgl+fsm
 tb_frame_detector
 tb_frame_detector_cov
-94
+96
 sysc_uni_pwd=/mnt/d/project/chaoslogic/verification
 no_proxy=192.168.*,172.31.*,172.30.*,172.29.*,172.28.*,172.27.*,172.26.*,172.25.*,172.24.*,172.23.*,172.22.*,172.21.*,172.20.*,172.19.*,172.18.*,172.17.*,172.16.*,10.*,127.*,localhost,<local>
 https_proxy=http://127.0.0.1:7890
@@ -64,6 +65,8 @@ VSCODE_GIT_ASKPASS_MAIN=/home/zhanyue/.vscode-server/bin/17baf841131aa23349f217c
 VSCODE_GIT_ASKPASS_EXTRA_ARGS=
 VSCODE_DEBUGPY_ADAPTER_ENDPOINTS=/home/zhanyue/.vscode-server/extensions/ms-python.debugpy-2025.8.0/.noConfigDebugAdapterEndpoints/endpoint-3165d9fe085b5b25.txt
 VMR_MODE_FLAG=64
+VIRTUAL_ENV_PROMPT=(python_env) 
+VIRTUAL_ENV=/home/zhanyue/python_env
 VERDI_HOME=/eda/verdi
 VCS_TARGET_ARCH=linux64
 VCS_MODE_FLAG=64
@@ -139,7 +142,7 @@ AUTOJUMP_ERROR_PATH=/home/zhanyue/.local/share/autojump/errors.log
 AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 0
 12
-1750397053 tb.sv
+1750397303 tb.sv
 1750340885 dut/top.v
 1750312205 dut/output_stage.sv
 1750345489 dut/input_stage.sv
@@ -147,7 +150,7 @@ AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 1750306040 dut/crc_module.v
 1750306040 dut/async_fifo.v
 1551421444 /eda/vcs/include/cm_vcsd.tab
-1750397060 filelist.f
+1750397397 filelist.f
 1551421246 /eda/vcs/linux64/lib/vcsdp_lite.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUXAMD64/novas.tab
 1550753332 /eda/verdi/share/PLI/VCS/LINUX64/verdi.tab
@@ -157,5 +160,5 @@ AM_HOME=/home/zhanyue/ysyx/ysyx-workbench/abstract-machine
 1551421768 /eda/vcs/linux64/lib/libsnpsmalloc.so
 1551421789 /eda/vcs/linux64/lib/libvfs.so
 1550752033 /eda/verdi/share/PLI/VCS/LINUXAMD64/pli.a
-1750397068 simv.daidir
+1750397412 simv.daidir
 -1 partitionlib

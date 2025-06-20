@@ -2,21 +2,20 @@
      VCS build date:                                   Feb 28 2019 22:34:30                                   
    Compiler version:                                   O-2018.09-SP2_Full64                                   
     Runtime version:                                   O-2018.09-SP2_Full64                                   
-       Machine Name:                                   tank                                                   
-     Profile runner:                                   ray                                                    
-       Profile data:                                   /home/ray/git/chaoslogic/verification/simprofile_dir   
-      Creation date:                                   Fri Jun 20 12:59:01 2025                               
+       Machine Name:                                   LG-GRAM16                                              
+     Profile runner:                                   zhanyue                                                
+       Profile data:                                   /mnt/d/project/chaoslogic/verification/simprofile_dir  
+      Creation date:                                   Fri Jun 20 13:30:14 2025                               
       Profile start:                                   0                                                      
-       Profile stop:                                   17135840                                               
-     Total CPU Time:                                   3.06                                                   
-    Compile Command:                                   /eda/vcs18/vcs/O-2018.09-SP2/bin/vcs -full64 -cc gcc -c
-                                                       pp g++ -LDFLAGS -Wl,-no-as-needed -cm line+cond+branch+
-                                                       tgl+fsm -cm_name tb_frame_detector_cov -cm_dir ./covdir
-                                                       .vdb -sverilog -f filelist.f -simprofile -top tb_frame_
-                                                       detector -timescale=1ns/100ps +incdir+config -fsdb -P /
-                                                       eda/verdi/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/LINUX
-                                                       AMD64/novas.tab /eda/verdi/verdi/Verdi_O-2018.09-SP2/sh
-                                                       are/PLI/VCS/LINUXAMD64/pli.a -debug_access             
+       Profile stop:                                   17135520                                               
+     Total CPU Time:                                   0.86                                                   
+    Compile Command:                                   /eda/vcs/bin/vcs -full64 -cc gcc -cpp g++ -LDFLAGS -Wl,
+                                                       -no-as-needed -cm line+cond+branch+tgl+fsm -cm_name tb_
+                                                       frame_detector_cov -cm_dir ./covdir.vdb -sverilog -f fi
+                                                       lelist.f -simprofile -top tb_frame_detector -timescale=
+                                                       1ns/100ps +incdir+config -fsdb -P /eda/verdi/share/PLI/
+                                                       VCS/LINUXAMD64/novas.tab /eda/verdi/share/PLI/VCS/LINUX
+                                                       AMD64/pli.a -debug_access                              
  Simulation Command:                                   ./simv -simprofile mem                                 
 ##############################################################################################################
 ==============================================================================================================

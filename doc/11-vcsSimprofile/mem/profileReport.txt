@@ -2,21 +2,20 @@
      VCS build date:                                   Feb 28 2019 22:34:30                                   
    Compiler version:                                   O-2018.09-SP2_Full64                                   
     Runtime version:                                   O-2018.09-SP2_Full64                                   
-       Machine Name:                                   tank                                                   
-     Profile runner:                                   ray                                                    
-       Profile data:                                   /home/ray/git/chaoslogic/verification/simprofile_dir   
-      Creation date:                                   Fri Jun 20 12:59:01 2025                               
+       Machine Name:                                   LG-GRAM16                                              
+     Profile runner:                                   zhanyue                                                
+       Profile data:                                   /mnt/d/project/chaoslogic/verification/simprofile_dir  
+      Creation date:                                   Fri Jun 20 13:30:14 2025                               
       Profile start:                                   0                                                      
-       Profile stop:                                   17135840                                               
-     Total CPU Time:                                   3.06                                                   
-    Compile Command:                                   /eda/vcs18/vcs/O-2018.09-SP2/bin/vcs -full64 -cc gcc -c
-                                                       pp g++ -LDFLAGS -Wl,-no-as-needed -cm line+cond+branch+
-                                                       tgl+fsm -cm_name tb_frame_detector_cov -cm_dir ./covdir
-                                                       .vdb -sverilog -f filelist.f -simprofile -top tb_frame_
-                                                       detector -timescale=1ns/100ps +incdir+config -fsdb -P /
-                                                       eda/verdi/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/LINUX
-                                                       AMD64/novas.tab /eda/verdi/verdi/Verdi_O-2018.09-SP2/sh
-                                                       are/PLI/VCS/LINUXAMD64/pli.a -debug_access             
+       Profile stop:                                   17135520                                               
+     Total CPU Time:                                   0.86                                                   
+    Compile Command:                                   /eda/vcs/bin/vcs -full64 -cc gcc -cpp g++ -LDFLAGS -Wl,
+                                                       -no-as-needed -cm line+cond+branch+tgl+fsm -cm_name tb_
+                                                       frame_detector_cov -cm_dir ./covdir.vdb -sverilog -f fi
+                                                       lelist.f -simprofile -top tb_frame_detector -timescale=
+                                                       1ns/100ps +incdir+config -fsdb -P /eda/verdi/share/PLI/
+                                                       VCS/LINUXAMD64/novas.tab /eda/verdi/share/PLI/VCS/LINUX
+                                                       AMD64/pli.a -debug_access                              
  Simulation Command:                                   ./simv -simprofile mem                                 
 ##############################################################################################################
 ==============================================================================================================
@@ -24,47 +23,26 @@
 ==============================================================================================================
    Component                                           Memory                                Percentage
 --------------------------------------------------------------------------------------------------------------
-  KERNEL                                               9.12 M                                     4.65%
-  HSIM                                                 4.37 M                                     2.23%
-  VERILOG                                             24.38 K                                     0.01%
+  KERNEL                                               9.04 M                                     4.84%
+  HSIM                                                 4.37 M                                     2.34%
+  VERILOG                                             24.71 K                                     0.01%
     Package                                           16.30 K                                     0.01%
-    Module                                             8.07 K                                     0.00%
+    Module                                             8.41 K                                     0.00%
     Function Coverage Kernel                                    584                                     0.00%
-  Anonymous                                           25.48 M                                    13.00%
-  Library/Executable                                 157.00 M                                    80.10%
-    VCS                                              139.00 M                                    70.92%
-    Third-party                                       18.00 M                                     9.18%
-      libvfs                                           3.05 M                                     1.56%
-      libnovas                                         2.07 M                                     1.06%
-      libc                                             1.86 M                                     0.95%
-      libstdc++                                        1.86 M                                     0.95%
-      libgio-2.0                                       1.58 M                                     0.81%
-      libgcrypt                                        1.22 M                                     0.62%
-      libglib-2.0                                      1.16 M                                     0.59%
-      libm                                           868.00 K                                     0.43%
-      libsystemd                                     804.00 K                                     0.40%
-      libzstd                                        728.00 K                                     0.36%
-      libpcre2-8                                     608.00 K                                     0.30%
-      libgobject-2.0                                 336.00 K                                     0.17%
-      libmount                                       272.00 K                                     0.14%
-      libdbus-1                                      268.00 K                                     0.13%
-      libblkid                                       208.00 K                                     0.10%
-      liblzma                                        188.00 K                                     0.09%
-      libgcc_s                                       168.00 K                                     0.08%
-      libselinux                                     148.00 K                                     0.07%
-      libdbus-glib-1                                 140.00 K                                     0.07%
-      libgpg-error                                   132.00 K                                     0.07%
-      liblz4                                         124.00 K                                     0.06%
-      libz                                           104.00 K                                     0.05%
-      libcap                                          40.00 K                                     0.02%
-      libffi                                          40.00 K                                     0.02%
-      libgmodule-2.0                                  20.00 K                                     0.01%
-      libnss_mdns4_minimal                                20.00 K                                     0.01%
+  Anonymous                                           25.56 M                                    13.67%
+  Library/Executable                                 148.00 M                                    79.14%
+    VCS                                              142.00 M                                    75.94%
+    Third-party                                        6.00 M                                     3.21%
+      libnovas                                         2.07 M                                     1.11%
+      libc                                             1.95 M                                     1.04%
+      libstdc++                                        1.56 M                                     0.83%
+      libm                                           868.00 K                                     0.45%
+      libgcc_s                                       116.00 K                                     0.06%
       librt                                           16.00 K                                     0.01%
       libdl                                           16.00 K                                     0.01%
       libpthread                                      16.00 K                                     0.01%
 --------------------------------------------------------------------------------------------------------------
-   TOTAL                                             196.00 M                                   100.00%
+   TOTAL                                             187.00 M                                   100.00%
 ______________________________________________________________________________________________________________
 
 

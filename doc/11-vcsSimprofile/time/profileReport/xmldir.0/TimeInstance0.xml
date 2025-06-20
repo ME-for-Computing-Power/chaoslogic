@@ -1,17 +1,21 @@
 <instances>
-  <total>299</total>
-  <totalv>187</totalv>
+  <total>134</total>
+  <totalv>98</totalv>
   <instance id='0' value='0' incl_value='0'>
     <child>2</child>
   </instance>
-  <instance id='2' value='160' incl_value='187'>
+  <instance id='2' value='89' incl_value='98'>
     <child>3</child>
   </instance>
-  <instance id='3' value='13' incl_value='27'>
-    <child>4</child>
+  <instance id='3' value='1' incl_value='9'>
+    <child>7</child>
     <child>5</child>
+    <child>4</child>
+    <child>6</child>
   </instance>
-  <instance id='4' value='7' incl_value='7'/>
-  <instance id='5' value='5' incl_value='5'/>
-  <if v='2'/>
+  <instance id='4' value='1' incl_value='1'/>
+  <instance id='5' value='2' incl_value='2'/>
+  <instance id='6' value='1' incl_value='1'/>
+  <instance id='7' value='4' incl_value='4'/>
+  <if v='0'/>
 </instances>

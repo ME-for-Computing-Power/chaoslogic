@@ -1,68 +1,90 @@
 <modules>
-  <module id='4' name='output_stage' type='Module' instno='1' cinstno='0' fileid='4' startline='1' endline='87'>
-    <constr id='1' name='Hsim {Module:output_stage}' type='Hsim' fileid='4' line='87' end='87'/>
-    <constr id='2' name='NoName {line:34}' type='AlwaysFF' fileid='4' line='34' end='61'/>
-    <constr id='3' name='NoName {line:65}' type='ContAssign' fileid='4' line='65' end='65'/>
-    <constr id='4' name='NoName {line:66}' type='ContAssign' fileid='4' line='66' end='66'/>
-    <constr id='5' name='NoName {line:67}' type='ContAssign' fileid='4' line='67' end='67'/>
-    <constr id='6' name='NoName {line:68}' type='ContAssign' fileid='4' line='68' end='68'/>
-    <constr id='7' name='NoName {line:69}' type='ContAssign' fileid='4' line='69' end='69'/>
-    <constr id='8' name='NoName {line:70}' type='ContAssign' fileid='4' line='70' end='70'/>
-    <constr id='9' name='NoName {line:71}' type='ContAssign' fileid='4' line='71' end='71'/>
-    <constr id='10' name='NoName {line:72}' type='ContAssign' fileid='4' line='72' end='72'/>
-    <constr id='11' name='NoName {line:74}' type='ContAssign' fileid='4' line='74' end='74'/>
-    <constr id='12' name='NoName {line:75}' type='ContAssign' fileid='4' line='75' end='75'/>
-    <constr id='13' name='NoName {line:76}' type='ContAssign' fileid='4' line='76' end='76'/>
-    <constr id='14' name='NoName {line:77}' type='ContAssign' fileid='4' line='77' end='77'/>
-    <constr id='15' name='NoName {line:78}' type='ContAssign' fileid='4' line='78' end='78'/>
-    <constr id='16' name='NoName {line:79}' type='ContAssign' fileid='4' line='79' end='79'/>
-    <constr id='17' name='NoName {line:80}' type='ContAssign' fileid='4' line='80' end='80'/>
-    <constr id='18' name='NoName {line:81}' type='ContAssign' fileid='4' line='81' end='81'/>
-    <constr id='19' name='NoName {line:84}' type='ContAssign' fileid='4' line='84' end='84'/>
-    <constr id='20' name='rst_n' type='Port' fileid='4' line='2' end='2'/>
-    <constr id='21' name='clk_out16x' type='Port' fileid='4' line='3' end='3'/>
-    <constr id='22' name='data_gray' type='Port' fileid='4' line='4' end='4'/>
-    <constr id='23' name='vld_ch' type='Port' fileid='4' line='5' end='5'/>
-    <constr id='24' name='data_count' type='Port' fileid='4' line='6' end='6'/>
-    <constr id='25' name='crc_valid' type='Port' fileid='4' line='7' end='7'/>
-    <constr id='26' name='data_out_ch1' type='Port' fileid='4' line='8' end='8'/>
-    <constr id='27' name='data_out_ch2' type='Port' fileid='4' line='9' end='9'/>
-    <constr id='28' name='data_out_ch3' type='Port' fileid='4' line='10' end='10'/>
-    <constr id='29' name='data_out_ch4' type='Port' fileid='4' line='11' end='11'/>
-    <constr id='30' name='data_out_ch5' type='Port' fileid='4' line='12' end='12'/>
-    <constr id='31' name='data_out_ch6' type='Port' fileid='4' line='13' end='13'/>
-    <constr id='32' name='data_out_ch7' type='Port' fileid='4' line='14' end='14'/>
-    <constr id='33' name='data_out_ch8' type='Port' fileid='4' line='15' end='15'/>
-    <constr id='34' name='data_vld_ch1' type='Port' fileid='4' line='16' end='16'/>
-    <constr id='35' name='data_vld_ch2' type='Port' fileid='4' line='17' end='17'/>
-    <constr id='36' name='data_vld_ch3' type='Port' fileid='4' line='18' end='18'/>
-    <constr id='37' name='data_vld_ch4' type='Port' fileid='4' line='19' end='19'/>
-    <constr id='38' name='data_vld_ch5' type='Port' fileid='4' line='20' end='20'/>
-    <constr id='39' name='data_vld_ch6' type='Port' fileid='4' line='21' end='21'/>
-    <constr id='40' name='data_vld_ch7' type='Port' fileid='4' line='22' end='22'/>
-    <constr id='41' name='data_vld_ch8' type='Port' fileid='4' line='23' end='23'/>
+  <module id='3' name='async_fifo' type='Module' instno='1' cinstno='0' fileid='3' startline='1' endline='101'>
+    <constr id='1' name='Hsim {Module:async_fifo}' type='Hsim' fileid='3' line='101' end='101'/>
+    <constr id='2' name='NoName {line:41}' type='Always' fileid='3' line='41' end='61'/>
+    <constr id='3' name='NoName {line:67}' type='Always' fileid='3' line='67' end='86'/>
+    <constr id='4' name='bin2gray' type='Function' fileid='3' line='33' end='38'/>
+    <constr id='5' name='NoName {line:64}' type='ContAssign' fileid='3' line='64' end='64'/>
+    <constr id='6' name='NoName {line:89}' type='ContAssign' fileid='3' line='89' end='89'/>
+    <constr id='7' name='NoName {line:93}' type='ContAssign' fileid='3' line='93' end='93'/>
+    <constr id='8' name='NoName {line:96}' type='ContAssign' fileid='3' line='96' end='96'/>
+    <constr id='9' name='NoName {line:99}' type='ContAssign' fileid='3' line='99' end='99'/>
+    <constr id='10' name='clk_in' type='Port' fileid='3' line='2' end='2'/>
+    <constr id='11' name='clk_out' type='Port' fileid='3' line='3' end='3'/>
+    <constr id='12' name='rst_n' type='Port' fileid='3' line='4' end='4'/>
+    <constr id='13' name='fifo_w_enable' type='Port' fileid='3' line='5' end='5'/>
+    <constr id='14' name='fifo_r_enable' type='Port' fileid='3' line='6' end='6'/>
+    <constr id='15' name='data_to_fifo' type='Port' fileid='3' line='7' end='7'/>
+    <constr id='16' name='data_from_fifo' type='Port' fileid='3' line='8' end='8'/>
+    <constr id='17' name='fifo_empty' type='Port' fileid='3' line='9' end='9'/>
+    <constr id='18' name='fifo_full' type='Port' fileid='3' line='10' end='10'/>
   </module>
-  <module id='6' name='async_fifo' type='Module' instno='1' cinstno='0' fileid='6' startline='1' endline='101'>
-    <constr id='1' name='Hsim {Module:async_fifo}' type='Hsim' fileid='6' line='101' end='101'/>
-    <constr id='2' name='NoName {line:41}' type='Always' fileid='6' line='41' end='61'/>
-    <constr id='3' name='NoName {line:67}' type='Always' fileid='6' line='67' end='86'/>
-    <constr id='4' name='bin2gray' type='Function' fileid='6' line='33' end='38'/>
-    <constr id='5' name='NoName {line:64}' type='ContAssign' fileid='6' line='64' end='64'/>
-    <constr id='6' name='NoName {line:89}' type='ContAssign' fileid='6' line='89' end='89'/>
-    <constr id='7' name='NoName {line:93}' type='ContAssign' fileid='6' line='93' end='93'/>
-    <constr id='8' name='NoName {line:96}' type='ContAssign' fileid='6' line='96' end='96'/>
-    <constr id='9' name='NoName {line:99}' type='ContAssign' fileid='6' line='99' end='99'/>
-    <constr id='10' name='clk_in' type='Port' fileid='6' line='2' end='2'/>
-    <constr id='11' name='clk_out' type='Port' fileid='6' line='3' end='3'/>
-    <constr id='12' name='rst_n' type='Port' fileid='6' line='4' end='4'/>
-    <constr id='13' name='fifo_w_enable' type='Port' fileid='6' line='5' end='5'/>
-    <constr id='14' name='fifo_r_enable' type='Port' fileid='6' line='6' end='6'/>
-    <constr id='15' name='data_to_fifo' type='Port' fileid='6' line='7' end='7'/>
-    <constr id='16' name='data_from_fifo' type='Port' fileid='6' line='8' end='8'/>
-    <constr id='17' name='fifo_empty' type='Port' fileid='6' line='9' end='9'/>
-    <constr id='18' name='fifo_full' type='Port' fileid='6' line='10' end='10'/>
+  <module id='4' name='crc_module' type='Module' instno='1' cinstno='0' fileid='4' startline='4' endline='35'>
+    <constr id='1' name='Hsim {Module:crc_module}' type='Hsim' fileid='4' line='35' end='35'/>
+    <constr id='2' name='NoName {line:15}' type='Always' fileid='4' line='15' end='33'/>
+    <constr id='3' name='NoName {line:12}' type='ContAssign' fileid='4' line='12' end='12'/>
+    <constr id='4' name='NoName {line:13}' type='ContAssign' fileid='4' line='13' end='13'/>
+    <constr id='5' name='data_to_crc' type='Port' fileid='4' line='5' end='5'/>
+    <constr id='6' name='crc' type='Port' fileid='4' line='6' end='6'/>
+    <constr id='7' name='data_from_crc' type='Port' fileid='4' line='7' end='7'/>
   </module>
-  <module id='7' name='top' type='Module' instno='1' cinstno='5' fileid='1' startline='3' endline='129'>
+  <module id='6' name='input_stage' type='Module' instno='1' cinstno='0' fileid='6' startline='3' endline='122'>
+    <constr id='1' name='Hsim {Module:input_stage}' type='Hsim' fileid='6' line='122' end='122'/>
+    <constr id='2' name='NoName {line:29}' type='AlwaysFF' fileid='6' line='29' end='120'/>
+    <constr id='3' name='clk_in' type='Port' fileid='6' line='4' end='4'/>
+    <constr id='4' name='rst_n' type='Port' fileid='6' line='5' end='5'/>
+    <constr id='5' name='data_in' type='Port' fileid='6' line='6' end='6'/>
+    <constr id='6' name='data_to_fifo' type='Port' fileid='6' line='8' end='8'/>
+    <constr id='7' name='fifo_w_enable' type='Port' fileid='6' line='9' end='9'/>
+    <constr id='8' name='crc_err' type='Port' fileid='6' line='10' end='10'/>
+    <constr id='9' name='data_to_crc' type='Port' fileid='6' line='12' end='12'/>
+    <constr id='10' name='crc' type='Port' fileid='6' line='13' end='13'/>
+    <constr id='11' name='data_from_crc' type='Port' fileid='6' line='14' end='14'/>
+  </module>
+  <module id='7' name='output_stage' type='Module' instno='1' cinstno='0' fileid='7' startline='1' endline='87'>
+    <constr id='1' name='Hsim {Module:output_stage}' type='Hsim' fileid='7' line='87' end='87'/>
+    <constr id='2' name='NoName {line:34}' type='AlwaysFF' fileid='7' line='34' end='61'/>
+    <constr id='3' name='NoName {line:65}' type='ContAssign' fileid='7' line='65' end='65'/>
+    <constr id='4' name='NoName {line:66}' type='ContAssign' fileid='7' line='66' end='66'/>
+    <constr id='5' name='NoName {line:67}' type='ContAssign' fileid='7' line='67' end='67'/>
+    <constr id='6' name='NoName {line:68}' type='ContAssign' fileid='7' line='68' end='68'/>
+    <constr id='7' name='NoName {line:69}' type='ContAssign' fileid='7' line='69' end='69'/>
+    <constr id='8' name='NoName {line:70}' type='ContAssign' fileid='7' line='70' end='70'/>
+    <constr id='9' name='NoName {line:71}' type='ContAssign' fileid='7' line='71' end='71'/>
+    <constr id='10' name='NoName {line:72}' type='ContAssign' fileid='7' line='72' end='72'/>
+    <constr id='11' name='NoName {line:74}' type='ContAssign' fileid='7' line='74' end='74'/>
+    <constr id='12' name='NoName {line:75}' type='ContAssign' fileid='7' line='75' end='75'/>
+    <constr id='13' name='NoName {line:76}' type='ContAssign' fileid='7' line='76' end='76'/>
+    <constr id='14' name='NoName {line:77}' type='ContAssign' fileid='7' line='77' end='77'/>
+    <constr id='15' name='NoName {line:78}' type='ContAssign' fileid='7' line='78' end='78'/>
+    <constr id='16' name='NoName {line:79}' type='ContAssign' fileid='7' line='79' end='79'/>
+    <constr id='17' name='NoName {line:80}' type='ContAssign' fileid='7' line='80' end='80'/>
+    <constr id='18' name='NoName {line:81}' type='ContAssign' fileid='7' line='81' end='81'/>
+    <constr id='19' name='NoName {line:84}' type='ContAssign' fileid='7' line='84' end='84'/>
+    <constr id='20' name='rst_n' type='Port' fileid='7' line='2' end='2'/>
+    <constr id='21' name='clk_out16x' type='Port' fileid='7' line='3' end='3'/>
+    <constr id='22' name='data_gray' type='Port' fileid='7' line='4' end='4'/>
+    <constr id='23' name='vld_ch' type='Port' fileid='7' line='5' end='5'/>
+    <constr id='24' name='data_count' type='Port' fileid='7' line='6' end='6'/>
+    <constr id='25' name='crc_valid' type='Port' fileid='7' line='7' end='7'/>
+    <constr id='26' name='data_out_ch1' type='Port' fileid='7' line='8' end='8'/>
+    <constr id='27' name='data_out_ch2' type='Port' fileid='7' line='9' end='9'/>
+    <constr id='28' name='data_out_ch3' type='Port' fileid='7' line='10' end='10'/>
+    <constr id='29' name='data_out_ch4' type='Port' fileid='7' line='11' end='11'/>
+    <constr id='30' name='data_out_ch5' type='Port' fileid='7' line='12' end='12'/>
+    <constr id='31' name='data_out_ch6' type='Port' fileid='7' line='13' end='13'/>
+    <constr id='32' name='data_out_ch7' type='Port' fileid='7' line='14' end='14'/>
+    <constr id='33' name='data_out_ch8' type='Port' fileid='7' line='15' end='15'/>
+    <constr id='34' name='data_vld_ch1' type='Port' fileid='7' line='16' end='16'/>
+    <constr id='35' name='data_vld_ch2' type='Port' fileid='7' line='17' end='17'/>
+    <constr id='36' name='data_vld_ch3' type='Port' fileid='7' line='18' end='18'/>
+    <constr id='37' name='data_vld_ch4' type='Port' fileid='7' line='19' end='19'/>
+    <constr id='38' name='data_vld_ch5' type='Port' fileid='7' line='20' end='20'/>
+    <constr id='39' name='data_vld_ch6' type='Port' fileid='7' line='21' end='21'/>
+    <constr id='40' name='data_vld_ch7' type='Port' fileid='7' line='22' end='22'/>
+    <constr id='41' name='data_vld_ch8' type='Port' fileid='7' line='23' end='23'/>
+  </module>
+  <module id='8' name='top' type='Module' instno='1' cinstno='5' fileid='1' startline='3' endline='129'>
     <constr id='1' name='Hsim {Module:top}' type='Hsim' fileid='1' line='129' end='129'/>
     <constr id='2' name='NoName {line:40}' type='ContAssign' fileid='1' line='40' end='40'/>
     <constr id='3' name='NoName {line:60}' type='ContAssign' fileid='1' line='60' end='60'/>
@@ -97,24 +119,25 @@
     <constr id='32' name='PortConnect {Instance:u_fifo_data_resolu}' type='PortConnections' fileid='1' line='96' end='96'/>
     <constr id='33' name='PortConnect {Instance:u_output_stage}' type='PortConnections' fileid='1' line='104' end='104'/>
   </module>
-  <module id='9' name='tb_frame_detector' type='Module' instno='1' cinstno='1' fileid='2' startline='5' endline='409'>
-    <constr id='1' name='Hsim {Module:tb_frame_detector}' type='Hsim' fileid='2' line='409' end='409'/>
+  <module id='9' name='tb_frame_detector' type='Module' instno='1' cinstno='1' fileid='2' startline='5' endline='477'>
+    <constr id='1' name='Hsim {Module:tb_frame_detector}' type='Hsim' fileid='2' line='477' end='477'/>
     <constr id='2' name='NoName' type='Initial' fileid='0' line='0' end='0'/>
     <constr id='3' name='NoName {line:64}' type='Initial' fileid='2' line='64' end='67'/>
     <constr id='4' name='NoName {line:69}' type='Initial' fileid='2' line='69' end='73'/>
     <constr id='5' name='NoName {line:75}' type='Initial' fileid='2' line='75' end='79'/>
-    <constr id='6' name='NoName {line:181}' type='Initial' fileid='2' line='181' end='263'/>
-    <constr id='7' name='NoName {line:385}' type='Always' fileid='2' line='385' end='387'/>
-    <constr id='8' name='NoName {line:389}' type='Initial' fileid='2' line='389' end='394'/>
-    <constr id='9' name='NoName {line:405}' type='Initial' fileid='2' line='405' end='408'/>
-    <constr id='10' name='bin2gray' type='Function' fileid='2' line='82' end='84'/>
-    <constr id='11' name='send_frame' type='Task' fileid='2' line='87' end='122'/>
-    <constr id='12' name='check_serial_output' type='Task' fileid='2' line='125' end='173'/>
-    <constr id='13' name='send_oversize_frame' type='Task' fileid='2' line='266' end='301'/>
-    <constr id='14' name='test_rand_frame' type='Task' fileid='2' line='303' end='314'/>
-    <constr id='15' name='crc16_ccitt' type='Task' fileid='2' line='317' end='348'/>
-    <constr id='16' name='test_single_frame' type='Task' fileid='2' line='351' end='367'/>
-    <constr id='17' name='check_output' type='Task' fileid='2' line='370' end='382'/>
-    <constr id='18' name='PortConnect {Instance:dut}' type='PortConnections' fileid='2' line='35' end='35'/>
+    <constr id='6' name='NoName {line:241}' type='Initial' fileid='2' line='241' end='328'/>
+    <constr id='7' name='NoName {line:450}' type='Always' fileid='2' line='450' end='452'/>
+    <constr id='8' name='NoName {line:454}' type='Initial' fileid='2' line='454' end='459'/>
+    <constr id='9' name='bin2gray' type='Function' fileid='2' line='82' end='84'/>
+    <constr id='10' name='send_frame' type='Task' fileid='2' line='87' end='122'/>
+    <constr id='11' name='fsm_test' type='Task' fileid='2' line='124' end='158'/>
+    <constr id='12' name='wait_test' type='Task' fileid='2' line='161' end='182'/>
+    <constr id='13' name='check_serial_output' type='Task' fileid='2' line='185' end='233'/>
+    <constr id='14' name='send_oversize_frame' type='Task' fileid='2' line='331' end='366'/>
+    <constr id='15' name='test_rand_frame' type='Task' fileid='2' line='368' end='379'/>
+    <constr id='16' name='crc16_ccitt' type='Task' fileid='2' line='382' end='413'/>
+    <constr id='17' name='test_single_frame' type='Task' fileid='2' line='416' end='432'/>
+    <constr id='18' name='check_output' type='Task' fileid='2' line='435' end='447'/>
+    <constr id='19' name='PortConnect {Instance:dut}' type='PortConnections' fileid='2' line='35' end='35'/>
   </module>
 </modules>

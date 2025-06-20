@@ -1,4 +1,6 @@
-tb_frame_detector|62.54
-tb_frame_detector.dut|9.03
-tb_frame_detector.dut.u_async_fifo|1.67
-tb_frame_detector.dut.u_output_stage|2.34
+tb_frame_detector|73.13
+tb_frame_detector.dut|6.72
+tb_frame_detector.dut.u_output_stage|0.75
+tb_frame_detector.dut.u_crc_module|0.75
+tb_frame_detector.dut.u_async_fifo|1.49
+tb_frame_detector.dut.u_input_stage|2.99

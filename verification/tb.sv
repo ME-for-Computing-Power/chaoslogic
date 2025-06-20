@@ -467,10 +467,12 @@ end
 // end
 
 //vcd dump
+/*
 initial begin
     $dumpfile("wave.vcd");
     $dumpvars(0, tb_frame_detector);
 end
-endmodule
 
+*/
+endmodule
 //VCS coverage on

@@ -1,12 +1,9 @@
 <entries>
-  <total>299</total>
-  <totalv>187</totalv>
-  <entry name='VERILOG' value='187'>
-    <entry name='Module' value='187'/>
+  <total>134</total>
+  <totalv>98</totalv>
+  <entry name='VERILOG' value='98'>
+    <entry name='Module' value='98'/>
   </entry>
-  <entry name='Value Change Dumping' value='64'>
-    <entry name='VCD' value='64'/>
-  </entry>
-  <entry name='KERNEL' value='41'/>
-  <entry name='HSIM' value='7'/>
+  <entry name='KERNEL' value='32'/>
+  <entry name='HSIM' value='4'/>
 </entries>

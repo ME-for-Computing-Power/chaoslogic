@@ -3,44 +3,43 @@
 //  DESIGN STATISTICS 
 // ===================
 //
-// No. of design lines (note: includes comments and blank lines)                  920
+// No. of design lines (note: includes comments and blank lines)                  985
 // No. of all modules (module+interface+package+program):                           8
-// No. of all processes:                                                           14
-// No. of all nodes (variable+net):                                               183
+// No. of all processes:                                                           13
+// No. of all nodes (variable+net):                                               192
 // No. of all parameters:                                                           5
-// No. of verilog task defns:                                                       7
+// No. of verilog task defns:                                                       9
 // No. of verilog functions defns:                                                  2
-// No. of named blocks:                                                             6
+// No. of named blocks:                                                             7
 // No. of typedefs defns:                                                           1
 // No. of enums defns:                                                              1
-// No. of constants                                                               797
+// No. of constants                                                               810
 // No. of packages:                                                                 1
 // No. of scalar nets:                                                             38
 // No. of vector nets:                                                             24
 // No. of scalar regs/logics:                                                      47
-// No. of vector/packed regs/logics:                                               63
+// No. of vector/packed regs/logics:                                               71
 // No. of memory regs/logics:                                                       1
 // No. of scalar bits:                                                              1
-// No. of integers (shortint+int+longint+byte+integer+time):                        8
+// No. of integers (shortint+int+longint+byte+integer+time):                        9
 // No. of enums:                                                                    1
 // No. of always blocks:                                                            5
 // No. of always flip-flop blocks:                                                  2
-// No. of initial blocks:                                                           6
+// No. of initial blocks:                                                           5
 // No. of fork/join blocks:                                                         6
-// No. of operators:                                                              470
-// No. of hierarchical references(xmr):                                             1
+// No. of operators:                                                              484
 // No. of concatenations:                                                          24
 // No. of bit selects:                                                            411
-// No. of part selects:                                                            61
+// No. of part selects:                                                            65
 // No. of non-blocking assignments:                                                64
 // No. of continuous assignments:                                                  31
 // No. of task calls (verilog+class):                                              25
 // No. of function calls (verilog+class):                                           3
-// No. of system task calls (verilog($)+built-in class):                           35
+// No. of system task calls (verilog($)+built-in class):                           33
 // No. of system function calls (verilog($)+built-in class):                       19
 //        packages:                                                                 1
 // No. of module+udp ports:                                                        72
-// No. of system tasks:                                                             7
+// No. of system tasks:                                                             5
 // No. of user tasks:                                                             137
 // No. of system functions:                                                         2
 // No. of user functions:                                                          16

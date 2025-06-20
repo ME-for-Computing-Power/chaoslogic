@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <?xml-stylesheet type="text/xsl" href="cstrProf.xsl"?>
 <cnst_profile>
-<simv_base_dir>/home/ray/git/chaoslogic/verification</simv_base_dir>
-<total_utime>3.060</total_utime>
-<total_stime>0.380</total_stime>
+<simv_base_dir>/mnt/d/project/chaoslogic/verification</simv_base_dir>
+<total_utime>0.860</total_utime>
+<total_stime>0.560</total_stime>
 <total_randomize_utime>0.000</total_randomize_utime>
 <total_randomize_count>0</total_randomize_count>
 <largest_inc_mem>0</largest_inc_mem>

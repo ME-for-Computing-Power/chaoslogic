@@ -34,7 +34,7 @@ fHsimDoXmrProcessing               	1
 fNoMergeDelays                     	0
 uGlblTimeUnit                      	6
 fHsimAllMtm                        	0
-fSimprofileNew                     	0
+fSimprofileNew                     	1
 fHsimVhVlOpt                       	0
 fHsimMdbVhVlInputFuseOpt           	0
 fHsimMdbVhVlInoutFuseOpt           	0
@@ -141,7 +141,7 @@ fHsimCcnOpt2                       	1
 fHsimCcnOpt3                       	0
 fHsimSmdMap                        	0
 fHsimSmdDiag                       	0
-fHsimSmdSimProf                    	0
+fHsimSmdSimProf                    	1
 fHsimSgdDiag                       	0
 fHsimRtDiagLite                    	0
 fHsimRtDiagLiteCevent              	100

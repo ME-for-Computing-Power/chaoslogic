@@ -1,12 +1,12 @@
 size: 8
-simvName: /home/ray/git/chaoslogic/verification/simv
+simvName: /mnt/d/project/chaoslogic/verification/simv
 cst: simv.cst
 day:  Feb 28 2019 22:34:30
 compile: O-2018.09-SP2_Full64
 run: O-2018.09-SP2_Full64
-host: tank
-user: ray
-ctime: Fri Jun 20 12:58:40 2025
+host: LG-GRAM16
+user: zhanyue
+ctime: Fri Jun 20 13:29:51 2025
 dummy1: 0
 dummy2: 0
 dummy3: 0
@@ -15,7 +15,7 @@ light: 0
 simp2: 1
 hasSpNameLenInRecord: 16
 simvCmd: ./simv -simprofile time 
-gconf: skipInternalSVAPackage:1,diagOn:0,trackAllAPsinSample:0,debugProfrptInXterm:0,keepOldHsimView:0,useHsimConstrForAll:0,plotSnapshot:0,plotSimTime:0,noCheckVersion:0,enableSnapshot:0,plotScriptDir:,diagMem:0,diagMemInterval:0.01,diagMemShortPrints:3,loadSmdDiagFiles:0,noMergeHeapAct:0,totalBCSize:0,noCollectHsimMem:0,noCollectAddrMap:0,noStackTrace:0,addFuncNameInSlot:0,rawView:0,exitAtMemCnt:0,diagSignalProfile:0,pidSimv:981242
-time: 2.790000000
-stamp: 1750395523
+gconf: skipInternalSVAPackage:1,diagOn:0,trackAllAPsinSample:0,debugProfrptInXterm:0,keepOldHsimView:0,useHsimConstrForAll:0,plotSnapshot:0,plotSimTime:0,noCheckVersion:0,enableSnapshot:0,plotScriptDir:,diagMem:0,diagMemInterval:0.01,diagMemShortPrints:3,loadSmdDiagFiles:0,noMergeHeapAct:0,totalBCSize:0,noCollectHsimMem:0,noCollectAddrMap:0,noStackTrace:0,addFuncNameInSlot:0,rawView:0,exitAtMemCnt:0,diagSignalProfile:0,pidSimv:28461
+time: 0.940000000
+stamp: 1750397393
 gcCount: 0
