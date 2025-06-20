@@ -163,18 +163,8 @@ Generator）的设计规范和特性要求，该模块旨在检测输入数据�
   转换条件：当 data\_in == 16'hE0E0 时进入 HEAD\_CHECK
 \end{itemize}
 
-\texttt{2.HEAD\_CHECK\hspace{0pt}（帧头校验状态）}
 
-\begin{itemize}
-\item
-  验证完整的32位帧头
-\item
-  行为：检查第二个16位数据是否为 E0E0
-\item
-  转换条件： 若 data\_in == 16'hE0E0 进入 CHANNEL 否则返回 IDLE
-\end{itemize}
-
-\texttt{3.\hspace{0pt}CHANNEL\hspace{0pt}（通道选择状态）}
+\texttt{2.\hspace{0pt}CHANNEL\hspace{0pt}（通道选择状态）}
 
 \begin{itemize}
 \item
@@ -185,7 +175,7 @@ Generator）的设计规范和特性要求，该模块旨在检测输入数据�
   转换条件：无条件进入 DATA 状态（仅需1周期）
 \end{itemize}
 
-\texttt{4.\hspace{0pt}DATA\hspace{0pt}（数据接收状态）}
+\texttt{3.\hspace{0pt}DATA\hspace{0pt}（数据接收状态）}
 
 \begin{itemize}
 \item
@@ -195,65 +185,15 @@ Generator）的设计规范和特性要求，该模块旨在检测输入数据�
 
   启动4位计数器（\texttt{data\_counte}r）从0开始计数
 
-  每个周期将32位寄存器
-  \texttt{tail\_detec\_reg}（用于帧尾检测，初始化全0）左移16位，并存入输入数据\texttt{data\_in}
-
-  每个周期将160位寄存器
-  \texttt{full\_data\_reg}（用于存储数据字段，初始化全0）左移16位，并存入输入数据\texttt{data\_in}
-
-  计数器递增，溢出时丢弃数据
+  启动4位计数器（\texttt{data\_count}）从0开始计数，每次增加16表示数据位宽
+    将data\_buffer[47:32]发送给data\_to\_crc，同时接收data\_from\_crc为crc，保存data\_buffer[47:32]到128位整段data寄存器
+    当检测到 data\_buffer[31:0] == 32'h0e0e0e0e且crc校验成功输出data\_to\_fifo为{data[15:0],112'd0,ch\_sel[7:0],data\_count[7:4]} 同时输出crc\_err和fifo\_w\_enable
 \item
-  转换条件： 当检测到\texttt{data\_in}为 \texttt{0E0E0E0E} 时进入
-  \texttt{CRC\_OUTPUT}，停止寄存器\texttt{tail\_detec\_reg}和\texttt{full\_data\_reg}的存储
-  若计数器溢出（≥15）返回 \texttt{IDLE}
+  当检测到 data\_buffer[31:0] == 32'h0e0e0e0e 时返回 IDLE
+
+  如果data\_count大于128表示数据超长，丢弃数据返回 IDLE；没有超长保留在 ​DATA​（数据接收状态）
 \end{itemize}
 
-\texttt{5.\hspace{0pt}CRC\_OUTPUT\hspace{0pt}（CRC提取状态）}
-
-\begin{itemize}
-\item
-  提取CRC字段并计算数据长度
-\item
-  行为：
-
-  从32位寄存器\texttt{tail\_detec\_reg}中获取CRC字段（帧尾前1周期的数据）
-
-  计算数据长度：data\_count = data\_counter - 2
-
-  截取 full\_data\_reg 的高128位作为 data\_128
-\item
-  转换条件：
-
-  当检测到data\_in为 0E0E0 时进入
-  ENABLE\_CRC（确保帧尾正确）否则数据错误，返回 IDLE
-\end{itemize}
-
-\texttt{6.\hspace{0pt}ENABLE\_CRC\hspace{0pt}（CRC校验使能状态）}
-
-\begin{itemize}
-\item
-  使能CRC校验模块
-\item
-  行为： 拉高 start\_crc信号，启动CRC校验模块，结果由CRC校验模块返回
-\item
-  转换条件： \textbf{无条件}返回 IDLE
-\end{itemize}
-
-单独为与CRC交互编写一个always块，确保后续数据的输入在CRC校验期间不会被丢弃：
-
-\begin{itemize}
-\item
-  行为：
-
-  接收到start\_crc信号后，拉低start\_crc信号，crc\_cnt开始计数。
-
-  当crc\_cnt小于data\_count的值的时候，维持 crc16\_valid
-  高电平，同时每个周期从data\_128低位开始每16位作为data\_to\_crc发送给CRC校验模块。所有数据已发送后清零crc16\_valid和crc\_cnt。
-
-  接收到crc16\_done信号后，检查CRC结果data\_from\_crc和crc\_field\_reg是否相等。相等时候拉高fifo\_w\_enable，拉低crc\_err，data\_to\_fifo
-  赋值为\{data\_128, data\_ch,
-  data\_count\}写入fifo。不相等时拉低fifo\_w\_enable，拉高crc\_err。
-\end{itemize}
 
 \textbf{顶层IO}
 
@@ -295,11 +235,9 @@ crc16\_valid & 1 & O \\
 \item
   \texttt{data\_to\_crc}:输入到CRC校验模块的待校验数据
 \item
+  \texttt{crc}:输出到帧格式识别模块crc校验初始值
+\item
   \texttt{data\_from\_crc}:从CRC校验模块返回的数据校验值
-\item
-  \texttt{crc16\_done}:从CRC校验模块返回的数据校验值有效信号，高电平有效
-\item
-  \texttt{crc16\_valid}:发送给CRC校验模块的使能信号，高电平有效
 \end{itemize}
 
 \hypertarget{async_fifo}{%
@@ -323,9 +261,8 @@ rst\_n & 1 & I \\
 fifo\_w\_enable & 1 & I \\
 fifo\_r\_enable & 1 & I \\
 data\_to\_fifo & 140 & I \\
+crc & 16 & O \\
 data\_from\_fifo & 140 & O \\
-fifo\_empty & 1 & O \\
-fifo\_full & 1 & O \\
 \end{longtable}
 
 \textbf{信号说明}
