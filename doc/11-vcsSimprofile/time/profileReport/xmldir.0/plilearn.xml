@@ -1,0 +1,14 @@
+<plilearn>
+  <noused>
+  </noused>
+  <allused>
+  </allused>
+  <stat>
+    <cap name='read' enabled='0' enabled_percent='0.00' enabled_time='0' enabled_time_percent='0.00' used='0' used_percent='0.00' used_time='0' used_time_percent='0.00' unused='0' unused_percent='0.00' unused_time='0' unused_time_percent='0.00'/>
+    <cap name='read_write' enabled='0' enabled_percent='0.00' enabled_time='0' enabled_time_percent='0.00' used='0' used_percent='0.00' used_time='0' used_time_percent='0.00' unused='0' unused_percent='0.00' unused_time='0' unused_time_percent='0.00'/>
+    <cap name='callback' enabled='0' enabled_percent='0.00' enabled_time='0' enabled_time_percent='0.00' used='0' used_percent='0.00' used_time='0' used_time_percent='0.00' unused='0' unused_percent='0.00' unused_time='0' unused_time_percent='0.00'/>
+    <cap name='callback_all' enabled='0' enabled_percent='0.00' enabled_time='0' enabled_time_percent='0.00' used='0' used_percent='0.00' used_time='0' used_time_percent='0.00' unused='0' unused_percent='0.00' unused_time='0' unused_time_percent='0.00'/>
+    <cap name='force' enabled='0' enabled_percent='0.00' enabled_time='0' enabled_time_percent='0.00' used='0' used_percent='0.00' used_time='0' used_time_percent='0.00' unused='0' unused_percent='0.00' unused_time='0' unused_time_percent='0.00'/>
+    <cap name='static' enabled='0' enabled_percent='0.00' enabled_time='0' enabled_time_percent='0.00' used='0' used_percent='0.00' used_time='0' used_time_percent='0.00' unused='0' unused_percent='0.00' unused_time='0' unused_time_percent='0.00'/>
+  </stat>
+</plilearn>

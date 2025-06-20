@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type="text/xsl" href="cstrProf.xsl"?>
+<cnst_profile>
+<simv_base_dir>/home/ray/git/chaoslogic/verification</simv_base_dir>
+<total_utime>2.790</total_utime>
+<total_stime>0.270</total_stime>
+<total_randomize_utime>0.000</total_randomize_utime>
+<total_randomize_count>0</total_randomize_count>
+<largest_inc_mem>0</largest_inc_mem>
+<top_context_profile_info>
+<context_profile_info><solver>Core Solver (default)</solver><ttime>0.000</ttime></context_profile_info>
+<context_profile_info><solver>Core Solver (mode=1)</solver><ttime>0.000</ttime></context_profile_info>
+<context_profile_info><solver>Core Solver (FAST)</solver><ttime>0.000</ttime></context_profile_info>
+<context_profile_info><solver>Problem Generation</solver><ttime>0.000</ttime></context_profile_info>
+</top_context_profile_info>
+<top_utime_randomize>
+</top_utime_randomize>
+<top_utime_partition>
+</top_utime_partition>
+<top_mem_randomize>
+</top_mem_randomize>
+<top_BDD_partition>
+</top_BDD_partition>
+<top_agregate_utime_randomize>
+</top_agregate_utime_randomize>
+<top_mem_line_randomize>
+</top_mem_line_randomize>
+</cnst_profile>

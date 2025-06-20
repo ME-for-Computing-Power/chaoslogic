@@ -1,0 +1,17 @@
+<instances>
+  <total>299</total>
+  <totalv>187</totalv>
+  <instance id='0' value='0' incl_value='0'>
+    <child>2</child>
+  </instance>
+  <instance id='2' value='160' incl_value='187'>
+    <child>3</child>
+  </instance>
+  <instance id='3' value='13' incl_value='27'>
+    <child>4</child>
+    <child>5</child>
+  </instance>
+  <instance id='4' value='7' incl_value='7'/>
+  <instance id='5' value='5' incl_value='5'/>
+  <if v='2'/>
+</instances>

@@ -1,0 +1,16 @@
+<files>
+  <file>Source File Unknown</file>
+  <file>/home/ray/git/chaoslogic/verification/dut/top.v</file>
+  <file>/home/ray/git/chaoslogic/verification/tb.sv</file>
+  <file>/home/ray/git/chaoslogic/verification/dut/crc_module.v</file>
+  <file>/home/ray/git/chaoslogic/verification/dut/output_stage.sv</file>
+  <file>/home/ray/git/chaoslogic/verification/dut/fifo_data_resolu.v</file>
+  <file>/home/ray/git/chaoslogic/verification/dut/async_fifo.v</file>
+  <file>/home/ray/git/chaoslogic/verification/dut/input_stage.sv</file>
+  <file>tb.sv</file>
+  <file>dut/crc_module.v</file>
+  <file>dut/output_stage.sv</file>
+  <file>dut/input_stage.sv</file>
+  <file>dut/async_fifo.v</file>
+  <file>dut/fifo_data_resolu.v</file>
+</files>

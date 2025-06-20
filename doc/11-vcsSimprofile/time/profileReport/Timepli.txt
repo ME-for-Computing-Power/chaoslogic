@@ -1,0 +1,31 @@
+##############################################################################################################
+     VCS build date:                                   Feb 28 2019 22:34:30                                   
+   Compiler version:                                   O-2018.09-SP2_Full64                                   
+    Runtime version:                                   O-2018.09-SP2_Full64                                   
+       Machine Name:                                   tank                                                   
+     Profile runner:                                   ray                                                    
+       Profile data:                                   /home/ray/git/chaoslogic/verification/simprofile_dir   
+      Creation date:                                   Fri Jun 20 12:58:40 2025                               
+      Profile start:                                   0                                                      
+       Profile stop:                                   17135840                                               
+     Total CPU Time:                                   2.79                                                   
+    Compile Command:                                   /eda/vcs18/vcs/O-2018.09-SP2/bin/vcs -full64 -cc gcc -c
+                                                       pp g++ -LDFLAGS -Wl,-no-as-needed -cm line+cond+branch+
+                                                       tgl+fsm -cm_name tb_frame_detector_cov -cm_dir ./covdir
+                                                       .vdb -sverilog -f filelist.f -simprofile -top tb_frame_
+                                                       detector -timescale=1ns/100ps +incdir+config -fsdb -P /
+                                                       eda/verdi/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/LINUX
+                                                       AMD64/novas.tab /eda/verdi/verdi/Verdi_O-2018.09-SP2/sh
+                                                       are/PLI/VCS/LINUXAMD64/pli.a -debug_access             
+ Simulation Command:                                   ./simv -simprofile time                                
+##############################################################################################################
+==============================================================================================================
+                                          Time PLI/DPI/DirectC View
+==============================================================================================================
+   Name                                                             Percentage
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+  Total:                                                                0.00 %
+______________________________________________________________________________________________________________
+
+

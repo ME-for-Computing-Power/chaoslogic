@@ -1,0 +1,75 @@
+#skip internal SVA package (e.g. SnpsSVA_classes)
+skipInternalSVAPackage : 1
+
+#enable diagnostic
+diagOn : 0
+
+#track all APs in a sample intead of the last one
+trackAllAPsinSample : 0
+
+#debug profrpt slave process in xterm gdb
+debugProfrptInXterm : 0
+
+#keep old hsim view for RTL/GLS design
+keepOldHsimView : 0
+
+#use HSIM construct type for all hsim type
+useHsimConstrForAll : 0
+
+#generate a plot script for snapshots
+plotSnapshot : 0
+
+#generate a plot script for simulation time
+plotSimTime : 0
+
+#not check version when loading simprofile database
+noCheckVersion : 0
+
+#enable snapshot report
+enableSnapshot : 0
+
+#direcotry for the plot script
+plotScriptDir : 
+
+#extra diagnostic for memory
+diagMem : 0
+
+#diag interval for VM increase
+diagMemInterval : 0.01
+
+#extra print times
+diagMemShortPrints : 3
+
+#load smd info from diagnostic files (-hsopt=smddiag)
+loadSmdDiagFiles : 0
+
+#not to merge heap record in databaes
+noMergeHeapAct : 0
+
+#total size of bytecode (SMD)
+totalBCSize : 224
+
+#do not collect record for hsim memory
+noCollectHsimMem : 0
+
+#do not collect raw code address
+noCollectAddrMap : 0
+
+#stop to retrieve stack trace through libunwind
+noStackTrace : 0
+
+#add function name in slot (for debug)
+addFuncNameInSlot : 0
+
+#RnD raw view
+rawView : 0
+
+#exit when hitting the memory counter (eng only, for debug)
+exitAtMemCnt : 0
+
+#print debug msg for signal profile
+diagSignalProfile : 0
+
+#pid of simv
+pidSimv : 982969
+

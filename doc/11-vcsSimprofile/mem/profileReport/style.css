@@ -1,0 +1,192 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font: bold 11px/1.5em Arial;
+}
+
+img {
+    border: none;
+}
+
+h1 {
+    font: bold 16px/1.5em Arial;
+    text-align: center;
+}
+
+h2 {
+    font: bold 14px/1.5em Arial;
+    text-align: center;
+}
+
+a {
+    cursor: pointer;
+    color: #0000ff;
+}
+
+select {
+    width: 120px;
+    margin-top: 10px;
+    margin-right: 100px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+#simp_head {
+    clear: both;
+    margin: 0 auto;
+    height: 80px;
+    min-width: 1080px; 
+    width: 90%;
+    border-bottom: 2px solid #333333;
+    background-color: #b0b0f0;
+    position: relative;
+}
+
+#simp_body {
+    margin: 0 auto;
+    min-width: 1080px; 
+    width: 90%;
+}
+
+#simp_logo {
+    float: left;
+    width: 300px;
+    font-family: "Times New Roman", Times, serif;
+    padding: 25px 15px 5px 15px;
+    color: #333333;
+    font-size: 36px;
+}
+
+#help_link {
+    position: absolute;
+    right: 5px;
+    bottom: 0px;
+}
+
+#simp_sidebar{
+    float: left;
+    width: 208px;
+}
+
+#simp_sbtb{
+    margin: 5px;
+    width: 288px;
+}
+
+#simp_board{
+    border-left: 2px solid #333333;
+    float: right;
+    width: calc(100% - 288px);
+    margin: 0 auto;
+}
+
+#simp_main{
+    padding: 15px 0 0 0;
+    border-left: 2px solid #333333;
+    width: calc(100% - 288px);
+    float: right;
+    height: 580px;
+    overflow: hidden;
+}
+
+#simp_clock{
+    position: absolute;
+    right: 200px;
+    color: blue;
+}
+
+#timelineFmt{
+    float: right;
+    margin-right: 100px;
+}
+
+.simp_table{
+    text-align: center;
+    margin: 0 auto;
+    clear: both;
+    width: 90%;
+    padding: 3px 20px 3px 10px;
+    border-collapse:collapse;
+}
+
+.simp_total{
+    border-top: 1px solid black;
+}
+
+.simp_left{
+    text-align: left;
+}
+
+.simp_right{
+    text-align: right;
+}
+
+.simp_center{
+    text-align: center;
+}
+
+.simp_cursor{
+    cursor: pointer;
+}
+
+.simp_table_red{
+    color: red;
+}
+
+.simp_table_green{
+    color: green;
+}
+
+.simp_table_blue{
+    color: blue;
+}
+
+.simp_table_ht{
+    color: #800000;
+}
+
+.simp_tableTH{
+    font-size: 14px;
+    border-bottom: 1px solid black;
+}
+
+.simp_tableft{
+    padding: 3px 20px 3px 30px;
+    cursor: pointer;
+}
+
+.simp_odd{
+    font: normal 12px Arial;
+    background-color: #d0d0ff;
+}
+
+.simp_odd td{
+    border-right: 1px solid white;
+}
+
+.simp_even{
+    font: normal 12px Arial;
+    background-color: #ffffff;
+}
+
+.simp_even td{
+    border-right: 1px solid white;
+}
+
+.simp_typespan{
+    margin: 0 10px;
+}
+
+.input_text {
+    width: 120px;
+    margin: 10px 30px;
+}
+
+.input_button{
+    width: 80px;
+    margin-top: 10px;
+    margin-left: 80px;
+}

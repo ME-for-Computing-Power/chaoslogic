@@ -1,0 +1,66 @@
+<modules>
+  <total>299</total>
+  <totalv>187</totalv>
+  <module id='9' value='160' ivalue='187'>
+    <constr id='5' t='Initial' value='100'/>
+    <constr id='16' t='Task' value='13'/>
+    <constr id='12' t='Task' value='9'/>
+    <constr id='11' t='Task' value='8'/>
+    <constr id='6' t='Initial' value='7'/>
+    <constr id='17' t='Task' value='5'/>
+    <constr id='4' t='Initial' value='3'/>
+    <constr id='1' t='Hsim' value='2'/>
+    <cf n='Task' v='1'/>
+    <inst id='3' value='13' ivalue='27'>
+      <mad mid='7' value='13'/>
+    </inst>
+    <l i='75' value='100'/>
+    <l i='165' value='3'/>
+    <l i='378' value='4'/>
+    <l i='181' value='6'/>
+    <l i='5' value='12'/>
+    <l i='87' value='7'/>
+    <l i='69' value='3'/>
+    <l i='363' value='2'/>
+    <l i='341' value='1'/>
+    <l i='361' value='3'/>
+    <l i='125' value='2'/>
+    <l i='162' value='1'/>
+    <l i='117' value='1'/>
+    <l i='143' value='3'/>
+    <l i='362' value='6'/>
+    <l i='409' value='2'/>
+    <l i='365' value='2'/>
+    <l i='370' value='1'/>
+    <l i='262' value='1'/>
+  </module>
+  <module id='7' value='13' ivalue='27'>
+    <inst id='4' value='7' ivalue='7'>
+      <mad mid='4' value='7'/>
+    </inst>
+    <inst id='5' value='5' ivalue='5'>
+      <mad mid='6' value='5'/>
+    </inst>
+    <l i='5' value='5'/>
+    <l i='3' value='8'/>
+  </module>
+  <module id='4' value='7' ivalue='7'>
+    <constr id='3' t='ContAssign' value='4'/>
+    <cf n='ContAssign' v='1'/>
+    <cf n='AlwaysFF' v='1'/>
+    <l i='53' value='1'/>
+    <l i='65' value='4'/>
+    <l i='70' value='1'/>
+    <l i='1' value='1'/>
+  </module>
+  <module id='6' value='5' ivalue='5'>
+    <constr id='3' t='Always' value='2'/>
+    <constr id='9' t='ContAssign' value='2'/>
+    <cf n='Always' v='1'/>
+    <l i='58' value='1'/>
+    <l i='67' value='1'/>
+    <l i='99' value='2'/>
+    <l i='78' value='1'/>
+  </module>
+  <mf v='2'/>
+</modules>

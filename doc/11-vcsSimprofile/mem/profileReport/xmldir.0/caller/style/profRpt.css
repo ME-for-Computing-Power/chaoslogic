@@ -1,0 +1,528 @@
+/* Pretty printing styles. Used with prettify.js. */
+
+/* SPAN elements with the classes below are added by prettyprint. */
+.pln { color: #000 }  /* plain text */
+
+@media screen {
+  .str { color: #080 }  /* string content */
+  .kwd { color: #008 }  /* a keyword */
+  .com { color: #800 }  /* a comment */
+  .typ { color: #606 }  /* a type name */
+  .lit { color: #066 }  /* a literal value */
+  /* punctuation, lisp open bracket, lisp close bracket */
+  .pun, .opn, .clo { color: #660 }
+  .tag { color: #008 }  /* a markup tag name */
+  .atn { color: #606 }  /* a markup attribute name */
+  .atv { color: #080 }  /* a markup attribute value */
+  .dec, .var { color: #606 }  /* a declaration; a variable name */
+  .fun { color: red }  /* a function name */
+}
+
+/* Use higher contrast and text-weight for printable form. */
+@media print, projection {
+  .str { color: #060 }
+  .kwd { color: #006; font-weight: bold }
+  .com { color: #600; font-style: italic }
+  .typ { color: #404; font-weight: bold }
+  .lit { color: #044 }
+  .pun, .opn, .clo { color: #440 }
+  .tag { color: #006; font-weight: bold }
+  .atn { color: #404 }
+  .atv { color: #060 }
+}
+
+/* Put a border around prettyprinted code snippets. */
+pre.prettyprint { padding: 2px; padding-left: 70px; border: 1px solid #888 }
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums { margin-top: 0; margin-bottom: 0 } /* IE indents via margin-left */
+/* Alternate shading for lines */
+li.L1,
+li.L3,
+li.L5,
+li.L7,
+li.L9 { background: #eee }
+
+* {
+    margin:0;
+    padding:0;
+
+}
+
+.container {
+    clear: both;
+    width: 100%;
+    margin: 0 auto;
+    font-family: "Arial";
+    font-size: 14px;
+}
+
+.main h2 {
+    padding: 10px 0 0 0;
+    text-align: center;
+}
+
+.main table{
+}
+
+.main pre{
+}
+
+.top_nav {
+    width: 960px;
+    margin: 0 auto;
+}
+
+.logo {
+    background-color: #f1efef;
+    border: 1px solid #cacac5;
+    width: 958px;
+    height: 98px;
+    margin: 25px auto 0 auto;
+    font-family: "Arial", serif;
+    color: #666; 
+    text-shadow: #ccc 1px 1px;
+}
+
+.logo h1{
+    text-align: left;
+    font-size: 3em;
+    padding: 20px;
+    width: 450px;
+    float: left;
+}
+
+.hd-nav{
+    width: 250px;
+    float: right;
+    padding: 68px 0 0 0;
+}
+
+.hd-nav li{
+    clear: both;
+    padding: 0 10px;
+    display: inline;
+    cursor: pointer;
+}
+
+.hd-nav li:hover{
+    background-color: #c3c4f1; 
+}
+
+.hd-nav li + li{
+    border-left: 1px solid #cacac5;
+}
+
+.side {
+    height:560px;
+    width: 40%;
+    float: left;
+    background-color: #dfdfff;
+}
+
+.main {
+    height:560px;
+    width: 60%;
+    float: right;
+}
+
+#stacktable_length{
+    display: none;
+}
+
+#stacktable_filter{
+    padding: 10px 15px;
+}
+
+#stacktable_filter input{
+    border: 1px solid #cacac5;
+    border-radius: 0.4em;
+    webkit-border-radius: 0.4em;
+    moz-border-radius: 0.4em;
+    ms-border-radius: 0.4em;
+    margin: 0 10px;
+}
+
+.tools{
+    background-color: #333;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    font-family: "Arial", serif;
+    font-size: 12px;
+    color: #cdcdcd; 
+    padding: 6px 0;
+    margin: 0;
+}
+
+.tools li{
+    padding: 0 10px;
+    display: inline;
+    cursor: pointer;
+} 
+
+.tools li + li{
+    border-left: 1px solid #dedede;
+}
+
+.tools li:hover {
+    color: yellow; 
+ }
+
+.foot{
+    clear: both;
+    width: 958px;
+    margin: 0 auto 50px auto;
+    font-family: "Arial";
+    font-size: 14px;
+    text-align: center;
+    padding: 8px 0;
+    border: 1px solid #cacac5;
+    border-bottom-left-radius: 0.6em;
+    border-bottom-right-radius: 0.6em;
+    background-color: #f1efef;
+}
+
+#stacktable_wrapper {
+    margin: 0 5px; 
+}
+
+#stacktable_info {
+    display: none;
+}
+
+table.display thead th {
+    border-bottom: 1px solid #cacac5;
+    cursor: pointer;
+}
+
+.even{
+    background-color: #eee;
+}
+
+.odd{
+    background-color: #dfd;
+}
+
+.stackright{
+    text-align: right;
+}
+
+.stackcentre{
+    text-align: center;
+}
+
+.stackleft{
+    text-align: left;
+}
+
+table.display tfoot th {
+    border-top: 1px solid #cacac5;
+}
+
+#stackinfo{
+    word-break:break-all;
+    word-wrap:break-word;
+    overflow: scroll; 
+}
+
+/* Following styles were introduced for UVM Profiler */
+.Table
+{
+  display: table;
+  width: 100%;
+  table-layout:fixed;
+  border-collapse: collapse;
+}
+
+.Title
+{
+  display: table-caption;
+  text-align: center;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.Heading
+{
+  display: table-row;
+  font-weight: bold;
+  text-align: center;
+  background-color:#360;
+  color:#FFF;
+  border-collapse: collapse;
+}
+
+.Row
+{
+  display: table-row;
+  border-collapse: collapse;
+}
+
+.HeadCell
+{
+  display: table-cell;
+  border: solid;
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  width:5%;
+  background-color:#560286;
+  color:#FFF;
+  word-wrap:break-word;
+}
+
+.HeadCellWide
+{
+  display: table-cell;
+  border: solid;
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  width:30%;
+  background-color:#560286;
+  color:#FFF;
+  word-wrap:break-word;
+}
+
+.CellWide
+{
+  display: table-cell;
+  border: solid;
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  width:30%;
+  background-color:#F6E5FF;
+  color:#333;
+  word-wrap:break-word;
+}
+
+.Cell
+{
+  display: table-cell;
+  border: solid;
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  width:5%;
+  background-color:#F6E5FF;
+  color:#333;
+  word-wrap:break-word;
+}
+
+.UvmCellWide
+{
+  display: table-cell;
+  border: solid;
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  width:30%;
+  background-color:#FAF0E6;
+  word-wrap:break-word;
+}
+.UvmCell
+{
+  display: table-cell;
+  border: solid;
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  width:5%;
+  background-color:#FAF0E6;
+  word-wrap:break-word;
+}
+.TableHeadCell
+{
+  display: table-cell;
+  border: solid;
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color:#560286;
+  color:#FFF;
+  width:25%;
+  word-wrap:break-word;
+}
+
+.ObjCell
+{
+  display: table-cell;
+  border: solid;
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color:#EDCDFF;
+  color:#333;
+  width:25%;
+  vertical-align:top;
+  word-wrap:break-word;
+}
+
+#UVMFlatReport { 
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+} 
+
+#UVMFlatReport td, #UVMFlatReport th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    word-wrap:break-word;
+    width: 10%;
+}
+
+#UVMFlatReport td, #UVMFlatReport th:nth-child(1){
+  width: 40%;
+  word-wrap: break-word;
+}
+#UVMFlatReport td, #UVMFlatReport th:nth-child(2){
+  width: 25%;
+  word-wrap: break-word;
+}
+
+#UVMFlatReport tr:hover {background-color: #ddd;}
+
+#UVMFlatReport tr.UVMFunction  {
+  background-color: #FAF0E6;
+}
+
+#UVMFlatReport tr  {
+  background-color: #F6E5FF;
+}
+
+.UVMStack { 
+}
+
+#UVMFlatReport th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #560286;
+    color: white;
+    font-size:12px;
+}
+
+#UVMExplanation {
+  width: 49%;
+  height:60px;
+  margin: 0 auto;
+  /*overflow:auto;*/
+  float: right;
+  border: 1px solid black;
+}
+
+#UVMSummary{
+  width: 50%;
+  height:60px;
+  margin: 0 auto;
+ /* overflow:auto;*/
+  float: left;
+  border: 1px solid black;
+}
+#UVMPagination{
+  clear: both;
+  width: 100%;
+  height:25px;
+  margin: 0 auto;
+  float: left;
+  border: 1px solid black;
+}
+#UVMProfileData {
+  clear: left;
+  width: 50%;
+  height: 650px;
+  margin: 0 auto;
+  overflow:auto;
+  float: left;
+  border: 1px solid black;
+  border-collapse:collapse;
+}
+#UVMCallerCallee {
+  width: 49%;
+  height: 650px;
+  margin: 0 auto;
+/*  overflow:auto; */
+  float: right;
+  /*border: 1px solid black;*/
+  clear: right;
+  border-collapse:collapse;
+  font-size: 14px;
+  font-family: "Times New Roman";
+}
+
+#UVMCallerCalleeHeader {
+  width: 100%;
+  height: 100px;
+  margin: 0 auto;
+  overflow:auto;
+  float: right;
+  border: 1px solid black;
+  clear: right;
+  border-collapse:collapse;
+  border: 1px solid black;
+  font-size: 14px;
+  font-family: "Times New Roman";
+}
+
+#UVMCaller {
+  width: 100%;
+  height: 275px;
+  margin: 0 auto;
+  overflow:auto;
+  float: right;
+  border: 1px solid black;
+}
+#UVMCallee {
+  border: 1px solid black;
+  float:right;
+  width: 100%;
+  height: 275px;
+  margin: 0 auto;
+  overflow:auto;
+}
+
+#UVMContent {
+  border-collapse:collapse;
+  clear: both;
+  width: 100%;
+  margin: 0 auto;
+  font-family: "Times New Roman";
+  font-size: 14px;
+  border: 1px solid black;
+}
+
+.UVMMessage {
+  border-collapse:collapse;
+  clear: both;
+  width: 100%;
+  margin: 0 auto;
+  font-family: "Times New Roman";
+  font-size: 18px;
+  font-weight: bold;
+  color:red;
+  border: 1px solid black;
+}
+
+.UVMCallStackCaption { 
+  text-align: center;
+  font-weight: bold;
+  font-size: medium;
+  color:red;
+}
+
+.UVMCallSelectedFunction { 
+  text-align: center;
+  font-weight: bold;
+  font-size: medium;
+  color:blue;
+}  
+
+.treegrid-indent {width:8px; height: 8px; display: inline-block; position: relative;}
+
+.treegrid-expander {width:16px; height: 16px; display: inline-block; position: relative; cursor: pointer;}
+
+.treegrid-expander-expanded{background-image: url(collapse.png); }
+.treegrid-expander-collapsed{background-image: url(expand.png);}
+

@@ -1,0 +1,56 @@
+##############################################################################################################
+     VCS build date:                                   Feb 28 2019 22:34:30                                   
+   Compiler version:                                   O-2018.09-SP2_Full64                                   
+    Runtime version:                                   O-2018.09-SP2_Full64                                   
+       Machine Name:                                   tank                                                   
+     Profile runner:                                   ray                                                    
+       Profile data:                                   /home/ray/git/chaoslogic/verification/simprofile_dir   
+      Creation date:                                   Fri Jun 20 12:58:40 2025                               
+      Profile start:                                   0                                                      
+       Profile stop:                                   17135840                                               
+     Total CPU Time:                                   2.79                                                   
+    Compile Command:                                   /eda/vcs18/vcs/O-2018.09-SP2/bin/vcs -full64 -cc gcc -c
+                                                       pp g++ -LDFLAGS -Wl,-no-as-needed -cm line+cond+branch+
+                                                       tgl+fsm -cm_name tb_frame_detector_cov -cm_dir ./covdir
+                                                       .vdb -sverilog -f filelist.f -simprofile -top tb_frame_
+                                                       detector -timescale=1ns/100ps +incdir+config -fsdb -P /
+                                                       eda/verdi/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/LINUX
+                                                       AMD64/novas.tab /eda/verdi/verdi/Verdi_O-2018.09-SP2/sh
+                                                       are/PLI/VCS/LINUXAMD64/pli.a -debug_access             
+ Simulation Command:                                   ./simv -simprofile time                                
+##############################################################################################################
+==============================================================================================================
+                                              Time Instance View
+==============================================================================================================
+        Instance           %TotalTime     Module/Program  Source
+                            incl|excl      /Architecture
+--------------------------------------------------------------------------------------------------------------
+tb_frame_detector          62.54|53.51   tb_frame_detect  /home/ray/git/chaoslogic/verification/tb.sv:5       
+                                                      or                                                      
+  NoName {line:75}(Initia  33.44|33.44                --  /home/ray/git/chaoslogic/verification/tb.sv:75      
+  l)                                                                                                          
+  test_single_frame(Task)   4.35|4.35                 --  /home/ray/git/chaoslogic/verification/tb.sv:351     
+  check_serial_output(Tas   3.01|3.01                 --  /home/ray/git/chaoslogic/verification/tb.sv:125     
+  k)                                                                                                          
+  send_frame(Task)          2.68|2.68                 --  /home/ray/git/chaoslogic/verification/tb.sv:87      
+  NoName {line:181}(Initi   2.34|2.34                 --  /home/ray/git/chaoslogic/verification/tb.sv:181     
+  al)                                                                                                         
+  check_output(Task)        1.67|1.67                 --  /home/ray/git/chaoslogic/verification/tb.sv:370     
+  NoName {line:69}(Initia   1.00|1.00                 --  /home/ray/git/chaoslogic/verification/tb.sv:69      
+  l)                                                                                                          
+  Hsim {Module:tb_frame_d   0.67|0.67                 --  /home/ray/git/chaoslogic/verification/tb.sv:409     
+  etector}(Hsim)                                                                                              
+tb_frame_detector.dut       9.03|4.35                top  /home/ray/git/chaoslogic/verification/tb.sv:35      
+tb_frame_detector.dut.u_a   1.67|1.67         async_fifo  /home/ray/git/chaoslogic/verification/dut/top.v:83  
+sync_fifo                                                                                                     
+  NoName {line:67}(Always   0.67|0.67                 --  /home/ray/git/chaoslogic/verification/dut/async_fifo
+  )                                                       .v:67                                               
+  NoName {line:99}(ContAs   0.67|0.67                 --  /home/ray/git/chaoslogic/verification/dut/async_fifo
+  sign)                                                   .v:99                                               
+tb_frame_detector.dut.u_o   2.34|2.34       output_stage  /home/ray/git/chaoslogic/verification/dut/top.v:104 
+utput_stage                                                                                                   
+  NoName {line:65}(ContAs   1.34|1.34                 --  /home/ray/git/chaoslogic/verification/dut/output_sta
+  sign)                                                   ge.sv:65                                            
+______________________________________________________________________________________________________________
+
+

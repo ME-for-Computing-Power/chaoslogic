@@ -1,0 +1,46 @@
+<entries>
+  <total>205520896</total>
+  <totalv>24960</totalv>
+  <entry name='KERNEL' value='9565748'/>
+  <entry name='HSIM' value='4585637'/>
+  <entry name='VERILOG' value='24960'>
+    <entry name='Package' value='16696'/>
+    <entry name='Module' value='8264'/>
+    <entry name='Function Coverage Kernel' value='584'/>
+  </entry>
+  <entry name='Anonymous' value='26718119'/>
+  <entry name='Library/Executable' value='164626432'>
+    <entry name='VCS' value='145752064'/>
+    <entry name='Third-party' value='18874368'>
+      <entry name='libvfs' value='3203072'/>
+      <entry name='libnovas' value='2170880'/>
+      <entry name='libc' value='1953792'/>
+      <entry name='libstdc++' value='1953792'/>
+      <entry name='libgio-2.0' value='1658880'/>
+      <entry name='libgcrypt' value='1277952'/>
+      <entry name='libglib-2.0' value='1220608'/>
+      <entry name='libm' value='888832'/>
+      <entry name='libsystemd' value='823296'/>
+      <entry name='libzstd' value='745472'/>
+      <entry name='libpcre2-8' value='622592'/>
+      <entry name='libgobject-2.0' value='344064'/>
+      <entry name='libmount' value='278528'/>
+      <entry name='libdbus-1' value='274432'/>
+      <entry name='libblkid' value='212992'/>
+      <entry name='liblzma' value='192512'/>
+      <entry name='libgcc_s' value='172032'/>
+      <entry name='libselinux' value='151552'/>
+      <entry name='libdbus-glib-1' value='143360'/>
+      <entry name='libgpg-error' value='135168'/>
+      <entry name='liblz4' value='126976'/>
+      <entry name='libz' value='106496'/>
+      <entry name='libcap' value='40960'/>
+      <entry name='libffi' value='40960'/>
+      <entry name='libgmodule-2.0' value='20480'/>
+      <entry name='libnss_mdns4_minimal' value='20480'/>
+      <entry name='librt' value='16384'/>
+      <entry name='libdl' value='16384'/>
+      <entry name='libpthread' value='16384'/>
+    </entry>
+  </entry>
+</entries>

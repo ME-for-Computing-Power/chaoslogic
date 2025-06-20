@@ -1,0 +1,6 @@
+tb.sv
+dut/crc_module.v
+dut/output_stage.sv
+dut/input_stage.sv
+dut/async_fifo.v
+dut/fifo_data_resolu.v
