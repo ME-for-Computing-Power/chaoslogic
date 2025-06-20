@@ -71,6 +71,7 @@
 
 \usepackage{fancyhdr}
 \usepackage{lastpage}
+\usepackage{svg}
 \pagestyle{fancyplain}
 
 \setcounter{secnumdepth}{0}
@@ -83,13 +84,17 @@
 \section{帧格式序列检测生成模块设计规范}\label{ux5e27ux683cux5f0fux5e8fux5217ux68c0ux6d4bux751fux6210ux6a21ux5757ux8bbeux8ba1ux89c4ux8303}}
 
 \tableofcontents
-
+\newpage
 
 \hypertarget{ux8bbeux8ba1ux6982ux8ff0}{%
 \subsection{设计概述}\label{ux8bbeux8ba1ux6982ux8ff0}}
 
 本规范文件描述了帧格式序列检测与生成模块（Frame Format Sequence
 Generator）的设计规范和特性要求，该模块旨在检测输入数据流中的特定帧格式，并在检测到目标帧时进行串行输出。
+
+\begin{figure}[h!]
+  \includesvg[width = 0.99\textwidth]{schematic.svg}
+\end{figure}
 
 如上框图所示，模块接收到数据输入 \texttt{data\_in}
 后，在模块进行以下处理过程：
