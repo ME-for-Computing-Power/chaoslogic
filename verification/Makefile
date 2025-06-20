@@ -5,7 +5,8 @@ TOP_MODULE = -top tb_frame_detector
 COMPILER += -cm line+cond+branch+tgl+fsm
 COMPILER    += -cm_name tb_frame_detector_cov
 COMPILER    += -cm_dir ./covdir.vdb
-
+SIMP    += -simprofile 
+CHK_USAGE    = -design_stats=design
 TIMESCALE = -timescale=1ns/100ps
 INCDIR = +incdir+config
 DEBUG = -debug_access
@@ -55,3 +56,24 @@ clean:
 	rm -rf *.log
 	rm -rf receive_pool*
 
+
+simp: filelist
+	$(COMPILER) -sverilog -f filelist.f  \
+	$(SIMP)								 \
+	$(TOP_MODULE)   					 \
+	$(TIMESCALE)						 \
+	$(INCDIR)						     \
+	$(FSDB)							     \
+	$(DEBUG)
+
+check_compile:  filelist
+	$(COMPILER) -sverilog -f filelist.f  \
+	$(CHK_USAGE)                         \
+	$(TOP_MODULE)   					 \
+	$(TIMESCALE)						 \
+	$(INCDIR)						     \
+	$(FSDB)							     \
+	$(DEBUG)
+	
+check: check_compile
+	./simv
