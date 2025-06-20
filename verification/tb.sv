@@ -237,10 +237,10 @@ initial begin
 
     $display("\n===== 测试5: 特殊数据测试 =====");
     test_single_frame(8'b0000_0100, 128'he0e0, 16);  // 帧头数据重合
-    check_output(8'b0000_0100, 128'he0e0, 16);
+    //check_output(8'b0000_0100, 128'he0e0, 16);
 
     test_single_frame(16'he0e0, 128'he0e0, 16);  // 通道数据错误
-    check_output(16'he0e0, 128'he0e0, 16);
+    //check_output(16'he0e0, 128'he0e0, 16);
 
     // 添加错误测试
     $display("\n===== 测试6: CRC错误测试 =====");

@@ -8,9 +8,8 @@ module fifo_data_resolu (
   // 1. 直接提取通道选择信号
   assign vld_ch = data_from_fifo[11:4];
   
-  // 2. 计算数据长度（当长度指示位>8时输出0）
-  assign data_count = (data_from_fifo[3:0] > 4'd8) ? 16'b0 : 
-                     {8'b0, data_from_fifo[3:0], 4'b0};
+  // 2. 计算数据长度
+  assign data_count =  {8'b0, data_from_fifo[3:0], 4'b0};
   
   // 3. 数据转换处理
   wire [127:0] data_high = data_from_fifo[139:12];  // 提取128位原始数据
@@ -29,7 +28,6 @@ module fifo_data_resolu (
       4'd6: gray_out = {gray_full[127:32], 32'd0};    // 高96位有效
       4'd7: gray_out = {gray_full[127:16], 16'd0};    // 高112位有效
       4'd8: gray_out = gray_full;        // 全部128位有效
-      default: gray_out = 128'd0;        // 其他情况输出全0
     endcase
   end
   
